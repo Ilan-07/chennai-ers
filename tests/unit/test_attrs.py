@@ -9,6 +9,17 @@ from ers.geo.attrs import (attribute_edges, junction_delay, parse_dimension,
                            parse_maxspeed, primary_highway)
 
 SPEEDS = yaml.safe_load(Path("config/speeds/base.yml").read_text())
+
+# Fixed table for arithmetic tests. These must NOT read the live config: a
+# recalibration would otherwise silently change what "18.0 s" means and the test
+# would be asserting the config against itself.
+FIXED = {
+    "free_flow_kmh": {"residential": 20, "primary": 45, "tertiary": 30,
+                      "motorway": 80, "service": 12},
+    "peak_factor": {"residential": 0.75, "primary": 0.50, "tertiary": 0.60,
+                    "motorway": 0.65, "service": 0.85},
+    "junction_delay_s": {"signalised": 12, "unsignalised_degree_ge_3": 5, "other": 0},
+}
 EMS = yaml.safe_load(Path("config/services/ems.yml").read_text())
 FIRE = yaml.safe_load(Path("config/services/fire.yml").read_text())
 
@@ -62,8 +73,22 @@ def test_traversal_time_matches_hand_calculation():
     # 100 m at residential 20 km/h = 18.0 s, no junction delay, no multiplier.
     e = _edges(1, "residential", 100.0)
     svc = {"emergency_multiplier": {}, "junction_delay_factor": 0.0, "access_filter": {}}
-    r = attribute_edges(e, np.zeros(1), speeds=SPEEDS, service=svc)
+    r = attribute_edges(e, np.zeros(1), speeds=FIXED, service=svc)
     assert r.tau_ds[0] == 180        # 18.0 s in deciseconds
+
+
+def test_calibrated_config_is_internally_consistent():
+    """Guards the live table rather than pinning its values: every class must
+    have a speed and a peak factor, and speeds must be physically plausible."""
+    ff, pf = SPEEDS["free_flow_kmh"], SPEEDS["peak_factor"]
+    assert set(ff) == set(pf)
+    for cls, v in ff.items():
+        assert 5 <= v <= 120, f"{cls} at {v} km/h is not a plausible road speed"
+    for cls, v in pf.items():
+        assert 0 < v <= 1.0, f"{cls} peak factor {v} must be in (0, 1]"
+    assert ff["motorway"] > ff["primary"] > ff["residential"]
+    assert 0.0 <= SPEEDS.get("junction_delay_scale", 1.0) <= 1.0
+    assert 0 <= SPEEDS.get("trip_overhead_s", 0) <= 120
 
 
 def test_tau_is_integer_deciseconds_for_determinism():
@@ -77,7 +102,7 @@ def test_tau_is_integer_deciseconds_for_determinism():
 def test_maxspeed_tag_overrides_class_default():
     e = _edges(1, "residential", 100.0, maxspeed="60")
     svc = {"emergency_multiplier": {}, "junction_delay_factor": 0.0}
-    r = attribute_edges(e, np.zeros(1), speeds=SPEEDS, service=svc)
+    r = attribute_edges(e, np.zeros(1), speeds=FIXED, service=svc)
     assert r.speed_source[0] == "maxspeed"
     assert r.speed_kmh[0] == pytest.approx(60.0)
     assert r.tau_ds[0] == 60         # 100 m at 60 km/h = 6.0 s
@@ -118,16 +143,16 @@ def test_access_filter_excludes_low_bridges_for_fire_only():
 def test_junction_delay_ranks_signalised_above_plain_junction():
     deg = np.array([2, 3, 3])
     sig = np.array([False, False, True])
-    d = junction_delay(deg, sig, SPEEDS)
+    d = junction_delay(deg, sig, FIXED)
     assert list(d) == [0.0, 5.0, 12.0]
 
 
 def test_junction_delay_factor_halves_delay_for_emergency():
     e = _edges(1, "residential", 100.0)
     d = np.array([12.0])
-    plain = attribute_edges(e, d, speeds=SPEEDS,
+    plain = attribute_edges(e, d, speeds=FIXED,
                             service={"emergency_multiplier": {}, "junction_delay_factor": 1.0})
-    emerg = attribute_edges(e, d, speeds=SPEEDS,
+    emerg = attribute_edges(e, d, speeds=FIXED,
                             service={"emergency_multiplier": {}, "junction_delay_factor": 0.5})
     assert plain.tau_ds[0] - emerg.tau_ds[0] == 60   # 6.0 s saved
 
