@@ -1,0 +1,81 @@
+{
+  "by_band": {
+    "0-2km": {
+      "_mean_of_means": 313.1,
+      "bias_pct": 0.3987,
+      "bias_s": 104.1,
+      "loa_lower_s": -213.8,
+      "loa_upper_s": 422.0,
+      "mean_abs_pct_error": 0.8105,
+      "median_abs_pct_error": 0.6922,
+      "median_ratio_model_over_oracle": 1.5942,
+      "model_mean_s": 365.1,
+      "n": 49,
+      "oracle_mean_s": 261.0,
+      "p90_abs_pct_error": 1.0027
+    },
+    "10-20km": {
+      "_mean_of_means": 1842.7,
+      "bias_pct": 0.774,
+      "bias_s": 1028.3,
+      "loa_lower_s": 525.3,
+      "loa_upper_s": 1531.3,
+      "mean_abs_pct_error": 0.7851,
+      "median_abs_pct_error": 0.8088,
+      "median_ratio_model_over_oracle": 1.8088,
+      "model_mean_s": 2356.8,
+      "n": 50,
+      "oracle_mean_s": 1328.5,
+      "p90_abs_pct_error": 0.9835
+    },
+    "2-5km": {
+      "_mean_of_means": 661.4,
+      "bias_pct": 0.585,
+      "bias_s": 299.4,
+      "loa_lower_s": -104.3,
+      "loa_upper_s": 703.0,
+      "mean_abs_pct_error": 0.7077,
+      "median_abs_pct_error": 0.7293,
+      "median_ratio_model_over_oracle": 1.7293,
+      "model_mean_s": 811.1,
+      "n": 50,
+      "oracle_mean_s": 511.7,
+      "p90_abs_pct_error": 1.1176
+    },
+    "5-10km": {
+      "_mean_of_means": 1102.7,
+      "bias_pct": 0.804,
+      "bias_s": 632.3,
+      "loa_lower_s": 260.8,
+      "loa_upper_s": 1003.9,
+      "mean_abs_pct_error": 0.8273,
+      "median_abs_pct_error": 0.8218,
+      "median_ratio_model_over_oracle": 1.8218,
+      "model_mean_s": 1418.8,
+      "n": 50,
+      "oracle_mean_s": 786.5,
+      "p90_abs_pct_error": 1.1104
+    }
+  },
+  "gate": {
+    "medape_le_15pct": false,
+    "no_band_bias_over_5pct": false
+  },
+  "oracle": "OSRM public demo, car profile",
+  "overall": {
+    "_mean_of_means": 983.3,
+    "bias_pct": 0.7153,
+    "bias_s": 518.1,
+    "loa_lower_s": -279.6,
+    "loa_upper_s": 1315.8,
+    "mean_abs_pct_error": 0.7825,
+    "median_abs_pct_error": 0.7764,
+    "median_ratio_model_over_oracle": 1.769,
+    "model_mean_s": 1242.4,
+    "n": 199,
+    "oracle_mean_s": 724.3,
+    "p90_abs_pct_error": 1.0662
+  },
+  "seconds": 180.7,
+  "seed": 20260903
+}

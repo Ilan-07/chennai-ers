@@ -5,9 +5,17 @@ peak: false
 flood:
   return_period_years: 25
   source: chennai_flows
-  # ASSM: fording depth thresholds. Swept over {0.20, 0.30, 0.45} in E-09.
-  closure_depth_m: 0.30
-  wading_depth_m: 0.15
+  # The Chennai Flows layers classify inundation by CATEGORY (LOW/MODERATE/HIGH),
+  # not depth, so the link-state model is keyed to category directly rather than
+  # to an assumed fording depth. The separate inundation-points layer (192 points
+  # with measured depth) is retained to sanity-check this mapping, but it is far
+  # too sparse to drive it.
+  # ASSM: category -> link state. Ablated in E-10, swept in E-09.
+  category_field: CATEGORY
+  link_state:
+    HIGH: closed          # impassable
+    MODERATE: wading      # passable at reduced speed
+    LOW: passable         # no modelled effect
   wading_speed_factor: 0.35
   bridges_exempt: true
 weight: 0.10

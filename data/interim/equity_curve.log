@@ -1,1 +1,5 @@
   k=  5  worst-ward floor  0.00%  |  city coverage: efficiency 47.48%  equity 47.48%  cost  0.00 pts  (9s)
+  k= 10  worst-ward floor  0.00%  |  city coverage: efficiency 56.01%  equity 56.01%  cost  0.00 pts  (600s)
+  k= 20  worst-ward floor  0.00%  |  city coverage: efficiency 66.75%  equity 66.75%  cost  0.00 pts  (602s)
+  k= 30  worst-ward floor 14.17%  |  city coverage: efficiency 74.30%  equity 65.68%  cost  8.63 pts  (70s)
+  k= 45  worst-ward floor 20.77%  |  city coverage: efficiency 81.06%  equity 79.34%  cost  1.72 pts  (1s)

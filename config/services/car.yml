@@ -1,0 +1,13 @@
+service: car
+label: "Ordinary car (validation baseline only)"
+# Not a modelled service. This profile exists so our travel times can be compared
+# like-for-like against an OSRM car oracle: no emergency speed multiplier, no
+# junction-delay discount, no vehicle access filter.
+t_alarm_s: 0
+t_turnout_s: 0
+default_standard: SFAC-7
+emergency_multiplier: {}
+junction_delay_factor: 1.0
+access_filter: {}
+bands: [{t_s: 300, u: 1.0}]
+demand_surface: population

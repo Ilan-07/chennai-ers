@@ -38,7 +38,8 @@ for k in KS:
     # is 0, since then every siting ties and the solver returns an arbitrary one.
     # Re-solve for maximum coverage SUBJECT TO the achieved floor, so the
     # "equity" column is the best equitable solution rather than a random one.
-    if beta > 0:
+    # Floors below 1e-4 are solver noise, not policy. Treat them as zero.
+    if beta > 1e-4:
         p_lex = SitingProblem(coverage=M, precovered=precov, demand=demand, k=k,
                               ward_of=ward, land_feasible=feas, equity_floor=beta)
         lex = exact.solve(p_lex, time_limit_s=300)
@@ -51,7 +52,7 @@ for k in KS:
         mm_sites = eff.selected
 
     rows.append({"k": k, "maximin_worst_ward": round(beta, 4),
-                 "maximin_degenerate": bool(beta <= 0),
+                 "maximin_degenerate": bool(beta <= 1e-4),
                  "sites": list(mm_sites),
                  "maximin_city_coverage": round(mm_share, 4),
                  "efficiency_city_coverage": round(float(eff_share), 4),

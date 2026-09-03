@@ -22,46 +22,46 @@
       "arcs_excluded_by_access_filter": 0,
       "arcs_unreachable": 0,
       "arcs_usable": 250803,
-      "junction_delay_share": 0.1422,
+      "junction_delay_share": 0.0201,
       "maxspeed_tagged_share": 0.0161,
-      "mean_speed_kmh": 24.88,
+      "mean_speed_kmh": 31.61,
       "network_length_km": 23064.8,
-      "total_traversal_hours": 1214.0
+      "total_traversal_hours": 860.3
     },
     "ems/peak": {
       "arcs": 250803,
       "arcs_excluded_by_access_filter": 0,
       "arcs_unreachable": 0,
       "arcs_usable": 250803,
-      "junction_delay_share": 0.1068,
+      "junction_delay_share": 0.0146,
       "maxspeed_tagged_share": 0.0161,
-      "mean_speed_kmh": 16.88,
+      "mean_speed_kmh": 21.3,
       "network_length_km": 23064.8,
-      "total_traversal_hours": 1615.7
+      "total_traversal_hours": 1180.3
     },
     "fire/dry": {
       "arcs": 250803,
       "arcs_excluded_by_access_filter": 22,
       "arcs_unreachable": 0,
       "arcs_usable": 250781,
-      "junction_delay_share": 0.1228,
+      "junction_delay_share": 0.017,
       "maxspeed_tagged_share": 0.0161,
-      "mean_speed_kmh": 21.03,
+      "mean_speed_kmh": 26.7,
       "network_length_km": 23064.8,
-      "total_traversal_hours": 1405.4
+      "total_traversal_hours": 1016.7
     },
     "fire/peak": {
       "arcs": 250803,
       "arcs_excluded_by_access_filter": 22,
       "arcs_unreachable": 0,
       "arcs_usable": 250781,
-      "junction_delay_share": 0.0918,
+      "junction_delay_share": 0.0124,
       "maxspeed_tagged_share": 0.0161,
-      "mean_speed_kmh": 14.27,
+      "mean_speed_kmh": 18.0,
       "network_length_km": 23064.8,
-      "total_traversal_hours": 1881.1
+      "total_traversal_hours": 1395.5
     }
   },
-  "seconds": 1.6,
+  "seconds": 3.3,
   "signalised_nodes": 193
 }

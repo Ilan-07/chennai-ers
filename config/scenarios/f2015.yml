@@ -5,8 +5,9 @@ peak: false
 flood:
   return_period_years: null
   source: nrsc_unosat_2015
-  closure_depth_m: 0.30
-  wading_depth_m: 0.15
+  # 2015 is represented by observed flooding/inundation POINTS, not a modelled
+  # extent, so it is buffered rather than category-classified. Reported only.
+  point_buffer_m: 250
   wading_speed_factor: 0.35
   bridges_exempt: true
 # Weight 0.0 — REPORTED, NEVER OPTIMISED AGAINST.

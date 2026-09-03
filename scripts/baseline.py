@@ -12,6 +12,8 @@ from ers.routing.csr import build_graph, snap, travel_times, to_seconds
 from ers.io.stations import qa_report, ResolvedStation
 
 t0 = time.time()
+SPEEDS = yaml.safe_load(open("config/speeds/base.yml"))
+OVERHEAD = float(SPEEDS.get("trip_overhead_s", 0.0))  # calibrated per-trip constant
 cfg = yaml.safe_load(open("config/city/chennai.yml"))
 METRIC = cfg["crs"]["metric"]
 
@@ -49,7 +51,7 @@ for svc in ("ems", "fire"):
     best_ds = d.min(axis=0)
     # Access time: centroid-to-network walk-equivalent, 1.2 m/s (ASSM A-14).
     access_s = c_dist / 1.2
-    best_s = to_seconds(best_ds) + access_s
+    best_s = to_seconds(best_ds) + access_s + OVERHEAD
 
     pop = cells["population"].to_numpy()
     reach = np.isfinite(best_s)
@@ -101,8 +103,26 @@ from ers.geo.graph import connectivity_report
 conn = connectivity_report(build_graph(nodes, edges, "tau_ds_ems").csr)
 print("\nconnectivity:", json.dumps(conn))
 
+# GATE: does the calibrated model reproduce the operator's own published figure?
+ems = results["ems"]
+modelled_response_s = ems["mean_travel_s"] + ems["t_alarm_s"] + ems["t_turnout_s"]
+tgt = SPEEDS["calibration_target"]
+in_range = tgt["value_min_s"] <= modelled_response_s <= tgt["value_max_s"]
+print(f"\n--- calibration check vs 108/EMRI published Chennai metro response ---")
+print(f"  modelled EMS response = {ems['mean_travel_s']:.0f}s travel + {ems['t_alarm_s']}s alarm"
+      f" + {ems['t_turnout_s']}s turnout = {modelled_response_s:.0f}s ({modelled_response_s/60:.2f} min)")
+print(f"  published range        = {tgt['value_min_s']}-{tgt['value_max_s']}s "
+      f"({tgt['value_min_s']/60:.1f}-{tgt['value_max_s']/60:.1f} min)")
+print(f"  GATE (within published range): {in_range}")
+
 report = {
     "connectivity": conn,
+    "calibration_check": {
+        "modelled_response_s": round(modelled_response_s, 1),
+        "published_min_s": tgt["value_min_s"], "published_max_s": tgt["value_max_s"],
+        "within_published_range": bool(in_range),
+        "source": tgt["source"],
+    },
     "PROVISIONAL": not gate["passes_publish_gate"],
     "provisional_reason": f"{len(gate['survey_required'])} of {gate['total']} stations "
                           f"are geocoder positions, not surveyed",

@@ -1,5 +1,12 @@
 {
   "PROVISIONAL": true,
+  "calibration_check": {
+    "modelled_response_s": 445.6,
+    "published_max_s": 450,
+    "published_min_s": 426,
+    "source": "108 / EMRI published Chennai metro mean response",
+    "within_published_range": true
+  },
   "cells": 3838,
   "connectivity": {
     "largest_strong_nodes": 88096,
@@ -18,13 +25,13 @@
     "ems": {
       "cell_snap_max_m": 1208.2,
       "cells_snap_over_300m": 488,
-      "coverage_share": 0.3628,
-      "max_travel_s": 2130.2,
-      "mean_travel_s": 407.1,
-      "p50_travel_s": 353.9,
-      "p90_travel_s": 719.4,
-      "population_covered": 2766392,
-      "population_outside": 4858877,
+      "coverage_share": 0.5568,
+      "max_travel_s": 1811.5,
+      "mean_travel_s": 325.6,
+      "p50_travel_s": 283.1,
+      "p90_travel_s": 538.1,
+      "population_covered": 4246070,
+      "population_outside": 3379199,
       "standard": "SFAC-7",
       "station_snap_max_m": 249.3,
       "t_alarm_s": 60,
@@ -32,36 +39,36 @@
       "t_turnout_s": 60,
       "threshold_ladder": {
         "NFPA-travel-4min": {
-          "coverage_share": 0.2229,
+          "coverage_share": 0.3252,
           "travel_budget_s": 240
         },
         "SFAC-5": {
-          "coverage_share": 0.1072,
+          "coverage_share": 0.1357,
           "travel_budget_s": 180
         },
         "SFAC-7": {
-          "coverage_share": 0.3628,
+          "coverage_share": 0.5568,
           "travel_budget_s": 300
         },
         "deck-8min": {
-          "coverage_share": 0.5126,
+          "coverage_share": 0.7074,
           "travel_budget_s": 360
         }
       },
       "travel_budget_s": 300,
-      "unreachable_cells": 51,
-      "unreachable_population": 35492
+      "unreachable_cells": 0,
+      "unreachable_population": 0
     },
     "fire": {
       "cell_snap_max_m": 1208.2,
       "cells_snap_over_300m": 488,
-      "coverage_share": 0.2449,
-      "max_travel_s": 1943.0,
-      "mean_travel_s": 444.5,
-      "p50_travel_s": 395.4,
-      "p90_travel_s": 785.6,
-      "population_covered": 1867331,
-      "population_outside": 5757938,
+      "coverage_share": 0.3675,
+      "max_travel_s": 1966.9,
+      "mean_travel_s": 364.6,
+      "p50_travel_s": 318.2,
+      "p90_travel_s": 613.2,
+      "population_covered": 2801943,
+      "population_outside": 4823326,
       "standard": "SFAC-7",
       "station_snap_max_m": 249.3,
       "t_alarm_s": 60,
@@ -69,28 +76,28 @@
       "t_turnout_s": 80,
       "threshold_ladder": {
         "NFPA-travel-4min": {
-          "coverage_share": 0.1648,
+          "coverage_share": 0.2414,
           "travel_budget_s": 240
         },
         "SFAC-5": {
-          "coverage_share": 0.0555,
+          "coverage_share": 0.0564,
           "travel_budget_s": 160
         },
         "SFAC-7": {
-          "coverage_share": 0.2449,
+          "coverage_share": 0.3675,
           "travel_budget_s": 280
         },
         "deck-8min": {
-          "coverage_share": 0.3686,
+          "coverage_share": 0.5672,
           "travel_budget_s": 340
         }
       },
       "travel_budget_s": 280,
-      "unreachable_cells": 156,
-      "unreachable_population": 164953
+      "unreachable_cells": 7,
+      "unreachable_population": 292
     }
   },
-  "seconds": 1.6,
+  "seconds": 2.7,
   "station_gate": {
     "by_confidence": {
       "locality": 29,

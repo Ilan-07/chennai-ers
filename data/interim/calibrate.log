@@ -1,0 +1,23 @@
+grid search over (speed_scale, junction_scale):
+  speed x1.0  junction x1.00  MedAPE  77.6%  bias  +71.5%  ratio 1.769
+  speed x1.0  junction x0.50  MedAPE  53.8%  bias  +48.7%  ratio 1.530
+  speed x1.0  junction x0.25  MedAPE  41.6%  bias  +36.7%  ratio 1.396
+  speed x1.0  junction x0.00  MedAPE  27.8%  bias  +24.4%  ratio 1.246
+  speed x1.2  junction x1.00  MedAPE  58.0%  bias  +52.2%  ratio 1.576
+  speed x1.2  junction x0.50  MedAPE  33.7%  bias  +29.6%  ratio 1.323
+  speed x1.2  junction x0.25  MedAPE  22.1%  bias  +17.7%  ratio 1.198
+  speed x1.2  junction x0.00  MedAPE  11.7%  bias   +5.5%  ratio 1.065
+  speed x1.4  junction x1.00  MedAPE  43.9%  bias  +38.1%  ratio 1.423
+  speed x1.4  junction x0.50  MedAPE  20.9%  bias  +15.7%  ratio 1.180
+  speed x1.4  junction x0.25  MedAPE  10.0%  bias   +3.8%  ratio 1.060
+  speed x1.4  junction x0.00  MedAPE  10.5%  bias   -8.5%  ratio 0.928
+  speed x1.6  junction x1.00  MedAPE  33.0%  bias  +27.4%  ratio 1.312
+  speed x1.6  junction x0.50  MedAPE  12.5%  bias   +5.1%  ratio 1.069
+  speed x1.6  junction x0.25  MedAPE   8.5%  bias   -6.7%  ratio 0.947
+  speed x1.6  junction x0.00  MedAPE  18.5%  bias  -19.2%  ratio 0.818
+  speed x1.8  junction x1.00  MedAPE  24.2%  bias  +19.0%  ratio 1.224
+  speed x1.8  junction x0.50  MedAPE   8.2%  bias   -3.3%  ratio 0.985
+  speed x1.8  junction x0.25  MedAPE  13.7%  bias  -15.1%  ratio 0.864
+  speed x1.8  junction x0.00  MedAPE  27.0%  bias  -27.6%  ratio 0.731
+
+best: speed x1.8  junction x0.5  MedAPE 8.2%  bias -3.3%

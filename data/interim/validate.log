@@ -1,0 +1,20 @@
+sampled 199 OD pairs across 4 bands
+querying OSRM oracle ...
+    50/199
+    100/199
+    150/199
+
+=== agreement vs OSRM car ===
+  n 199  MedAPE 77.6%  P90APE 106.6%
+  median ratio model/oracle 1.769  bias +71.5%
+  limits of agreement -280s .. +1316s
+
+  by distance band:
+    0-2km     n= 49  MedAPE  69.2%  ratio 1.594  bias  +39.9%
+    10-20km   n= 50  MedAPE  80.9%  ratio 1.809  bias  +77.4%
+    2-5km     n= 50  MedAPE  72.9%  ratio 1.729  bias  +58.5%
+    5-10km    n= 50  MedAPE  82.2%  ratio 1.822  bias  +80.4%
+
+  GATE  MedAPE<=15%: False  no band bias>5%: False
+
+done 181s

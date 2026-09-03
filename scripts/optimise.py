@@ -13,6 +13,8 @@ from ers.optimise import greedy, exact
 
 SVC = sys.argv[1] if len(sys.argv) > 1 else "ems"
 t0 = time.time()
+SPEEDS = yaml.safe_load(open("config/speeds/base.yml"))
+OVERHEAD = float(SPEEDS.get("trip_overhead_s", 0.0))  # calibrated per-trip constant
 cfg = yaml.safe_load(open("config/city/chennai.yml")); METRIC = cfg["crs"]["metric"]
 scfg = yaml.safe_load(open(f"config/services/{SVC}.yml"))
 std = yaml.safe_load(open("config/standards/sfac.yml"))
@@ -39,14 +41,14 @@ print(f"[{SVC}] budget {budget_s}s | {len(cells):,} cells | {len(cand):,} candid
 
 t1 = time.time()
 d_st = travel_times(g, s_idx, c_idx, cutoff_ds=cutoff)
-pre_s = to_seconds(d_st.min(axis=0)) + access_s
+pre_s = to_seconds(d_st.min(axis=0)) + access_s + OVERHEAD
 precovered = np.isfinite(pre_s) & (pre_s <= budget_s)
 print(f"  existing-station sweep: {time.time()-t1:.1f}s -> precovered {precovered.sum():,} cells",
       flush=True)
 
 t1 = time.time()
 d_c = travel_times(g, j_idx, c_idx, cutoff_ds=cutoff)          # |J| x |I|
-cand_s = to_seconds(d_c) + access_s[None, :]
+cand_s = to_seconds(d_c) + access_s[None, :] + OVERHEAD
 M = sparse.csr_matrix((cand_s <= budget_s).T)                  # |I| x |J|
 print(f"  candidate sweep: {time.time()-t1:.1f}s -> matrix {M.shape} nnz {M.nnz:,} "
       f"({100*M.nnz/(M.shape[0]*M.shape[1]):.2f}% dense)", flush=True)

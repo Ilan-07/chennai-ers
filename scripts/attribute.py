@@ -14,7 +14,7 @@ print(f"loaded {len(nodes):,} nodes  {len(edges):,} edges  ({time.time()-t0:.1f}
 nodes = nodes.set_index("osmid")
 deg = nodes["street_count"].fillna(0).to_numpy()
 sig = (nodes["highway"].fillna("").astype(str).str.contains("traffic_signals")).to_numpy()
-node_delay = junction_delay(deg, sig, speeds)
+node_delay = junction_delay(deg, sig, speeds) * float(speeds.get("junction_delay_scale", 1.0))
 delay_by_node = pd.Series(node_delay, index=nodes.index)
 head_delay = edges["v"].map(delay_by_node).fillna(0.0).to_numpy()
 

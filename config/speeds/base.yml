@@ -3,8 +3,20 @@
 # Calibrated in build step 07 against an OSRM oracle and the published
 # 108/EMRI Chennai metro response figure. Swept +/-20% in experiment E-09.
 # Where an OSM `maxspeed` tag exists it OVERRIDES the class default.
-status: ASSM
-calibrated: false
+status: CALIBRATED
+calibrated: true
+calibration:
+  date: 2026-09-03
+  oracle: "OSRM public demo server, car profile"
+  sample: "199 stratified station->cell OD pairs, 4 distance bands, seed 20260903"
+  result: {median_abs_pct_error: 0.091, bias_pct: 0.021, worst_band_bias_pct: 0.050}
+  gate: {medape_le_15pct: true, band_bias_le_5pct: "at the boundary (5.0%)"}
+  note: >
+    The pre-calibration table was 1.77x SLOWER than the oracle uniformly across
+    every distance band. A scalar rescale fitted well (x1.8, MedAPE 8.2%) but was
+    rejected as a fitting artifact: it implies 144 km/h motorways and 36 km/h
+    residential streets. The table below is shaped like the OSRM car profile
+    instead, so every line is defensible on its own terms.
 calibration_target:
   source: "108 / EMRI published Chennai metro mean response"
   value_min_s: 426      # 7.1 min
@@ -12,20 +24,20 @@ calibration_target:
   tolerance_s: 60
 
 free_flow_kmh:
-  motorway: 80
+  motorway: 90
   motorway_link: 45
-  trunk: 60
+  trunk: 85
   trunk_link: 40
-  primary: 45
-  primary_link: 35
-  secondary: 35
-  secondary_link: 30
-  tertiary: 30
-  tertiary_link: 25
-  unclassified: 22
-  residential: 20
-  living_street: 12
-  service: 12
+  primary: 65
+  primary_link: 30
+  secondary: 55
+  secondary_link: 25
+  tertiary: 40
+  tertiary_link: 20
+  unclassified: 25
+  residential: 25
+  living_street: 10
+  service: 15
 
 # Multiplicative congestion factor applied in the `peak` scenario.
 peak_factor:
@@ -49,3 +61,21 @@ junction_delay_s:
   signalised: 12          # node tagged highway=traffic_signals
   unsignalised_degree_ge_3: 5
   other: 0
+
+# CALIBRATION FINDING (build step 07).
+# The junction term fits to a scale of 0.10 — about 1.2 s at a signal and 0.5 s
+# at a junction, i.e. effectively nothing. The reason is that 86,439 of 88,143
+# nodes have street_count >= 3, so OSMnx's node set is not a proxy for real
+# intersections; it reflects how OSM ways happen to be split. Charging a per-node
+# delay was charging a delay per topology artifact, and it made the model 1.77x
+# slower than the OSRM oracle. The work the junction term was doing is done
+# properly by trip_overhead_s below.
+# This term is a candidate for outright removal in the E-10 ablation.
+junction_delay_scale: 0.10
+
+# Fixed per-trip overhead, seconds, added to every origin-destination travel time.
+# Represents acceleration from rest and the final approach, and absorbs the turn
+# penalties the oracle applies that this model does not.
+# NOT the same as turnout time, which is modelled separately per service and
+# must not be double-counted with this.
+trip_overhead_s: 45
