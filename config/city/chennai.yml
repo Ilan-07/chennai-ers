@@ -1,0 +1,32 @@
+# City profile — Greater Chennai Corporation
+# Evidence classes: FACT (verified against a primary source) | ASSM (engineering assumption)
+name: Chennai
+authority: Greater Chennai Corporation
+
+# FACT: GCC administrative area after the 2011 expansion.
+# Census 2011 population within the expanded 426 km2 limits = 6,748,026.
+area_km2: 426
+wards: 200
+zones: 15
+census_2011_population: 6748026
+
+# ASSM: single city-wide growth factor from Census 2011 to the modelling year.
+# Must be swept in experiment E-10. Replace with ward-level CMDA projections if obtainable.
+growth_factor: 1.13
+growth_factor_status: ASSM
+
+crs:
+  storage: EPSG:4326      # lat/lon, for storage and web delivery
+  metric:  EPSG:32644     # UTM zone 44N, for ALL length/area/distance operations
+
+# Graph is built on a buffer beyond the boundary to avoid edge effects,
+# then demand is clipped to GCC. The graph is NOT clipped.
+graph_buffer_km: 5
+
+# Bounding box of the GCC area plus buffer (south, west, north, east)
+bbox: [12.80, 80.05, 13.30, 80.40]
+
+demand:
+  tessellation: h3
+  resolution: 9           # ~0.105 km2 per cell -> ~4050 cells over GCC
+  sensitivity_resolution: 10

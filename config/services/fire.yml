@@ -1,0 +1,36 @@
+service: fire
+label: Fire engine (TNFRS)
+
+t_alarm_s: 60
+t_turnout_s: 80                # FACT: NFPA 1710 turnout for fire suppression
+offsets_status: ASSM           # the alarm component remains an assumption
+
+default_standard: SFAC-7
+
+# Fire appliances are heavy and slow on narrow local streets.
+emergency_multiplier:
+  motorway: 1.00
+  trunk: 1.00
+  primary: 1.00
+  secondary: 0.95
+  tertiary: 0.90
+  unclassified: 0.85
+  residential: 0.85
+  living_street: 0.75
+  service: 0.75
+junction_delay_factor: 0.5
+
+# Exclude arcs the appliance physically cannot use, WHERE TAGGED.
+# Report how many arcs the filter actually touched — coverage of these tags in
+# Chennai is sparse, and implying the constraint is doing work when it is not
+# would be dishonest.
+access_filter:
+  max_height_m_below: 3.5
+  width_m_below: 3.0
+
+bands:
+  - {t_s: 240, u: 1.0}         # NFPA first-engine travel, as the top band
+  - {t_s: 420, u: 0.7}
+  - {t_s: 600, u: 0.3}
+
+demand_surface: landuse_weighted

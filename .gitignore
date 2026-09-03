@@ -1,0 +1,21 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Caches and bulk upstream data — reproducible, never edited by hand.
+data/raw/osm_cache/
+data/raw/ghsl/
+data/raw/*.pbf
+data/raw/ind_ppp_*.tif
+
+# Large derived graph tables (~24 MB). Regenerate with:
+#   sh scripts/fetch_ghsl.sh && python scripts/build_graph.py   (~17 min)
+data/interim/graph_nodes.parquet
+data/interim/graph_edges.parquet
+data/interim/graph_consolidated.pkl
+data/interim/arc_times.parquet
+
+data/processed/
+data/tiles/
+*.npz

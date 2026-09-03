@@ -1,0 +1,70 @@
+[
+  {
+    "bytes": 2533,
+    "fetched_at": "2026-09-03T08:04:21+00:00",
+    "id": 1,
+    "licence": "Government of Tamil Nadu / GCC public listing",
+    "local_path": "data/reference/tnfrs_stations_gcc.csv",
+    "notes": {
+      "closes_finding": "F-01",
+      "divisions": 4,
+      "stations": 33
+    },
+    "sha256": "ca2820117c35878685e95b1f685cf84d03a12b40ce72fd3ac5baade61da216d7",
+    "source": "gcc_fire_stations",
+    "uri": "https://chennaicorporation.gov.in/gcc/about-GCC/about-chennai/fire-station/",
+    "version_label": "2026-09-03"
+  },
+  {
+    "bytes": 3652,
+    "fetched_at": "2026-09-03T08:04:21+00:00",
+    "id": 2,
+    "licence": "ODbL (OpenStreetMap contributors)",
+    "local_path": "data/raw/osm_stations_overpass.json",
+    "notes": {
+      "query": "amenity=fire_station + emergency=ambulance_station over GCC bbox"
+    },
+    "sha256": "f9edfd6ec360086aa91f068e2f0b0f835a038a535f1389025c08a8cab02c57ab",
+    "source": "osm_stations_overpass",
+    "uri": "https://overpass-api.de/api/interpreter",
+    "version_label": "2026-09-03"
+  },
+  {
+    "bytes": 6866,
+    "fetched_at": "2026-09-03T08:16:30+00:00",
+    "id": 3,
+    "licence": "derived",
+    "local_path": "data/interim/stations_resolved.csv",
+    "notes": {},
+    "sha256": "274b7f6464596c5130483342ee73245e5811f5333e890a89428d186848c43c05",
+    "source": "stations_resolved",
+    "uri": "derived://ers.io.stations.resolve",
+    "version_label": "2026-09-03"
+  },
+  {
+    "bytes": 482832,
+    "fetched_at": "2026-09-03T09:56:11+00:00",
+    "id": 4,
+    "licence": "CC-BY 4.0 (EC JRC GHSL)",
+    "local_path": "data/raw/ghspop_chennai_2020_100m.tif",
+    "notes": {
+      "product": "GHS_POP_E2020_R2023A_54009_100 tile R8_C26"
+    },
+    "sha256": "9537294c83ec22b98ad16c3105b1c2dfaac5db3b7d5e0ce44858bf0a514dd7fc",
+    "source": "ghspop_chennai_clip",
+    "uri": "https://jeodpp.jrc.ec.europa.eu/ftp/jrc-opendata/GHSL/GHS_POP_GLOBE_R2023A/",
+    "version_label": "2026-09-03"
+  },
+  {
+    "bytes": 350534,
+    "fetched_at": "2026-09-03T09:56:11+00:00",
+    "id": 5,
+    "licence": "derived",
+    "local_path": "data/interim/demand_cells.parquet",
+    "notes": {},
+    "sha256": "a19e49015854e5fedc4ad96e17186d463eb00eaea1f86b11d31c87c0028fc3ad",
+    "source": "demand_cells",
+    "uri": "derived://ers.geo.demand",
+    "version_label": "2026-09-03"
+  }
+]

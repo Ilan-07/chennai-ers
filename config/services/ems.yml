@@ -1,0 +1,36 @@
+service: ems
+label: Ambulance (108 EMS)
+
+# ASSM: alarm handling and turnout offsets. The isochrone budget is derived as
+#   t_travel_budget = t_target - t_alarm - t_turnout        (Finding F-03)
+t_alarm_s: 60
+t_turnout_s: 60
+offsets_status: ASSM
+
+default_standard: SFAC-7
+
+# RSCH-bounded: the lights-and-siren literature reports a weighted-average saving
+# of ~159 s (2.7 min) over a whole response, range ~0.7-3.8 min. That is consistent
+# with a 10-20% speed gain on arterials and ~nothing on residential streets.
+# DO NOT EXCEED THIS ENVELOPE during calibration.
+emergency_multiplier:
+  motorway: 1.20
+  trunk: 1.20
+  primary: 1.15
+  secondary: 1.15
+  tertiary: 1.10
+  unclassified: 1.00
+  residential: 1.00
+  living_street: 1.00
+  service: 1.00
+junction_delay_factor: 0.5     # emergency vehicles clear junctions faster
+
+access_filter: {}              # ambulances have no height/width restriction
+
+# Graded coverage bands (formulation E). u = utility credited at that band.
+bands:
+  - {t_s: 300, u: 1.0}
+  - {t_s: 420, u: 0.7}
+  - {t_s: 600, u: 0.3}
+
+demand_surface: age_weighted

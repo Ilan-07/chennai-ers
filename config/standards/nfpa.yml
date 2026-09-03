@@ -1,0 +1,16 @@
+# FACT: NFPA 1710. Comparator only — not binding in India.
+# The interval is DECOMPOSED, which is the point: an isochrone is a TRAVEL-time
+# object and must not be compared against a whole-response target. (Finding F-03)
+name: NFPA-1710
+authority: National Fire Protection Association
+
+turnout_s: 80                      # fire suppression turnout
+first_engine_travel_s: 240         # 4 min travel, first arriving engine
+full_alarm_travel_s: 480           # 8 min travel, initial full alarm assignment
+high_rise_full_alarm_travel_s: 610
+percentile: 90                     # "not less than 90% of dispatched incidents"
+
+presets:
+  NFPA-first-engine:
+    t_travel_s: 240
+    label: "NFPA 1710 first-engine travel"

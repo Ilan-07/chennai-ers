@@ -1,0 +1,43 @@
+downloading (cached) bbox W80.05 S12.8 E80.4 N13.3 ...
+raw: 149,126 nodes 371,309 edges (57s)
+consolidating intersections (tolerance 12 m) ...
+consolidated: 88,143 nodes 250,803 edges (998s)
+checkpointed -> data/interim/graph_consolidated.pkl
+{
+  "bbox": [
+    12.8,
+    80.05,
+    13.3,
+    80.4
+  ],
+  "crs_metric": "EPSG:32644",
+  "raw_nodes": 149126,
+  "raw_edges": 371309,
+  "consolidated_nodes": 88143,
+  "consolidated_edges": 250803,
+  "components": 1,
+  "largest_wcc_nodes": 88143,
+  "stranded_nodes": 0,
+  "largest_wcc_node_share": 1.0,
+  "final_nodes": 88143,
+  "final_edges": 250803,
+  "network_length_km": 23064.8,
+  "build_seconds": 1009.5,
+  "encoded_list_columns": {
+    "node_list_columns": [
+      "osmid_original"
+    ],
+    "edge_list_columns": [
+      "osmid",
+      "highway",
+      "name",
+      "reversed",
+      "lanes",
+      "ref",
+      "access",
+      "maxspeed",
+      "width"
+    ]
+  }
+}
+wrote graph_nodes/edges.parquet + graph_schema.json

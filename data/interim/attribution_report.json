@@ -1,0 +1,67 @@
+{
+  "composition_km": {
+    "living_street": 344.8,
+    "motorway": 121.8,
+    "motorway_link": 14.8,
+    "primary": 1048.9,
+    "primary_link": 33.0,
+    "residential": 16965.6,
+    "secondary": 774.1,
+    "secondary_link": 4.4,
+    "tertiary": 2562.5,
+    "tertiary_link": 7.2,
+    "trunk": 237.4,
+    "trunk_link": 27.7,
+    "unclassified": 922.8
+  },
+  "maxspeed_tagged_share": 0.0161,
+  "nodes_degree_ge_3": 86439,
+  "scenarios": {
+    "ems/dry": {
+      "arcs": 250803,
+      "arcs_excluded_by_access_filter": 0,
+      "arcs_unreachable": 0,
+      "arcs_usable": 250803,
+      "junction_delay_share": 0.1422,
+      "maxspeed_tagged_share": 0.0161,
+      "mean_speed_kmh": 24.88,
+      "network_length_km": 23064.8,
+      "total_traversal_hours": 1214.0
+    },
+    "ems/peak": {
+      "arcs": 250803,
+      "arcs_excluded_by_access_filter": 0,
+      "arcs_unreachable": 0,
+      "arcs_usable": 250803,
+      "junction_delay_share": 0.1068,
+      "maxspeed_tagged_share": 0.0161,
+      "mean_speed_kmh": 16.88,
+      "network_length_km": 23064.8,
+      "total_traversal_hours": 1615.7
+    },
+    "fire/dry": {
+      "arcs": 250803,
+      "arcs_excluded_by_access_filter": 22,
+      "arcs_unreachable": 0,
+      "arcs_usable": 250781,
+      "junction_delay_share": 0.1228,
+      "maxspeed_tagged_share": 0.0161,
+      "mean_speed_kmh": 21.03,
+      "network_length_km": 23064.8,
+      "total_traversal_hours": 1405.4
+    },
+    "fire/peak": {
+      "arcs": 250803,
+      "arcs_excluded_by_access_filter": 22,
+      "arcs_unreachable": 0,
+      "arcs_usable": 250781,
+      "junction_delay_share": 0.0918,
+      "maxspeed_tagged_share": 0.0161,
+      "mean_speed_kmh": 14.27,
+      "network_length_km": 23064.8,
+      "total_traversal_hours": 1881.1
+    }
+  },
+  "seconds": 1.6,
+  "signalised_nodes": 193
+}

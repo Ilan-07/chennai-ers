@@ -1,0 +1,13 @@
+id: flood25
+label: "25-year return period flood"
+network_state: flood
+peak: false
+flood:
+  return_period_years: 25
+  source: chennai_flows
+  # ASSM: fording depth thresholds. Swept over {0.20, 0.30, 0.45} in E-09.
+  closure_depth_m: 0.30
+  wading_depth_m: 0.15
+  wading_speed_factor: 0.35
+  bridges_exempt: true
+weight: 0.10

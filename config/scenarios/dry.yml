@@ -1,0 +1,6 @@
+id: dry
+label: "Dry day, free flow"
+network_state: dry
+peak: false
+flood: null
+weight: 0.70          # ASSM: planning judgement, not an estimated frequency. Swept in E-10.

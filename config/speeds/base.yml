@@ -1,0 +1,51 @@
+# ASSM: free-flow speed by OSM highway class, km/h.
+# EVERY VALUE HERE IS A HYPOTHESIS, NOT A MEASUREMENT.
+# Calibrated in build step 07 against an OSRM oracle and the published
+# 108/EMRI Chennai metro response figure. Swept +/-20% in experiment E-09.
+# Where an OSM `maxspeed` tag exists it OVERRIDES the class default.
+status: ASSM
+calibrated: false
+calibration_target:
+  source: "108 / EMRI published Chennai metro mean response"
+  value_min_s: 426      # 7.1 min
+  value_max_s: 450      # 7.5 min
+  tolerance_s: 60
+
+free_flow_kmh:
+  motorway: 80
+  motorway_link: 45
+  trunk: 60
+  trunk_link: 40
+  primary: 45
+  primary_link: 35
+  secondary: 35
+  secondary_link: 30
+  tertiary: 30
+  tertiary_link: 25
+  unclassified: 22
+  residential: 20
+  living_street: 12
+  service: 12
+
+# Multiplicative congestion factor applied in the `peak` scenario.
+peak_factor:
+  motorway: 0.65
+  motorway_link: 0.65
+  trunk: 0.55
+  trunk_link: 0.55
+  primary: 0.50
+  primary_link: 0.50
+  secondary: 0.50
+  secondary_link: 0.50
+  tertiary: 0.60
+  tertiary_link: 0.60
+  unclassified: 0.70
+  residential: 0.75
+  living_street: 0.85
+  service: 0.85
+
+# Node delay in seconds, applied at the HEAD node of each arc.
+junction_delay_s:
+  signalised: 12          # node tagged highway=traffic_signals
+  unsignalised_degree_ge_3: 5
+  other: 0

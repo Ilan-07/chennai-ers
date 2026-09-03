@@ -1,0 +1,15 @@
+id: f2015
+label: "November-December 2015 flood replay"
+network_state: flood
+peak: false
+flood:
+  return_period_years: null
+  source: nrsc_unosat_2015
+  closure_depth_m: 0.30
+  wading_depth_m: 0.15
+  wading_speed_factor: 0.35
+  bridges_exempt: true
+# Weight 0.0 — REPORTED, NEVER OPTIMISED AGAINST.
+# An extreme historical event is not a design basis. (Finding F-09)
+weight: 0.00
+report_only: true

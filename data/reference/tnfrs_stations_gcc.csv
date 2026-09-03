@@ -1,0 +1,34 @@
+station_name,division,service,phone,mobile,source
+Esplanade,Chennai City North,fire,101,9445086012,gcc_fire_station_page
+Korukkupet,Chennai City North,fire,044-25544662,9445086019,gcc_fire_station_page
+Royapuram,Chennai City North,fire,101,9445086021,gcc_fire_station_page
+Secretariat,Chennai City North,fire,101,9445086022,gcc_fire_station_page
+Sembium,Chennai City North,fire,044-25370101,9445086023,gcc_fire_station_page
+Tondiarpet,Chennai City North,fire,101,9445086024,gcc_fire_station_page
+V.O.C Nagar,Chennai City North,fire,101,9445086025,gcc_fire_station_page
+Vyasarpadi,Chennai City North,fire,044-25520101,9445086026,gcc_fire_station_page
+Washermanpet,Chennai City North,fire,101,9445086027,gcc_fire_station_page
+Ashok Nagar,Chennai City South,fire,101,9445086046,gcc_fire_station_page
+Guindy,Chennai City South,fire,101,9445086050,gcc_fire_station_page
+Mylapore,Chennai City South,fire,101,9445086047,gcc_fire_station_page
+Raj Bhavan,Chennai City South,fire,044-22354835,9445086051,gcc_fire_station_page
+Saidapet,Chennai City South,fire,101,9445086049,gcc_fire_station_page
+Teynampet,Chennai City South,fire,101,9445086048,gcc_fire_station_page
+Thiruvanmiyur,Chennai City South,fire,044-24401213,9445086052,gcc_fire_station_page
+Tambaram,Chennai City South,fire,044-22382204,9445086053,gcc_fire_station_page
+T Nagar,Chennai City South,fire,101,9445086045,gcc_fire_station_page
+Kilpauk,Chennai City Central,fire,044-26428544,9445086063,gcc_fire_station_page
+Vepery,Chennai City Central,fire,,9445086069,gcc_fire_station_page
+Egmore,Chennai City Central,fire,,9445086065,gcc_fire_station_page
+Triplicane,Chennai City Central,fire,,9445086068,gcc_fire_station_page
+Koyambedu,Chennai City Central,fire,044-20479261,9445086067,gcc_fire_station_page
+J.J. Nagar,Chennai City Central,fire,044-26563629,9445086066,gcc_fire_station_page
+Villivakkam,Chennai City Central,fire,044-26174718,9445086070,gcc_fire_station_page
+Ambattur,Chennai Suburban,fire,044-26251601,9445086064,gcc_fire_station_page
+Avadi,Chennai Suburban,fire,044-26555202,9445086159,gcc_fire_station_page
+Athipattu,Chennai Suburban,fire,044-27950080,9445086013,gcc_fire_station_page
+Ennore,Chennai Suburban,fire,044-25750633,9445086018,gcc_fire_station_page
+Manali,Chennai Suburban,fire,044-25941147,9445086020,gcc_fire_station_page
+Thiruvottiyur,Chennai Suburban,fire,044-25990596,,gcc_fire_station_page
+Poonamallee,Chennai Suburban,fire,9144-26274700,9445086165,gcc_fire_station_page
+Redhills,Chennai Suburban,fire,9144-26418468,9445086166,gcc_fire_station_page

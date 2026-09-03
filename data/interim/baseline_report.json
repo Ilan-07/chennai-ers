@@ -1,0 +1,105 @@
+{
+  "PROVISIONAL": true,
+  "cells": 3838,
+  "connectivity": {
+    "largest_strong_nodes": 88096,
+    "largest_strong_share": 0.99947,
+    "largest_weak_nodes": 88143,
+    "largest_weak_share": 1.0,
+    "nodes": 88143,
+    "nodes_outside_largest_scc": 47,
+    "scc_singletons": 27,
+    "strong_components": 33,
+    "weak_components": 1
+  },
+  "demand_total": 7625269,
+  "provisional_reason": "29 of 33 stations are geocoder positions, not surveyed",
+  "results": {
+    "ems": {
+      "cell_snap_max_m": 1208.2,
+      "cells_snap_over_300m": 488,
+      "coverage_share": 0.3628,
+      "max_travel_s": 2130.2,
+      "mean_travel_s": 407.1,
+      "p50_travel_s": 353.9,
+      "p90_travel_s": 719.4,
+      "population_covered": 2766392,
+      "population_outside": 4858877,
+      "standard": "SFAC-7",
+      "station_snap_max_m": 249.3,
+      "t_alarm_s": 60,
+      "t_target_s": 420,
+      "t_turnout_s": 60,
+      "threshold_ladder": {
+        "NFPA-travel-4min": {
+          "coverage_share": 0.2229,
+          "travel_budget_s": 240
+        },
+        "SFAC-5": {
+          "coverage_share": 0.1072,
+          "travel_budget_s": 180
+        },
+        "SFAC-7": {
+          "coverage_share": 0.3628,
+          "travel_budget_s": 300
+        },
+        "deck-8min": {
+          "coverage_share": 0.5126,
+          "travel_budget_s": 360
+        }
+      },
+      "travel_budget_s": 300,
+      "unreachable_cells": 51,
+      "unreachable_population": 35492
+    },
+    "fire": {
+      "cell_snap_max_m": 1208.2,
+      "cells_snap_over_300m": 488,
+      "coverage_share": 0.2449,
+      "max_travel_s": 1943.0,
+      "mean_travel_s": 444.5,
+      "p50_travel_s": 395.4,
+      "p90_travel_s": 785.6,
+      "population_covered": 1867331,
+      "population_outside": 5757938,
+      "standard": "SFAC-7",
+      "station_snap_max_m": 249.3,
+      "t_alarm_s": 60,
+      "t_target_s": 420,
+      "t_turnout_s": 80,
+      "threshold_ladder": {
+        "NFPA-travel-4min": {
+          "coverage_share": 0.1648,
+          "travel_budget_s": 240
+        },
+        "SFAC-5": {
+          "coverage_share": 0.0555,
+          "travel_budget_s": 160
+        },
+        "SFAC-7": {
+          "coverage_share": 0.2449,
+          "travel_budget_s": 280
+        },
+        "deck-8min": {
+          "coverage_share": 0.3686,
+          "travel_budget_s": 340
+        }
+      },
+      "travel_budget_s": 280,
+      "unreachable_cells": 156,
+      "unreachable_population": 164953
+    }
+  },
+  "seconds": 1.6,
+  "station_gate": {
+    "by_confidence": {
+      "locality": 29,
+      "osm": 4
+    },
+    "passes_publish_gate": false,
+    "runnable": true,
+    "total": 33,
+    "unresolved": [],
+    "with_coordinates": 33
+  }
+}

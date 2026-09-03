@@ -1,0 +1,12 @@
+id: flood100
+label: "100-year return period flood"
+network_state: flood
+peak: false
+flood:
+  return_period_years: 100
+  source: chennai_flows
+  closure_depth_m: 0.30
+  wading_depth_m: 0.15
+  wading_speed_factor: 0.35
+  bridges_exempt: true
+weight: 0.05

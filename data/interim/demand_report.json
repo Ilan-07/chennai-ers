@@ -1,0 +1,31 @@
+{
+  "aggregation": {
+    "cells_with_population": 3658,
+    "mass_balance_ok": true,
+    "populated_pixels": 104529,
+    "population_outside_study_area": 3957539.2,
+    "population_placed_in_cells": 7224730.8,
+    "raster_crs": "ESRI:54009",
+    "raster_population": 11182270.0
+  },
+  "cells": 3838,
+  "cells_with_zero_population": 180,
+  "join": {
+    "cells_without_ward": 0
+  },
+  "population_total": 7625269.4,
+  "reconciliation": {
+    "scale_factor_max": 1.0554,
+    "scale_factor_median": 1.0554,
+    "scale_factor_min": 1.0554,
+    "target_total": 7625269.4,
+    "total_after": 7625269.4,
+    "total_before": 7224730.8,
+    "wards_missing_cells": [],
+    "wards_reconciled": 200,
+    "wards_with_no_modelled_population": []
+  },
+  "reconciliation_status": "PLACEHOLDER city-total scaling; needs Census 2011 ward totals",
+  "resolution": 9,
+  "seconds": 0.9
+}

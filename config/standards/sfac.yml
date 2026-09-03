@@ -1,0 +1,21 @@
+# FACT: Standing Fire Advisory Council (Ministry of Home Affairs, India) norms.
+# Primary normative frame for this project — SFAC is the standard that actually
+# binds an Indian municipal authority. NFPA 1710 is carried only as a comparator.
+name: SFAC
+authority: Standing Fire Advisory Council, MHA, Government of India
+
+spatial_norm:
+  urban_km2_per_station: 10
+  rural_km2_per_station: 50
+  # Derived for GCC: 426 / 10 = 42.6 -> ~43 stations implied by the norm
+  # against the 33 that exist. This deficit is quantified by the LSCP solve.
+
+presets:
+  SFAC-5:
+    t_target_s: 300       # 5 min, the strict urban expectation
+    label: "SFAC urban 5 min"
+  SFAC-7:
+    t_target_s: 420       # 7 min, the revised achievable urban figure
+    label: "SFAC urban 7 min"
+
+percentile: 90            # report at P90; the mean is reported alongside, never alone

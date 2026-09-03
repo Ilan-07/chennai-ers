@@ -1,0 +1,16 @@
+{
+  "edge_list_columns": [
+    "osmid",
+    "highway",
+    "name",
+    "reversed",
+    "lanes",
+    "ref",
+    "access",
+    "maxspeed",
+    "width"
+  ],
+  "node_list_columns": [
+    "osmid_original"
+  ]
+}

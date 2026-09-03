@@ -1,0 +1,37 @@
+{
+  "bbox": [
+    12.8,
+    80.05,
+    13.3,
+    80.4
+  ],
+  "build_seconds": 1009.5,
+  "components": 1,
+  "consolidated_edges": 250803,
+  "consolidated_nodes": 88143,
+  "crs_metric": "EPSG:32644",
+  "encoded_list_columns": {
+    "edge_list_columns": [
+      "osmid",
+      "highway",
+      "name",
+      "reversed",
+      "lanes",
+      "ref",
+      "access",
+      "maxspeed",
+      "width"
+    ],
+    "node_list_columns": [
+      "osmid_original"
+    ]
+  },
+  "final_edges": 250803,
+  "final_nodes": 88143,
+  "largest_wcc_node_share": 1.0,
+  "largest_wcc_nodes": 88143,
+  "network_length_km": 23064.8,
+  "raw_edges": 371309,
+  "raw_nodes": 149126,
+  "stranded_nodes": 0
+}

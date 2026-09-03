@@ -1,0 +1,50 @@
+{
+  "by_confidence": {
+    "locality": 29,
+    "osm": 4
+  },
+  "by_plausibility": {
+    "boundary_centroid": 2,
+    "ok": 4,
+    "road_feature": 5,
+    "settlement_centroid": 12,
+    "transit_feature": 6,
+    "unrelated_feature": 4
+  },
+  "passes_publish_gate": false,
+  "runnable": true,
+  "survey_required": [
+    "Korukkupet",
+    "Royapuram",
+    "Secretariat",
+    "Sembium",
+    "Tondiarpet",
+    "V.O.C Nagar",
+    "Vyasarpadi",
+    "Ashok Nagar",
+    "Guindy",
+    "Mylapore",
+    "Raj Bhavan",
+    "Saidapet",
+    "Thiruvanmiyur",
+    "Tambaram",
+    "T Nagar",
+    "Kilpauk",
+    "Vepery",
+    "Triplicane",
+    "Koyambedu",
+    "J.J. Nagar",
+    "Villivakkam",
+    "Ambattur",
+    "Avadi",
+    "Athipattu",
+    "Ennore",
+    "Manali",
+    "Thiruvottiyur",
+    "Poonamallee",
+    "Redhills"
+  ],
+  "total": 33,
+  "unresolved": [],
+  "with_coordinates": 33
+}
