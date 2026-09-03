@@ -66,5 +66,17 @@
     "source": "demand_cells",
     "uri": "derived://ers.geo.demand",
     "version_label": "2026-09-03"
+  },
+  {
+    "bytes": 1675889,
+    "fetched_at": "2026-09-03T12:25:08+00:00",
+    "id": 6,
+    "licence": "ODbL",
+    "local_path": "data/raw/osm_parcels_overpass.json",
+    "notes": {},
+    "sha256": "6922a9e36e81c3297a547e9d6643b8be308a28f48b8bfe8615125dfd661252f1",
+    "source": "osm_parcels",
+    "uri": "https://overpass-api.de/api/interpreter",
+    "version_label": "2026-09-03"
   }
 ]

@@ -1,0 +1,36 @@
+{
+  "candidates": {
+    "after_thinning": 948,
+    "feasible_share": 0.3713,
+    "land_class_counts": {
+      "amenity=bus_station": 3,
+      "amenity=college": 24,
+      "amenity=community_centre": 5,
+      "amenity=hospital": 13,
+      "amenity=school": 88,
+      "amenity=townhall": 2,
+      "amenity=university": 5,
+      "landuse=brownfield": 2,
+      "landuse=industrial": 112,
+      "landuse=military": 3,
+      "landuse=recreation_ground": 12,
+      "leisure=park": 67,
+      "leisure=playground": 1,
+      "leisure=sports_centre": 6,
+      "office=government": 9
+    },
+    "land_feasible": 352,
+    "land_infeasible": 596,
+    "min_separation_m": 800.0,
+    "parcel_snap_m": 400.0,
+    "proposed_on_arterial": 19834
+  },
+  "parcels": {
+    "kept": 1828,
+    "min_area_m2": 800.0,
+    "parsed": 2090,
+    "skipped_below_min_area": 262,
+    "skipped_unbuildable_geometry": 0
+  },
+  "seconds": 2.0
+}

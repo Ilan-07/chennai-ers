@@ -1,0 +1,227 @@
+{
+  "PROVISIONAL": true,
+  "baseline_share": 0.2449,
+  "candidates": 948,
+  "candidates_land_feasible": 352,
+  "cells": 3838,
+  "matrix_nnz": 8611,
+  "runs": [
+    {
+      "candidate_set": "land-feasible",
+      "exact_s": 0.767,
+      "exact_share": 0.2671,
+      "greedy_gap_vs_exact": 0.0,
+      "greedy_s": 0.0021,
+      "greedy_share": 0.2671,
+      "k": 1,
+      "proven_gap": 0.0,
+      "sites": [
+        93
+      ],
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "land-feasible",
+      "exact_s": 0.079,
+      "exact_share": 0.286,
+      "greedy_gap_vs_exact": -0.0,
+      "greedy_s": 0.0004,
+      "greedy_share": 0.286,
+      "k": 2,
+      "proven_gap": 0.0,
+      "sites": [
+        32,
+        93
+      ],
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "land-feasible",
+      "exact_s": 0.081,
+      "exact_share": 0.3028,
+      "greedy_gap_vs_exact": 0.0,
+      "greedy_s": 0.0004,
+      "greedy_share": 0.3028,
+      "k": 3,
+      "proven_gap": 0.0,
+      "sites": [
+        32,
+        93,
+        195
+      ],
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "land-feasible",
+      "exact_s": 0.116,
+      "exact_share": 0.3363,
+      "greedy_gap_vs_exact": 0.0,
+      "greedy_s": 0.0006,
+      "greedy_share": 0.3363,
+      "k": 5,
+      "proven_gap": 0.0,
+      "sites": [
+        2,
+        32,
+        93,
+        195,
+        240
+      ],
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "land-feasible",
+      "exact_s": 0.083,
+      "exact_share": 0.378,
+      "greedy_gap_vs_exact": 0.0003,
+      "greedy_s": 0.0008,
+      "greedy_share": 0.3779,
+      "k": 8,
+      "proven_gap": 0.0,
+      "sites": [
+        2,
+        25,
+        32,
+        50,
+        63,
+        94,
+        195,
+        240
+      ],
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "land-feasible",
+      "exact_s": 0.084,
+      "exact_share": 0.4033,
+      "greedy_gap_vs_exact": 0.00044,
+      "greedy_s": 0.001,
+      "greedy_share": 0.4032,
+      "k": 10,
+      "proven_gap": 0.0,
+      "sites": [
+        2,
+        15,
+        32,
+        50,
+        63,
+        86,
+        92,
+        94,
+        195,
+        240
+      ],
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "unconstrained",
+      "exact_s": 0.927,
+      "exact_share": 0.2671,
+      "greedy_gap_vs_exact": 0.0,
+      "greedy_s": 0.0002,
+      "greedy_share": 0.2671,
+      "k": 1,
+      "proven_gap": 0.0,
+      "sites": [
+        93
+      ],
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "unconstrained",
+      "exact_s": 0.126,
+      "exact_share": 0.286,
+      "greedy_gap_vs_exact": -0.0,
+      "greedy_s": 0.0004,
+      "greedy_share": 0.286,
+      "k": 2,
+      "proven_gap": 0.0,
+      "sites": [
+        32,
+        93
+      ],
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "unconstrained",
+      "exact_s": 0.125,
+      "exact_share": 0.3028,
+      "greedy_gap_vs_exact": 0.0,
+      "greedy_s": 0.0005,
+      "greedy_share": 0.3028,
+      "k": 3,
+      "proven_gap": 0.0,
+      "sites": [
+        32,
+        93,
+        195
+      ],
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "unconstrained",
+      "exact_s": 0.126,
+      "exact_share": 0.3363,
+      "greedy_gap_vs_exact": 0.0,
+      "greedy_s": 0.0006,
+      "greedy_share": 0.3363,
+      "k": 5,
+      "proven_gap": 0.0,
+      "sites": [
+        2,
+        32,
+        93,
+        195,
+        240
+      ],
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "unconstrained",
+      "exact_s": 0.131,
+      "exact_share": 0.378,
+      "greedy_gap_vs_exact": 0.0003,
+      "greedy_s": 0.0009,
+      "greedy_share": 0.3779,
+      "k": 8,
+      "proven_gap": 0.0,
+      "sites": [
+        2,
+        25,
+        32,
+        50,
+        63,
+        94,
+        195,
+        240
+      ],
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "unconstrained",
+      "exact_s": 0.133,
+      "exact_share": 0.4033,
+      "greedy_gap_vs_exact": 0.00044,
+      "greedy_s": 0.001,
+      "greedy_share": 0.4032,
+      "k": 10,
+      "proven_gap": 0.0,
+      "sites": [
+        2,
+        15,
+        32,
+        50,
+        63,
+        86,
+        92,
+        94,
+        195,
+        240
+      ],
+      "status": "Optimal"
+    }
+  ],
+  "seconds": 4.9,
+  "service": "fire",
+  "travel_budget_s": 280
+}
