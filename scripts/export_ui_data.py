@@ -52,10 +52,37 @@ out = {
               "lon": [round(float(v), 5) for v in cc.x],
               "pop": [int(round(float(v))) for v in cells["population"]],
               "ward": [int(v) for v in cells["ward_id"]]},
-    "stations": [{"name": r.station_name, "lat": round(r.lat, 5), "lon": round(r.lon, 5),
-                  "conf": r.geocode_confidence} for r in st.itertuples()],
+    "stations": [],
     "services": {},
 }
+
+# Identity state per station. 33 markers that all look equally solid would
+# overstate what is known: 12 are confirmed against the official TNFRS number,
+# 4 were OSM-matched from the start, 1 is provably not a municipal station, and
+# the rest are assumed. The map should say which is which.
+try:
+    look = pd.read_csv("data/interim/stations_gmaps_lookup.csv").set_index("station_name")
+except FileNotFoundError:
+    look = pd.DataFrame()
+STATE = {"tnfrs_landline": "confirmed", "tnfrs_cug_mobile": "confirmed",
+         "osm_proximity": "corroborated", "contested_unresolved": "unresolved"}
+for r in st.itertuples():
+    idc = ""
+    if len(look) and r.station_name in look.index:
+        v = look.loc[r.station_name, "identity_confirmed_by"]
+        idc = v if isinstance(v, str) else ""
+    state = ("osm_source" if r.geocode_confidence == "osm"
+             else STATE.get(idc, "assumed"))
+    out["stations"].append({"name": r.station_name, "lat": round(r.lat, 5),
+                            "lon": round(r.lon, 5), "conf": r.geocode_confidence,
+                            "state": state, "via": idc})
+from collections import Counter
+print("station identity states:", dict(Counter(x["state"] for x in out["stations"])))
+
+# Ward labels, so the worst-served list names real wards.
+wards = gpd.read_parquet("data/interim/wards.parquet")
+out["wards"] = {int(r.ward_id): {"no": int(r.ward_no), "zone": str(r.zone_name)}
+                for r in wards.itertuples()}
 
 for svc in ("ems", "fire"):
     ctx = load_service(svc)
@@ -118,6 +145,30 @@ for svc in ("ems", "fire"):
               flush=True)
     rec["candidates"] = [{"lat": round(float(p.y), 5), "lon": round(float(p.x), 5)}
                          for p in cand.to_crs("EPSG:4326").geometry.iloc[keep]]
+
+    # E-11g bracket: the tight interval assumes every Google POI names the right
+    # station. Fifteen of the 29 are unchecked, so both ends travel with the number.
+    unc = {}
+    for tag, f in (("assumed_correct", f"data/interim/sensitivity_stations_{svc}.json"),
+                   ("if_unconfirmed_wrong", f"data/interim/sensitivity_mixed_{svc}.json")):
+        try:
+            d = json.load(open(f))
+            unc[tag] = {"spread_points": d["coverage"]["p5_p95_spread_points"],
+                        "p5": d["coverage"]["p5"], "p95": d["coverage"]["p95"],
+                        "draws": d["draws"]}
+        except FileNotFoundError:
+            pass
+    rec["uncertainty"] = unc
+
+    # Exact MCLP results, so the browser's greedy can be shown against a proven optimum.
+    try:
+        o = json.load(open(f"data/interim/optimise_{svc}.json"))
+        rec["exact"] = {str(r["k"]): {"share": r["exact_share"],
+                                      "greedy": r["greedy_share"],
+                                      "proven": r["proven_optimal"]}
+                        for r in o["runs"] if r["candidate_set"] == "land-feasible"}
+    except (FileNotFoundError, KeyError):
+        rec["exact"] = {}
     out["services"][svc] = rec
 
 path = "data/interim/ui_data.json"

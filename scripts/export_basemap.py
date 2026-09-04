@@ -68,7 +68,7 @@ sec = hw.str.contains("secondary", case=False, na=False)
 for g in edges.loc[art, "geometry"]:
     bm["arterial"] += lines(g, 0.00025)
 for g in edges.loc[sec, "geometry"]:
-    bm["secondary"] += lines(g, 0.00035)
+    bm["secondary"] += lines(g, 0.0007)
 
 # water: rivers and canals as lines, lakes and tanks as polygons
 try:
@@ -80,8 +80,14 @@ try:
             continue
         pts = [[round(p["lon"], R), round(p["lat"], R)] for p in geom]
         if t.get("natural") == "water":
+            # Keep water bodies large enough to read at city scale. 1,207 tanks
+            # cost 0.52 MB -- half the basemap -- for features a few pixels wide,
+            # and the page blanks for 25 s while the browser parses them.
             if len(pts) > 3:
-                bm["water"].append(pts)
+                xs = [q[0] for q in pts]; ys = [q[1] for q in pts]
+                span = max(max(xs) - min(xs), max(ys) - min(ys))
+                if span >= 0.0022 or t.get("name"):     # ~250 m, or named
+                    bm["water"].append(pts)
         else:
             bm["waterline"].append(pts)
 except FileNotFoundError:
