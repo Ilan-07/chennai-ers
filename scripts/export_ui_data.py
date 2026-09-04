@@ -126,14 +126,32 @@ for svc in ("ems", "fire"):
                             metric_crs=metric, flood_states=states, flood_stats=fstats)
         e2 = edges[["u", "v", "key"]].copy(); e2["tau"] = net.tau_ds
         g = build_graph(nodes, e2, "tau")
-        best = cov.response_seconds(g, s_idx, c_idx, c_snap,
-                                    overhead_s=ctx.overhead_s, cutoff_ds=None)
+        # Per-STATION response, not just the minimum. "Which stations can reach
+        # here fastest" is the question a dispatcher asks, and a min() cannot
+        # answer it -- it knows the best time but not who provides it.
+        dmat = travel_times(g, s_idx, c_idx, cutoff_ds=None)          # |S| x |I|
+        allresp = to_seconds(dmat) + (c_snap / cov.ACCESS_SPEED_MS)[None, :] + ctx.overhead_s
+        best = allresp.min(axis=0)
         # CEIL, not round. Rounding put four cells sitting at 300.0-300.5 s on the
         # covered side of a 300 s budget -- 10,398 people, and a console reading
         # 61.9% against the pipeline's 61.75%. A view that disagrees with the
         # report it is drawn from is the F-13 failure in a new costume.
         rec["scenarios"][sid]["resp"] = [(-1 if not np.isfinite(v) else int(np.ceil(v)))
                                          for v in best]
+        # Top-3 responders per cell, as flat arrays. Flat integer arrays cost a
+        # fraction of nested ones in JSON, and three is enough to answer "who
+        # comes, and who backs them up".
+        TOPK = 3
+        order = np.argsort(allresp, axis=0)[:TOPK, :]                 # TOPK x |I|
+        who, when = [], []
+        for c in range(allresp.shape[1]):
+            for r in range(TOPK):
+                si = int(order[r, c]); v = allresp[si, c]
+                who.append(si if np.isfinite(v) else -1)
+                when.append(int(np.ceil(v)) if np.isfinite(v) else -1)
+        rec["scenarios"][sid]["top_who"] = who
+        rec["scenarios"][sid]["top_s"] = when
+        rec["scenarios"][sid]["topk"] = TOPK
         # GATE: coverage computed from the quantised array must equal the exact one.
         pop = cells["population"].to_numpy()
         q = np.array(rec["scenarios"][sid]["resp"], dtype="float64")
