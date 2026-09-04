@@ -5,6 +5,13 @@
 const D=JSON.parse(document.getElementById("d-model").textContent);
 D.base=JSON.parse(document.getElementById("d-base").textContent);
 const $=id=>document.getElementById(id);
+// Errors thrown inside an event handler are invisible from outside a
+// cross-origin frame. Put them where they can be read.
+window.addEventListener("error",ev=>{
+  const h=document.getElementById("modeHint");
+  if(h)h.innerHTML='<b style="color:var(--red)">'+(ev.message||"error")+'</b><br>'+
+    '<span style="font-size:10px">'+((ev.filename||"").split("/").pop()||"")+':'+(ev.lineno||"")+'</span>';
+});
 const SC_LABEL={dry:"Dry day, free flow",peak:"Peak hour congestion",flood5:"5-year flood",
   flood25:"25-year flood",flood100:"100-year flood",f2015:"2015 flood replay"};
 const BANDS=[["within","--green"],["+2 min","--yellow"],["+2-7 min","--amber"],["beyond","--red"]];
@@ -25,7 +32,7 @@ const budget=()=>Math.round(thrMin*60 - S().t_alarm_s - S().t_turnout_s);
 // pixels, so alignment is exact by construction rather than by calibration.
 let Z=1, PANX=0, PANY=0, BASE=1, BX=0, BY=0;
 let W=0,H=0,dpr=1,PX=null,PY=null;
-let SEL=[], MODE='pan';   // selected cells; pan vs select-area
+let SEL=[], SCOPE='ward', SELKIND=null, SELKEY=null;   // selection by administrative area
 const layers={flood:true,cov:true,st:true,sites:true,zones:true,base:true};
 const RM=D.raster;
 const mercY=lat=>Math.log(Math.tan(Math.PI/4+lat*Math.PI/360));
@@ -145,6 +152,22 @@ function draw(){
   x.strokeStyle=cssv("--coast"); x.lineWidth=Math.max(1.2,1.6*Z);
   path(x,B.outline,true); x.stroke();
 
+  if(SELKIND==="ward"&&D.base.ward_rings[String(SELKEY)]){
+    path(x,D.base.ward_rings[String(SELKEY)],true);
+    x.strokeStyle=cssv("--accent"); x.lineWidth=2.2; x.stroke();
+  } else if(SELKIND==="zone"){
+    const wm=D.base.ward_meta||{};
+    for(const [zid,rg] of Object.entries(D.base.zone_rings||{})){
+      const any=Object.entries(wm).find(([,v])=>v.zone===SELKEY);
+      if(!any)break;
+    }
+    // a zone's outline is the union of its wards' rings
+    const rs=[];
+    for(const [wid,v] of Object.entries(wm)) if(v.zone===SELKEY)
+      rs.push(...(D.base.ward_rings[wid]||[]));
+    path(x,rs,true); x.strokeStyle=cssv("--accent"); x.lineWidth=1.6; x.stroke();
+  }
+
   if(SEL.length){
     const hx=hexPx(S_);
     x.strokeStyle=cssv("--accent"); x.lineWidth=1.1; x.beginPath();
@@ -206,7 +229,7 @@ cvEl().addEventListener("wheel",e=>{
 let rect=null;
 cvEl().addEventListener("mousedown",e=>{
   const r=cvEl().getBoundingClientRect();
-  if(e.shiftKey||MODE==="sel"){ rect={x0:e.clientX-r.left,y0:e.clientY-r.top,x1:0,y1:0};
+  if(e.shiftKey){ rect={x0:e.clientX-r.left,y0:e.clientY-r.top,x1:0,y1:0};
     $("selbox").style.display="block"; return; }
   drag={x:e.clientX,y:e.clientY,px:PANX,py:PANY,moved:false};
   cvEl().style.cursor="grabbing";});
@@ -220,7 +243,12 @@ window.addEventListener("mouseup",e=>{
   if(drag&&!drag.moved){
     const r=cvEl().getBoundingClientRect();
     const i=nearestCell(e.clientX-r.left,e.clientY-r.top);
-    SEL = i>=0?[i]:[]; paintSel();
+    if(i<0){SEL=[];SELKIND=null;paintSel();}
+    else if(SCOPE==="cell") selectArea("cell",i);
+    else if(SCOPE==="zone"){
+      const wm=D.base.ward_meta||{}, z=(wm[String(C.ward[i])]||{}).zone;
+      z?selectArea("zone",z):selectArea("cell",i);
+    } else selectArea("ward",C.ward[i]);
   }
   drag=null; cvEl().style.cursor="crosshair";});
 window.addEventListener("mousemove",e=>{
@@ -290,6 +318,37 @@ function idLegend(){
     `<span class="idrow"><i style="background:${IDCOL[k]}"></i>${IDTXT[k]}<span class="c">${c[k]}</span></span>`).join("");
 }
 
+// Cells indexed by the administrative areas a planner actually works in.
+const BY_WARD={}, BY_ZONE={};
+(()=>{
+  const wm=D.base.ward_meta||{};
+  for(let i=0;i<N;i++){
+    const w=String(C.ward[i]); (BY_WARD[w]||(BY_WARD[w]=[])).push(i);
+    const z=D.wards&&D.wards[C.ward[i]]?D.wards[C.ward[i]].zone:(wm[w]||{}).zone;
+    if(z)(BY_ZONE[z]||(BY_ZONE[z]=[])).push(i);
+  }
+})();
+
+function selectArea(kind,key){
+  SELKIND=kind; SELKEY=key;
+  SEL = kind==="ward" ? (BY_WARD[String(key)]||[])
+      : kind==="zone" ? (BY_ZONE[key]||[])
+      : [key];
+  paintSel();
+}
+
+function buildPicker(){
+  const wm=D.base.ward_meta||{};
+  const zones=[...new Set(Object.values(wm).map(v=>v.zone))].sort();
+  const wards=Object.keys(wm).map(k=>({id:+k,...wm[k]})).sort((a,b)=>a.no-b.no);
+  $("areaPick").innerHTML='<option value="">Jump to a ward or zone…</option>'+
+    '<optgroup label="Zones">'+zones.map(z=>
+      `<option value="zone:${z}">${z.replace(/_/g," ")}</option>`).join("")+'</optgroup>'+
+    '<optgroup label="Wards">'+wards.map(w=>
+      `<option value="ward:${w.id}">Ward ${w.no} · ${w.zone.replace(/_/g," ")}</option>`).join("")+
+    '</optgroup>';
+}
+
 // ---------- who responds here
 // The map knows the best response time everywhere; a min() cannot say WHO
 // provides it. top_who / top_s carry the three fastest stations per cell, so a
@@ -320,14 +379,17 @@ function paintSel(){
   if(!SEL.length){P.style.display="none"; draw(); return;}
   P.style.display="block";
   const s=selectionStats(), sd=SS(), K=sd.topk||3;
-  $("selTitle").textContent = SEL.length===1
-    ? `Ward ${C.ward[SEL[0]]} · one cell` : `${SEL.length} cells selected`;
+  const wm=D.base.ward_meta||{};
+  $("selTitle").textContent =
+    SELKIND==="ward" ? `Ward ${(wm[String(SELKEY)]||{}).no ?? SELKEY} · ${((wm[String(SELKEY)]||{}).zone||"").replace(/_/g," ")}`
+  : SELKIND==="zone" ? `${String(SELKEY).replace(/_/g," ")} zone`
+  : `Ward ${C.ward[SEL[0]]} · one cell`;
   $("selSum").innerHTML=`${Math.round(s.pop).toLocaleString()} residents · `+
     `<b style="color:var(--${s.cov/Math.max(s.pop,1)>=.6?"green":"amber"})">`+
     `${(100*s.cov/Math.max(s.pop,1)).toFixed(0)}%</b> reached within ${thrMin} min`+
     (s.unreach>0?` · <b style="color:var(--red)">${Math.round(s.unreach).toLocaleString()} with no route</b>`:"");
 
-  if(SEL.length===1){
+  if(SELKIND==="cell"&&SEL.length===1){
     // one cell: the actual ranked queue for that spot
     const i=SEL[0];
     $("respBody").innerHTML=Array.from({length:K},(_,r)=>{
@@ -348,7 +410,7 @@ function paintSel(){
       ||`<tr><td colspan="3" style="color:var(--red)">No station reaches any of this area.</td></tr>`;
     $("selHint").innerHTML=`Each station is credited with the residents for whom it is the `+
       `FASTEST responder, and the time shown is its population-weighted mean over those. `+
-      `Shift-drag to reselect, or click a single cell for its full queue.`;
+      `Switch scope to Cell for a single hex and its full queue.`;
   }
   draw();
 }
@@ -411,8 +473,15 @@ function wardTable(){
     .sort((x,y)=>x[1]-y[1]).slice(0,8);
   $("wardBody").innerHTML=rows.map(([w,sh,p])=>{
     const meta=(D.wards||{})[w]||{};
-    return `<tr><td class="n">${meta.no??w}</td><td>${(meta.zone||"—").replace(/^Zone \d+\s*/,"")}</td>`+
+    return `<tr data-ward="${w}" style="cursor:pointer"><td class="n">${meta.no??w}</td>`+
+      `<td>${(meta.zone||"—").replace(/^Zone \d+\s*/,"").replace(/_/g," ")}</td>`+
       `<td style="text-align:right" class="${sh<=0.0001?"bad":""}">${(sh*100).toFixed(0)}%</td></tr>`;}).join("");
+  document.querySelectorAll("[data-ward]").forEach(tr=>tr.onclick=()=>{
+    SCOPE="ward";
+    document.querySelectorAll("[data-scope]").forEach(o=>
+      o.setAttribute("aria-pressed",o.dataset.scope==="ward"));
+    $("areaPick").value="ward:"+tr.dataset.ward;
+    selectArea("ward", +tr.dataset.ward);});
 }
 
 function compare(){
@@ -468,15 +537,26 @@ $("clear").onclick=()=>{picked=[]; paintSites(); draw(); paint();};
   $(id).onclick=e=>{layers[key]=!layers[key];
     e.currentTarget.setAttribute("aria-pressed",layers[key]); draw();};});
 $("reset").onclick=()=>{Z=1;PANX=0;PANY=0;recalc();draw();};
-$("selClear").onclick=()=>{SEL=[];paintSel();};
-$("modeSeg").onclick=e=>{const b=e.target.closest("[data-mode]"); if(!b)return;
-  MODE=b.dataset.mode;
-  document.querySelectorAll("[data-mode]").forEach(o=>
-    o.setAttribute("aria-pressed",o.dataset.mode===MODE));
-  cvEl().style.cursor = MODE==="sel"?"crosshair":"grab";
-  $("modeHint").innerHTML = MODE==="sel"
-    ? "Drag a box over any neighbourhood. Each station is then credited with the residents it reaches <b>fastest</b>."
-    : "Click any cell for the stations that reach it, ranked. Switch to <b>Select area</b> to drag a box over a neighbourhood.";};
+$("selClear").onclick=()=>{SEL=[];SELKIND=null;$("areaPick").value="";paintSel();};
+$("scopeSeg").onclick=e=>{const b=e.target.closest("[data-scope]"); if(!b)return;
+  SCOPE=b.dataset.scope;
+  document.querySelectorAll("[data-scope]").forEach(o=>
+    o.setAttribute("aria-pressed",o.dataset.scope===SCOPE));
+  $("modeHint").innerHTML = SCOPE==="cell"
+    ? "Click a single demand cell for its full responder queue."
+    : `Click the map to select the ${SCOPE} under the pointer, or pick one below. `+
+      "Emergency planning is done by ward and zone, so those are the units here.";
+  if(SEL.length&&SELKIND&&SELKIND!==SCOPE&&SCOPE!=="cell"){
+    const i=SEL[0], wm=D.base.ward_meta||{};
+    SCOPE==="ward"?selectArea("ward",C.ward[i]):selectArea("zone",(wm[String(C.ward[i])]||{}).zone);
+  }};
+$("areaPick").onchange=e=>{
+  const v=e.target.value; if(!v){SEL=[];SELKIND=null;paintSel();return;}
+  const [kind,key]=v.split(":");
+  SCOPE=kind;
+  document.querySelectorAll("[data-scope]").forEach(o=>
+    o.setAttribute("aria-pressed",o.dataset.scope===kind));
+  selectArea(kind, kind==="ward"?+key:key);};
 $("copy").onclick=async()=>{
   const s=stats();
   const payload={generated:new Date().toISOString(),PROVISIONAL:true,
@@ -519,7 +599,7 @@ $("attrib").textContent=D.raster.attribution;
 // invisible from outside. Surface it on the page itself rather than leaving a
 // blank screen that looks like a slow load.
 try{
-  idLegend(); buildScen(); fit(); paint(); paintSites();
+  idLegend(); buildPicker(); buildScen(); fit(); paint(); paintSites();
   const _b=$("boot"); if(_b)_b.remove();
   loadRaster(()=>draw());
 }catch(err){

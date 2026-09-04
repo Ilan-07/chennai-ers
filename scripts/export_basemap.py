@@ -52,13 +52,22 @@ bm = {"outline": [], "wards": [], "zones": [], "zone_labels": [],
 
 # GCC outline — the coastline comes free with it
 bm["outline"] = rings(wards.union_all(), 0.0004)
-# ward outlines are legible on the raster; the zone boundaries are what the
-# equity analysis actually groups by, so only those are drawn.
-pass
+
+# Boundaries keyed by IDENTITY, not as an anonymous pile of rings. A planner
+# selects "ward 42" or "zone Ambattur", never a rectangle drawn by hand, so the
+# console needs to know which ring is which.
+bm["ward_rings"] = {}
+bm["ward_meta"] = {}
+for r in wards.itertuples():
+    bm["ward_rings"][str(int(r.ward_id))] = rings(r.geometry, 0.0004)
+    bm["ward_meta"][str(int(r.ward_id))] = {"no": int(r.ward_no), "zone": str(r.zone_name)}
+bm["zone_rings"] = {}
 for r in zones.itertuples():
+    bm["zone_rings"][str(int(r.zone_no))] = rings(r.geometry, 0.0003)
     bm["zones"] += rings(r.geometry, 0.0003)
     c = r.geometry.representative_point()
-    bm["zone_labels"].append({"n": str(r.zone_name), "lat": round(c.y, R), "lon": round(c.x, R)})
+    bm["zone_labels"].append({"n": str(r.zone_name), "no": int(r.zone_no),
+                              "lat": round(c.y, R), "lon": round(c.x, R)})
 
 # Roads, water and ward fills now come from the imported raster basemap
 # (scripts/export_basemap_raster.py), which is real cartography rather than a

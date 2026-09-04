@@ -23,12 +23,17 @@
 
     <div class="grp">
       <span class="lbl">Map mode</span>
-      <div class="seg" id="modeSeg">
-        <button data-mode="pan" aria-pressed="true">Pan &amp; inspect</button>
-        <button data-mode="sel" aria-pressed="false">Select area</button>
+      <div class="seg" id="scopeSeg">
+        <button data-scope="ward" aria-pressed="true">Ward</button>
+        <button data-scope="zone" aria-pressed="false">Zone</button>
+        <button data-scope="cell" aria-pressed="false">Cell</button>
       </div>
-      <p class="hint" id="modeHint">Click any cell for the stations that reach it, ranked.
-        Switch to <b>Select area</b> to drag a box over a neighbourhood.</p>
+      <p class="hint" id="modeHint">Click the map to select the ward under the pointer,
+        or pick one below. Emergency planning is done by ward and zone, so those are the
+        units here.</p>
+      <select id="areaPick" style="width:100%;margin-top:8px;padding:7px 8px;
+        border:1px solid var(--rule);border-radius:4px;background:var(--panel);
+        color:var(--ink);font:13px 'Source Sans 3',sans-serif"></select>
 
     <div class="grp">
       <span class="lbl">Response threshold</span>
@@ -92,7 +97,7 @@
     </div>
 
     <div class="grp">
-      <span class="lbl">Worst-served wards</span>
+      <span class="lbl">Worst-served wards · click to inspect</span>
       <table class="wardtbl"><thead><tr><th>Ward</th><th>Zone</th><th style="text-align:right">Reached</th></tr></thead>
         <tbody id="wardBody"></tbody></table>
     </div>
