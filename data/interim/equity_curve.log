@@ -1,5 +1,9 @@
-  k=  5  worst-ward floor  0.00%  |  city coverage: efficiency 47.48%  equity 47.48%  cost  0.00 pts  (9s)
-  k= 10  worst-ward floor  0.00%  |  city coverage: efficiency 56.01%  equity 56.01%  cost  0.00 pts  (600s)
-  k= 20  worst-ward floor  0.00%  |  city coverage: efficiency 66.75%  equity 66.75%  cost  0.00 pts  (602s)
-  k= 30  worst-ward floor 14.17%  |  city coverage: efficiency 74.30%  equity 65.68%  cost  8.63 pts  (70s)
-  k= 45  worst-ward floor 20.77%  |  city coverage: efficiency 81.06%  equity 79.34%  cost  1.72 pts  (1s)
+[ems] baseline 55.68% (1,397 of 3,838 cells) | budget 300s | overhead 45.0s
+  k=  5  worst-ward floor  0.00%  |  city coverage: efficiency 68.09%  equity 68.09%  cost  0.00 pts  (70s)
+  k= 10  worst-ward floor  0.00%  |  city coverage: efficiency 75.23%  equity 75.23%  cost  0.00 pts  (600s)   <- NOT PROVEN: NOT PROVEN - feasible incumbent only, stopped at 600s of a 600s limit
+  k= 20  worst-ward floor 22.19%  |  city coverage: efficiency 82.71%  equity 77.71%  cost  5.00 pts  (4s)
+  k= 30  worst-ward floor 22.19%  |  city coverage: efficiency 86.61%  equity 85.86%  cost  0.74 pts  (1s)
+  k= 45  worst-ward floor 22.19%  |  city coverage: efficiency 89.67%  equity 89.57%  cost  0.10 pts  (1s)
+  k= 60  worst-ward floor 22.19%  |  city coverage: efficiency 91.36%  equity 91.36%  cost  0.01 pts  (0s)
+
+wrote data/interim/equity_curve_ems.json

@@ -5,6 +5,7 @@ peak: false
 flood:
   return_period_years: 25
   source: chennai_flows
+  layer: data/raw/chennai_flows_25yr.kml
   # The Chennai Flows layers classify inundation by CATEGORY (LOW/MODERATE/HIGH),
   # not depth, so the link-state model is keyed to category directly rather than
   # to an assumed fording depth. The separate inundation-points layer (192 points

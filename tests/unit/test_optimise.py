@@ -186,3 +186,71 @@ def test_maximin_finds_the_best_achievable_floor():
 def test_maximin_requires_wards():
     with pytest.raises(ValueError):
         exact.solve_maximin(make([[1]], k=1))
+
+
+# --------------------------------------------------------------------------
+# Structural bound on the maximin floor (added closing the k=10 unproven row).
+# --------------------------------------------------------------------------
+
+def _ward_problem(coverage_rows, ward, precovered, demand=None, k=1):
+    """Small hand-built instance: rows are cells, columns candidates."""
+    from scipy import sparse
+    M = sparse.csr_matrix(np.array(coverage_rows, dtype=bool))
+    n = M.shape[0]
+    return SitingProblem(
+        coverage=M, precovered=np.array(precovered, dtype=bool),
+        demand=np.ones(n) if demand is None else np.asarray(demand, dtype="float64"),
+        k=k, ward_of=np.asarray(ward))
+
+
+def test_min_sites_is_zero_when_every_ward_already_has_coverage():
+    p = _ward_problem([[1], [1]], ward=[1, 2], precovered=[True, True])
+    n, d = exact.min_sites_for_positive_floor(p)
+    assert n == 0
+    assert d["wards_zero_coverage"] == 0
+
+
+def test_min_sites_counts_wards_not_cells():
+    """Three uncovered wards, one candidate reaching all three: the answer is 1.
+    Counting cells instead of wards would say 3."""
+    p = _ward_problem([[1], [1], [1]], ward=[1, 2, 3], precovered=[False] * 3)
+    n, _ = exact.min_sites_for_positive_floor(p)
+    assert n == 1
+
+
+def test_min_sites_needs_one_candidate_per_disjoint_ward():
+    # candidate 0 reaches ward 1 only, candidate 1 reaches ward 2 only.
+    p = _ward_problem([[1, 0], [0, 1]], ward=[1, 2], precovered=[False, False])
+    n, _ = exact.min_sites_for_positive_floor(p)
+    assert n == 2
+
+
+def test_min_sites_is_none_when_a_ward_is_unreachable_from_every_candidate():
+    """No k whatsoever produces a positive floor, so there is no bound to give.
+    Returning a number here would understate an impossibility."""
+    p = _ward_problem([[1], [0]], ward=[1, 2], precovered=[False, False])
+    n, d = exact.min_sites_for_positive_floor(p)
+    assert n is None
+    assert d["wards_no_candidate_reaches"] == [2]
+
+
+def test_wards_with_no_demand_are_ignored():
+    """A zero-population ward cannot pin the maximin objective -- solve_maximin
+    skips it -- so the bound must skip it too or it overstates the requirement."""
+    p = _ward_problem([[1, 0], [0, 1]], ward=[1, 2], precovered=[False, False],
+                      demand=[1.0, 0.0])
+    n, d = exact.min_sites_for_positive_floor(p)
+    assert d["wards_with_demand"] == 1
+    assert n == 1
+
+
+def test_bound_is_consistent_with_the_maximin_solve():
+    """The contract that makes the short-circuit valid: below the bound the
+    maximin floor must actually be zero."""
+    rows = [[1, 0], [0, 1], [0, 0]]
+    ward = [1, 2, 3]
+    p = _ward_problem(rows, ward=ward, precovered=[False] * 3, k=2)
+    n, d = exact.min_sites_for_positive_floor(p)
+    assert n is None                      # ward 3 is unreachable
+    beta, _ = exact.solve_maximin(p, time_limit_s=30)
+    assert beta == pytest.approx(0.0, abs=1e-6)

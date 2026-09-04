@@ -1,0 +1,22 @@
+id: flood5
+label: "5-year return period flood"
+network_state: flood
+peak: false
+flood:
+  return_period_years: 5
+  source: chennai_flows
+  layer: data/raw/chennai_flows_5yr.kml
+  category_field: CATEGORY
+  link_state:
+    HIGH: closed
+    MODERATE: wading
+    LOW: passable
+  wading_speed_factor: 0.35
+  bridges_exempt: true
+# Weight 0.00 — REPORTED, NOT OPTIMISED AGAINST.
+# The design-basis weights (A-10) already sum to 1.0 over dry/peak/f25/f100 and
+# are not silently re-cut to admit a new scenario. This layer exists to give the
+# degradation curve a fourth point, so that "coverage vs flood severity" is a
+# curve rather than a line through two points.
+weight: 0.00
+report_only: true

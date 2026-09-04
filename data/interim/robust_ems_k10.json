@@ -1,0 +1,199 @@
+{
+  "PROVISIONAL": true,
+  "all_proven_optimal": true,
+  "design_basis_weights": {
+    "dry": 0.7,
+    "flood100": 0.05,
+    "flood25": 0.1,
+    "peak": 0.15
+  },
+  "k": 10,
+  "meta": {
+    "budget_s": 300,
+    "candidates": 948,
+    "cell_snap_max_m": 1208.2,
+    "cells": 3838,
+    "service": "ems",
+    "trip_overhead_s": 45.0
+  },
+  "provisional_reason": "29 of 33 stations are geocoder positions, not surveyed",
+  "report_only": [
+    "flood5",
+    "f2015"
+  ],
+  "scenario_stats": {
+    "dry": {
+      "arcs_usable": 250803,
+      "baseline_share": 0.5568,
+      "cells_no_candidate_reaches": 740,
+      "flood": {},
+      "matrix_nnz": 27584
+    },
+    "f2015": {
+      "arcs_usable": 247997,
+      "baseline_share": 0.4718,
+      "cells_no_candidate_reaches": 845,
+      "flood": {
+        "arcs": 250803,
+        "bridges_exempted_from_closure": 20,
+        "closed": 2806,
+        "closed_share": 0.0112,
+        "length_km_closed": 283.7,
+        "length_km_total": 23064.8,
+        "length_share_closed": 0.0123,
+        "passable": 243173,
+        "wading": 4824
+      },
+      "matrix_nnz": 23100
+    },
+    "flood100": {
+      "arcs_usable": 236918,
+      "baseline_share": 0.3655,
+      "cells_no_candidate_reaches": 1270,
+      "flood": {
+        "arcs": 250803,
+        "bridges_exempted_from_closure": 227,
+        "closed": 13885,
+        "closed_share": 0.0554,
+        "length_km_closed": 1385.0,
+        "length_km_total": 23064.8,
+        "length_share_closed": 0.06,
+        "passable": 220345,
+        "wading": 16573
+      },
+      "matrix_nnz": 16755
+    },
+    "flood25": {
+      "arcs_usable": 244037,
+      "baseline_share": 0.4127,
+      "cells_no_candidate_reaches": 1059,
+      "flood": {
+        "arcs": 250803,
+        "bridges_exempted_from_closure": 120,
+        "closed": 6766,
+        "closed_share": 0.027,
+        "length_km_closed": 723.3,
+        "length_km_total": 23064.8,
+        "length_share_closed": 0.0314,
+        "passable": 230136,
+        "wading": 13901
+      },
+      "matrix_nnz": 19589
+    },
+    "flood5": {
+      "arcs_usable": 248869,
+      "baseline_share": 0.4964,
+      "cells_no_candidate_reaches": 846,
+      "flood": {
+        "arcs": 250803,
+        "bridges_exempted_from_closure": 60,
+        "closed": 1934,
+        "closed_share": 0.0077,
+        "length_km_closed": 234.9,
+        "length_km_total": 23064.8,
+        "length_share_closed": 0.0102,
+        "passable": 244564,
+        "wading": 4305
+      },
+      "matrix_nnz": 23929
+    },
+    "peak": {
+      "arcs_usable": 250803,
+      "baseline_share": 0.2399,
+      "cells_no_candidate_reaches": 960,
+      "flood": {},
+      "matrix_nnz": 8447
+    }
+  },
+  "seconds": 40.3,
+  "service": "ems",
+  "strategies": [
+    {
+      "coverage_by_scenario": {
+        "dry": 0.7523,
+        "f2015": 0.6337,
+        "flood100": 0.5249,
+        "flood25": 0.5843,
+        "flood5": 0.7026,
+        "peak": 0.3543
+      },
+      "expected_coverage": 0.6644,
+      "optimality": "proven optimal",
+      "proven_optimal": true,
+      "sites": [
+        50,
+        63,
+        65,
+        94,
+        118,
+        275,
+        404,
+        482,
+        505,
+        528
+      ],
+      "solve_s": 0.194,
+      "strategy": "dry-only",
+      "worst_coverage": 0.3543,
+      "worst_design_basis": "peak"
+    },
+    {
+      "coverage_by_scenario": {
+        "dry": 0.7488,
+        "f2015": 0.6346,
+        "flood100": 0.5294,
+        "flood25": 0.5892,
+        "flood5": 0.701,
+        "peak": 0.3726
+      },
+      "expected_coverage": 0.6654,
+      "optimality": "proven optimal",
+      "proven_optimal": true,
+      "sites": [
+        32,
+        50,
+        63,
+        65,
+        94,
+        118,
+        275,
+        404,
+        482,
+        505
+      ],
+      "solve_s": 0.765,
+      "strategy": "expected",
+      "worst_coverage": 0.3726,
+      "worst_design_basis": "peak"
+    },
+    {
+      "coverage_by_scenario": {
+        "dry": 0.7059,
+        "f2015": 0.6259,
+        "flood100": 0.5124,
+        "flood25": 0.5743,
+        "flood5": 0.6519,
+        "peak": 0.4011
+      },
+      "expected_coverage": 0.6373,
+      "optimality": "proven optimal",
+      "proven_optimal": true,
+      "sites": [
+        2,
+        25,
+        32,
+        63,
+        84,
+        94,
+        163,
+        195,
+        240,
+        404
+      ],
+      "solve_s": 0.974,
+      "strategy": "maximin",
+      "worst_coverage": 0.4011,
+      "worst_design_basis": "peak"
+    }
+  ]
+}

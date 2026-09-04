@@ -20,6 +20,8 @@
     "weak_components": 1
   },
   "demand_total": 7625269,
+  "headline_caveat": "Coverage shares carry a P5-P95 interval from E-11 station position uncertainty; see results.<svc>.position_uncertainty. The point estimate also sits above the mean draw.",
+  "position_uncertainty_measured": true,
   "provisional_reason": "29 of 33 stations are geocoder positions, not surveyed",
   "results": {
     "ems": {
@@ -32,6 +34,16 @@
       "p90_travel_s": 538.1,
       "population_covered": 4246070,
       "population_outside": 3379199,
+      "position_uncertainty": {
+        "coverage_p5": 0.4953,
+        "coverage_p95": 0.5618,
+        "coverage_sd_points": 1.96,
+        "draws": 300,
+        "mean_bias_points": -3.16,
+        "p5_p95_spread_points": 6.66,
+        "seed": 20260904,
+        "source": "data/interim/sensitivity_stations_ems.json"
+      },
       "standard": "SFAC-7",
       "station_snap_max_m": 249.3,
       "t_alarm_s": 60,
@@ -55,20 +67,31 @@
           "travel_budget_s": 360
         }
       },
-      "travel_budget_s": 300,
+      "travel_budget_s": 300.0,
       "unreachable_cells": 0,
-      "unreachable_population": 0
+      "unreachable_population": 0,
+      "unreachable_share": 0.0
     },
     "fire": {
       "cell_snap_max_m": 1208.2,
       "cells_snap_over_300m": 488,
       "coverage_share": 0.3675,
       "max_travel_s": 1966.9,
-      "mean_travel_s": 364.6,
+      "mean_travel_s": 364.7,
       "p50_travel_s": 318.2,
       "p90_travel_s": 613.2,
       "population_covered": 2801943,
       "population_outside": 4823326,
+      "position_uncertainty": {
+        "coverage_p5": 0.3318,
+        "coverage_p95": 0.3873,
+        "coverage_sd_points": 1.65,
+        "draws": 300,
+        "mean_bias_points": -1.05,
+        "p5_p95_spread_points": 5.55,
+        "seed": 20260904,
+        "source": "data/interim/sensitivity_stations_fire.json"
+      },
       "standard": "SFAC-7",
       "station_snap_max_m": 249.3,
       "t_alarm_s": 60,
@@ -92,12 +115,13 @@
           "travel_budget_s": 340
         }
       },
-      "travel_budget_s": 280,
-      "unreachable_cells": 7,
-      "unreachable_population": 292
+      "travel_budget_s": 280.0,
+      "unreachable_cells": 0,
+      "unreachable_population": 0,
+      "unreachable_share": 0.0
     }
   },
-  "seconds": 2.7,
+  "seconds": 3.6,
   "station_gate": {
     "by_confidence": {
       "locality": 29,

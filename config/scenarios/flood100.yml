@@ -5,7 +5,16 @@ peak: false
 flood:
   return_period_years: 100
   source: chennai_flows
-  wading_depth_m: 0.15
+  layer: data/raw/chennai_flows_100yr.kml
+  # Same CATEGORY schema as the 25-year layer, so the same link-state mapping
+  # applies. The previous `wading_depth_m: 0.15` here was a DEAD PARAMETER —
+  # nothing read it, because this layer carries no depth field to compare it
+  # against. Removed rather than left to imply a depth model that does not exist.
+  category_field: CATEGORY
+  link_state:
+    HIGH: closed
+    MODERATE: wading
+    LOW: passable
   wading_speed_factor: 0.35
   bridges_exempt: true
 weight: 0.05

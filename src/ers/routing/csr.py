@@ -66,8 +66,19 @@ def snap(graph: RoadGraph, x: np.ndarray, y: np.ndarray,
     Snapping in degrees is a classic silent error: a degree of longitude is
     ~108 km at Chennai's latitude, so a degree-space nearest-neighbour search
     is anisotropic and picks the wrong node.
+
+    The KD-tree is built once per graph and memoised. It used to be rebuilt on
+    every call -- 38 ms over 88,143 nodes, against 308 ms for the 33-source
+    Dijkstra it usually accompanies, so a third of the cost of every Monte Carlo
+    evaluation in E-11 went on rebuilding an index over an unchanged node set.
+    The graph is frozen and its coordinates never change, so the cache cannot go
+    stale; `object.__setattr__` is how a pure memo is attached to a frozen
+    dataclass.
     """
-    tree = cKDTree(graph.xy)
+    tree = getattr(graph, "_kdtree", None)
+    if tree is None:
+        tree = cKDTree(graph.xy)
+        object.__setattr__(graph, "_kdtree", tree)
     dist, idx = tree.query(np.column_stack([x, y]), k=1)
     return idx.astype(np.int32), dist
 

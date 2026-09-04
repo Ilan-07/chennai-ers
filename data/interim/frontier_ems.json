@@ -1,128 +1,36 @@
 {
   "PROVISIONAL": true,
+  "all_rungs_proven_optimal": true,
+  "baseline_share": 0.5568,
   "baseline_worst_ward": 0.0,
+  "beta_max": 0.0,
+  "beta_max_optimality": "proven optimal",
+  "beta_max_proven": true,
+  "degenerate": true,
+  "degenerate_reason": "maximin floor is 0% at k=5: the equity constraint binds nothing and the ladder collapses to the unconstrained solve",
   "frontier": [
     {
       "beta": 0.0,
-      "coverage_share": 0.4748,
+      "coverage_share": 0.6809,
       "feasible": true,
       "jaccard_vs_prev": 1.0,
-      "median_ward": 0.4233,
+      "median_ward": 0.7893,
+      "optimality": "proven optimal",
+      "proven_optimal": true,
       "sites": [
-        34,
+        50,
         63,
-        65,
         94,
-        505
+        118,
+        421
       ],
-      "solve_s": 0.091,
-      "ward_share_std": 0.3867,
-      "worst_ward": 0.0
-    },
-    {
-      "beta": 0.0,
-      "coverage_share": 0.4748,
-      "feasible": true,
-      "jaccard_vs_prev": 1.0,
-      "median_ward": 0.4233,
-      "sites": [
-        34,
-        63,
-        65,
-        94,
-        505
-      ],
-      "solve_s": 0.089,
-      "ward_share_std": 0.3867,
-      "worst_ward": 0.0
-    },
-    {
-      "beta": 0.0,
-      "coverage_share": 0.4748,
-      "feasible": true,
-      "jaccard_vs_prev": 1.0,
-      "median_ward": 0.4233,
-      "sites": [
-        34,
-        63,
-        65,
-        94,
-        505
-      ],
-      "solve_s": 0.11,
-      "ward_share_std": 0.3867,
-      "worst_ward": 0.0
-    },
-    {
-      "beta": 0.0,
-      "coverage_share": 0.4748,
-      "feasible": true,
-      "jaccard_vs_prev": 1.0,
-      "median_ward": 0.4233,
-      "sites": [
-        34,
-        63,
-        65,
-        94,
-        505
-      ],
-      "solve_s": 0.092,
-      "ward_share_std": 0.3867,
-      "worst_ward": 0.0
-    },
-    {
-      "beta": 0.0,
-      "coverage_share": 0.4748,
-      "feasible": true,
-      "jaccard_vs_prev": 1.0,
-      "median_ward": 0.4233,
-      "sites": [
-        34,
-        63,
-        65,
-        94,
-        505
-      ],
-      "solve_s": 0.092,
-      "ward_share_std": 0.3867,
-      "worst_ward": 0.0
-    },
-    {
-      "beta": 0.0,
-      "coverage_share": 0.4748,
-      "feasible": true,
-      "jaccard_vs_prev": 1.0,
-      "median_ward": 0.4233,
-      "sites": [
-        34,
-        63,
-        65,
-        94,
-        505
-      ],
-      "solve_s": 0.101,
-      "ward_share_std": 0.3867,
-      "worst_ward": 0.0
-    },
-    {
-      "beta": 0.0,
-      "coverage_share": 0.4748,
-      "feasible": true,
-      "jaccard_vs_prev": 1.0,
-      "median_ward": 0.4233,
-      "sites": [
-        34,
-        63,
-        65,
-        94,
-        505
-      ],
-      "solve_s": 0.1,
-      "ward_share_std": 0.3867,
+      "solve_s": 0.174,
+      "ward_share_std": 0.3379,
       "worst_ward": 0.0
     }
   ],
   "k": 5,
-  "seconds": 7.6,
-  "service": "ems"
+  "seconds": 73.0,
+  "service": "ems",
+  "trip_overhead_s": 45.0
 }

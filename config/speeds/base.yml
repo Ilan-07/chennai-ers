@@ -70,7 +70,23 @@ junction_delay_s:
 # delay was charging a delay per topology artifact, and it made the model 1.77x
 # slower than the OSRM oracle. The work the junction term was doing is done
 # properly by trip_overhead_s below.
-# This term is a candidate for outright removal in the E-10 ablation.
+#
+# E-10 ABLATION RESULT (data/interim/ablation_e10.json). The hypothesis was
+# tested and SUPPORTED. Deleting the term outright and refitting the trip
+# overhead to 60 s fits the OSRM oracle BETTER on every measure:
+#
+#                        MedAPE    bias     worst band bias   band gate
+#   shipped  x0.10 + 45s   9.13%   +2.06%        5.04%          FAIL
+#   ablated  x0.00 + 60s   7.91%   -0.92%        4.38%          PASS
+#
+# Stage-3 calibration had searched junction_scale over [0.10, 0.30] and settled
+# on 0.10 -- exactly the lower bound. An optimum on a grid boundary is not an
+# optimum, and extending the grid through it found the real one at zero.
+#
+# NOT YET ADOPTED. Adopting it moves baseline coverage by up to 3.4 points and
+# therefore invalidates every published coverage figure and every optimisation
+# downstream of step 06. That is a re-run of the whole chain, not a config edit,
+# and it is a decision to take deliberately.
 junction_delay_scale: 0.10
 
 # Fixed per-trip overhead, seconds, added to every origin-destination travel time.

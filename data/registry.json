@@ -78,5 +78,72 @@
     "source": "osm_parcels",
     "uri": "https://overpass-api.de/api/interpreter",
     "version_label": "2026-09-03"
+  },
+  {
+    "bytes": 4836627,
+    "fetched_at": "2026-09-03T16:04:57+00:00",
+    "id": 7,
+    "licence": "Chennai Flows public data release",
+    "local_path": "data/raw/chennai_flows_5yr.kml",
+    "notes": {
+      "category_field": "CATEGORY",
+      "return_period_years": 5,
+      "used_by": "config/scenarios/flood5.yml"
+    },
+    "sha256": "9c4dbe3185d579fa7b5ddc62c5a264dd12f7f83f54361d1df9d5541c6804a8bd",
+    "source": "chennai_flows_5yr",
+    "uri": "https://www.chennaiflows.com/ \u2014 Chennai Flows return-period inundation layers, derived from CMDA / Anna University hydrological modelling",
+    "version_label": "2026-09-03"
+  },
+  {
+    "bytes": 6343528,
+    "fetched_at": "2026-09-03T16:04:57+00:00",
+    "id": 8,
+    "licence": "Chennai Flows public data release",
+    "local_path": "data/raw/chennai_flows_25yr.kml",
+    "notes": {
+      "category_field": "CATEGORY",
+      "return_period_years": 25,
+      "used_by": "config/scenarios/flood25.yml"
+    },
+    "sha256": "c880ad9e050c8399d5a41db8f5f50714d6cd83a86bcfb1fefc15ba81b5dc2313",
+    "source": "chennai_flows_25yr",
+    "uri": "https://www.chennaiflows.com/ \u2014 Chennai Flows return-period inundation layers, derived from CMDA / Anna University hydrological modelling",
+    "version_label": "2026-09-03"
+  },
+  {
+    "bytes": 6011034,
+    "fetched_at": "2026-09-03T16:04:57+00:00",
+    "id": 9,
+    "licence": "Chennai Flows public data release",
+    "local_path": "data/raw/chennai_flows_100yr.kml",
+    "notes": {
+      "category_field": "CATEGORY",
+      "return_period_years": 100,
+      "used_by": "config/scenarios/flood100.yml"
+    },
+    "sha256": "10bda9adfc8b093d5f1be34640d5114e81e34fe34795f8b757030cdc82fffe3e",
+    "source": "chennai_flows_100yr",
+    "uri": "https://www.chennaiflows.com/ \u2014 Chennai Flows return-period inundation layers, derived from CMDA / Anna University hydrological modelling",
+    "version_label": "2026-09-03"
+  },
+  {
+    "bytes": 110179,
+    "fetched_at": "2026-09-03T16:04:57+00:00",
+    "id": 10,
+    "licence": "Chennai Flows public data release",
+    "local_path": "data/raw/chennai_inundation_points_depth.kml",
+    "notes": {
+      "caveat": "192 surveyed points cannot describe a city-wide flood; this layer is reported, never optimised against",
+      "depth_field": "DEPTH",
+      "depth_units": "inches",
+      "event": "November-December 2015",
+      "features": 192,
+      "used_by": "config/scenarios/f2015.yml"
+    },
+    "sha256": "b4bbbdaeb62c78151cee81d33d993dac51f2af9595bbcd275d75440ea1e6215b",
+    "source": "chennai_inundation_points_depth",
+    "uri": "https://www.chennaiflows.com/ \u2014 Chennai Flows return-period inundation layers, derived from CMDA / Anna University hydrological modelling",
+    "version_label": "2026-09-03"
   }
 ]

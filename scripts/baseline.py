@@ -5,10 +5,12 @@ than surveyed ones, so the publish gate is closed and every figure here is
 stamped accordingly. The pipeline runs anyway so the whole chain is exercised.
 """
 import csv, json, sys, time
+from pathlib import Path
 sys.path.insert(0, "src")
 import geopandas as gpd, numpy as np, pandas as pd, yaml
+from ers import coverage
 from ers.geo.graph import read_graph_tables
-from ers.routing.csr import build_graph, snap, travel_times, to_seconds
+from ers.routing.csr import build_graph, snap
 from ers.io.stations import qa_report, ResolvedStation
 
 t0 = time.time()
@@ -47,48 +49,29 @@ for svc in ("ems", "fire"):
     cc = gpd.GeoSeries(cells.to_crs(METRIC).geometry.centroid, crs=METRIC)
     c_idx, c_dist = snap(g, cc.x.to_numpy(), cc.y.to_numpy())
 
-    d = travel_times(g, s_idx, c_idx, cutoff_ds=budget_s * 10 * 4)
-    best_ds = d.min(axis=0)
-    # Access time: centroid-to-network walk-equivalent, 1.2 m/s (ASSM A-14).
-    access_s = c_dist / 1.2
-    best_s = to_seconds(best_ds) + access_s + OVERHEAD
-
+    # Exhaustive sweep, no cutoff. A cutoff makes "unreachable" mean "further
+    # away than the cutoff", which is a different claim -- and a false one. The
+    # 4x-budget cutoff used previously reported 7 fire cells as unreachable that
+    # are simply distant; population coverage was unaffected, the honesty of the
+    # unreachable count was not.
     pop = cells["population"].to_numpy()
-    reach = np.isfinite(best_s)
-    covered = reach & (best_s <= budget_s)
-    tot = pop.sum()
-
-    finite = best_s[reach]
-    wts = pop[reach]
-    order = np.argsort(finite)
-    cw = np.cumsum(wts[order]) / wts.sum()
-    p50 = float(finite[order][np.searchsorted(cw, 0.50)])
-    p90 = float(finite[order][np.searchsorted(cw, 0.90)])
-
-    ladder = {}
-    for label, tgt in (("SFAC-5", 300), ("SFAC-7", 420), ("deck-8min", 480), ("NFPA-travel-4min", 240)):
-        b = tgt - scfg["t_alarm_s"] - scfg["t_turnout_s"] if label != "NFPA-travel-4min" else 240
-        cov = reach & (best_s <= b)
-        ladder[label] = {"travel_budget_s": b,
-                         "coverage_share": round(float(pop[cov].sum() / tot), 4)}
+    best_s = coverage.response_seconds(g, s_idx, c_idx, c_dist,
+                                       overhead_s=OVERHEAD, cutoff_ds=None)
+    off = scfg["t_alarm_s"] + scfg["t_turnout_s"]
+    # NFPA 1710's 240 s is already a TRAVEL figure, so the offsets are not
+    # subtracted from it. The SFAC targets are total-response figures and are.
+    ladder = {"SFAC-5": 300 - off, "SFAC-7": 420 - off,
+              "deck-8min": 480 - off, "NFPA-travel-4min": 240}
 
     results[svc] = {
-        "threshold_ladder": ladder,
+        **coverage.summarise(best_s, pop, budget_s=budget_s, ladder=ladder),
         "standard": preset, "t_target_s": t_target,
         "t_alarm_s": scfg["t_alarm_s"], "t_turnout_s": scfg["t_turnout_s"],
-        "travel_budget_s": budget_s,
-        "coverage_share": round(float(pop[covered].sum() / tot), 4),
-        "population_covered": round(float(pop[covered].sum())),
-        "population_outside": round(float(tot - pop[covered].sum())),
-        "unreachable_cells": int((~reach).sum()),
-        "unreachable_population": round(float(pop[~reach].sum())),
-        "mean_travel_s": round(float(np.average(finite, weights=wts)), 1),
-        "p50_travel_s": round(p50, 1), "p90_travel_s": round(p90, 1),
-        "max_travel_s": round(float(finite.max()), 1),
         "station_snap_max_m": round(float(s_dist.max()), 1),
         "cell_snap_max_m": round(float(c_dist.max()), 1),
         "cells_snap_over_300m": int((c_dist > 300).sum()),
     }
+    tot = pop.sum()
     r = results[svc]
     print(f"\n{svc.upper()}  {preset}: target {t_target}s - alarm {scfg['t_alarm_s']}s "
           f"- turnout {scfg['t_turnout_s']}s = travel budget {budget_s}s", flush=True)
@@ -98,6 +81,39 @@ for svc in ("ems", "fire"):
           f"P90 {r['p90_travel_s']/60:.1f} | max {r['max_travel_s']/60:.1f}", flush=True)
     print(f"  unreachable cells {r['unreachable_cells']} | snap>300m {r['cells_snap_over_300m']}",
           flush=True)
+
+# E-11: station position uncertainty puts a measured interval under every figure
+# below. A bare point estimate implies a precision this data does not have, so the
+# headline is reported WITH its interval or explicitly marked as lacking one.
+SENS = {}
+for svc in ("ems", "fire"):
+    f = Path(f"data/interim/sensitivity_stations_{svc}.json")
+    if f.exists():
+        SENS[svc] = json.loads(f.read_text())
+
+print("\n--- E-11 station position uncertainty ---")
+if not SENS:
+    print("  NOT MEASURED. Run scripts/sensitivity_stations.py; until then every "
+          "coverage figure above is a point estimate with an unquantified error bar.")
+else:
+    for svc, sn in SENS.items():
+        c, r = sn["coverage"], results[svc]
+        r["position_uncertainty"] = {
+            "draws": sn["draws"], "seed": sn["seed"],
+            "coverage_p5": c["p5"], "coverage_p95": c["p95"],
+            "coverage_sd_points": round(100 * c["sd"], 2),
+            "p5_p95_spread_points": c["p5_p95_spread_points"],
+            "mean_bias_points": c["bias_vs_point_estimate_points"],
+            "source": f"data/interim/sensitivity_stations_{svc}.json",
+        }
+        print(f"  {svc.upper():4s} coverage {r['coverage_share']:.1%} "
+              f"[P5-P95 {c['p5']:.1%} - {c['p95']:.1%}, spread "
+              f"{c['p5_p95_spread_points']:.1f} pts]")
+        # The bias is the part that a confidence interval alone would hide: the
+        # point estimate is not merely uncertain, it sits above the mean draw.
+        if c["bias_vs_point_estimate_points"] <= -1.0:
+            print(f"       point estimate is {abs(c['bias_vs_point_estimate_points']):.1f} pts "
+                  f"ABOVE the mean over draws -- geocoded positions flatter coverage")
 
 from ers.geo.graph import connectivity_report
 conn = connectivity_report(build_graph(nodes, edges, "tau_ds_ems").csr)
@@ -117,6 +133,14 @@ print(f"  GATE (within published range): {in_range}")
 
 report = {
     "connectivity": conn,
+    "position_uncertainty_measured": bool(SENS),
+    "headline_caveat": (
+        "Coverage shares carry a P5-P95 interval from E-11 station position "
+        "uncertainty; see results.<svc>.position_uncertainty. The point estimate "
+        "also sits above the mean draw."
+        if SENS else
+        "Station position uncertainty is NOT quantified for this run; the coverage "
+        "shares below are point estimates with an unknown error bar."),
     "calibration_check": {
         "modelled_response_s": round(modelled_response_s, 1),
         "published_min_s": tgt["value_min_s"], "published_max_s": tgt["value_max_s"],

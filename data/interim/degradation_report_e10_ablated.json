@@ -1,0 +1,714 @@
+{
+  "PROVISIONAL": true,
+  "cell_snap_max_m": 1208.2,
+  "cells": 3838,
+  "cutoff": "none (exhaustive sweep)",
+  "demand_total": 7625269,
+  "junction_delay_scale": 0.0,
+  "provisional_reason": "29 of 33 stations are geocoder positions, not surveyed",
+  "seconds": 27.6,
+  "services": {
+    "ems": {
+      "design_basis_weight_sum": 1.0,
+      "expected_coverage_share": 0.4549,
+      "scenarios": {
+        "dry": {
+          "coverage_share": 0.5237,
+          "label": "Dry day, free flow",
+          "max_travel_s": 1818.8,
+          "mean_travel_s": 333.5,
+          "network": {
+            "arcs_usable": 250803,
+            "junction_delay_share": 0.0,
+            "mean_speed_kmh": 31.61
+          },
+          "p50_travel_s": 291.9,
+          "p90_travel_s": 540.2,
+          "population_covered": 3993359,
+          "population_outside": 3631910,
+          "report_only": false,
+          "scenario": "dry",
+          "threshold_ladder": {
+            "NFPA-travel-4min": {
+              "coverage_share": 0.2868,
+              "travel_budget_s": 240
+            },
+            "SFAC-5": {
+              "coverage_share": 0.1037,
+              "travel_budget_s": 180
+            },
+            "SFAC-7": {
+              "coverage_share": 0.5237,
+              "travel_budget_s": 300
+            },
+            "deck-8min": {
+              "coverage_share": 0.6926,
+              "travel_budget_s": 360
+            }
+          },
+          "travel_budget_s": 300.0,
+          "unreachable_cells": 0,
+          "unreachable_population": 0,
+          "unreachable_share": 0.0,
+          "weight": 0.7
+        },
+        "f2015": {
+          "coverage_share": 0.4409,
+          "flood": {
+            "arcs": {
+              "arcs": 250803,
+              "bridges_exempted_from_closure": 20,
+              "closed": 2806,
+              "closed_share": 0.0112,
+              "length_km_closed": 283.7,
+              "length_km_total": 23064.8,
+              "length_share_closed": 0.0123,
+              "passable": 243173,
+              "wading": 4824
+            },
+            "layer": "data/raw/chennai_inundation_points_depth.kml",
+            "zones": {
+              "area_km2": 37.6,
+              "buffer_m": 250.0,
+              "categories": {
+                "closed": 43,
+                "wading": 149
+              },
+              "closure_depth_m": 0.3,
+              "depth_m_max": 1.524,
+              "depth_m_median": 0.229,
+              "depth_missing": 0,
+              "depth_units": "inches",
+              "features": 192
+            }
+          },
+          "label": "November-December 2015 flood replay",
+          "max_travel_s": 1818.8,
+          "mean_travel_s": 364.5,
+          "network": {
+            "arcs_usable": 247997,
+            "junction_delay_share": 0.0,
+            "mean_speed_kmh": 31.07
+          },
+          "p50_travel_s": 314.8,
+          "p90_travel_s": 630.2,
+          "population_covered": 3361933,
+          "population_outside": 4263336,
+          "report_only": true,
+          "scenario": "f2015",
+          "threshold_ladder": {
+            "NFPA-travel-4min": {
+              "coverage_share": 0.2432,
+              "travel_budget_s": 240
+            },
+            "SFAC-5": {
+              "coverage_share": 0.0873,
+              "travel_budget_s": 180
+            },
+            "SFAC-7": {
+              "coverage_share": 0.4409,
+              "travel_budget_s": 300
+            },
+            "deck-8min": {
+              "coverage_share": 0.6078,
+              "travel_budget_s": 360
+            }
+          },
+          "travel_budget_s": 300.0,
+          "unreachable_cells": 62,
+          "unreachable_population": 174246,
+          "unreachable_share": 0.0229,
+          "weight": 0.0
+        },
+        "flood100": {
+          "coverage_share": 0.3462,
+          "flood": {
+            "arcs": {
+              "arcs": 250803,
+              "bridges_exempted_from_closure": 227,
+              "closed": 13885,
+              "closed_share": 0.0554,
+              "length_km_closed": 1385.0,
+              "length_km_total": 23064.8,
+              "length_share_closed": 0.06,
+              "passable": 220345,
+              "wading": 16573
+            },
+            "layer": "data/raw/chennai_flows_100yr.kml",
+            "zones": {
+              "area_km2": 266.3,
+              "categories": {
+                "HIGH": 85,
+                "LOW": 156,
+                "MODERATE": 181
+              },
+              "features": 422,
+              "invalid_repaired": 2
+            }
+          },
+          "label": "100-year return period flood",
+          "max_travel_s": 2366.6,
+          "mean_travel_s": 392.1,
+          "network": {
+            "arcs_usable": 236918,
+            "junction_delay_share": 0.0,
+            "mean_speed_kmh": 30.21
+          },
+          "p50_travel_s": 338.4,
+          "p90_travel_s": 646.3,
+          "population_covered": 2640086,
+          "population_outside": 4985183,
+          "report_only": false,
+          "scenario": "flood100",
+          "threshold_ladder": {
+            "NFPA-travel-4min": {
+              "coverage_share": 0.1919,
+              "travel_budget_s": 240
+            },
+            "SFAC-5": {
+              "coverage_share": 0.0673,
+              "travel_budget_s": 180
+            },
+            "SFAC-7": {
+              "coverage_share": 0.3462,
+              "travel_budget_s": 300
+            },
+            "deck-8min": {
+              "coverage_share": 0.4708,
+              "travel_budget_s": 360
+            }
+          },
+          "travel_budget_s": 300.0,
+          "unreachable_cells": 639,
+          "unreachable_population": 1111740,
+          "unreachable_share": 0.1458,
+          "weight": 0.05
+        },
+        "flood25": {
+          "coverage_share": 0.3857,
+          "flood": {
+            "arcs": {
+              "arcs": 250803,
+              "bridges_exempted_from_closure": 120,
+              "closed": 6766,
+              "closed_share": 0.027,
+              "length_km_closed": 723.3,
+              "length_km_total": 23064.8,
+              "length_share_closed": 0.0314,
+              "passable": 230136,
+              "wading": 13901
+            },
+            "layer": "data/raw/chennai_flows_25yr.kml",
+            "zones": {
+              "area_km2": 220.1,
+              "categories": {
+                "HIGH": 96,
+                "LOW": 278,
+                "MODERATE": 175
+              },
+              "features": 549,
+              "invalid_repaired": 1
+            }
+          },
+          "label": "25-year return period flood",
+          "max_travel_s": 2366.6,
+          "mean_travel_s": 381.3,
+          "network": {
+            "arcs_usable": 244037,
+            "junction_delay_share": 0.0,
+            "mean_speed_kmh": 30.4
+          },
+          "p50_travel_s": 330.0,
+          "p90_travel_s": 630.0,
+          "population_covered": 2940819,
+          "population_outside": 4684451,
+          "report_only": false,
+          "scenario": "flood25",
+          "threshold_ladder": {
+            "NFPA-travel-4min": {
+              "coverage_share": 0.2144,
+              "travel_budget_s": 240
+            },
+            "SFAC-5": {
+              "coverage_share": 0.074,
+              "travel_budget_s": 180
+            },
+            "SFAC-7": {
+              "coverage_share": 0.3857,
+              "travel_budget_s": 300
+            },
+            "deck-8min": {
+              "coverage_share": 0.5274,
+              "travel_budget_s": 360
+            }
+          },
+          "travel_budget_s": 300.0,
+          "unreachable_cells": 356,
+          "unreachable_population": 527395,
+          "unreachable_share": 0.0692,
+          "weight": 0.1
+        },
+        "flood5": {
+          "coverage_share": 0.4633,
+          "flood": {
+            "arcs": {
+              "arcs": 250803,
+              "bridges_exempted_from_closure": 60,
+              "closed": 1934,
+              "closed_share": 0.0077,
+              "length_km_closed": 234.9,
+              "length_km_total": 23064.8,
+              "length_share_closed": 0.0102,
+              "passable": 244564,
+              "wading": 4305
+            },
+            "layer": "data/raw/chennai_flows_5yr.kml",
+            "zones": {
+              "area_km2": 128.6,
+              "categories": {
+                "HIGH": 76,
+                "LOW": 374,
+                "MODERATE": 129
+              },
+              "features": 579,
+              "invalid_repaired": 6
+            }
+          },
+          "label": "5-year return period flood",
+          "max_travel_s": 2366.6,
+          "mean_travel_s": 347.1,
+          "network": {
+            "arcs_usable": 248869,
+            "junction_delay_share": 0.0,
+            "mean_speed_kmh": 31.22
+          },
+          "p50_travel_s": 305.7,
+          "p90_travel_s": 564.6,
+          "population_covered": 3532671,
+          "population_outside": 4092599,
+          "report_only": true,
+          "scenario": "flood5",
+          "threshold_ladder": {
+            "NFPA-travel-4min": {
+              "coverage_share": 0.2516,
+              "travel_budget_s": 240
+            },
+            "SFAC-5": {
+              "coverage_share": 0.0953,
+              "travel_budget_s": 180
+            },
+            "SFAC-7": {
+              "coverage_share": 0.4633,
+              "travel_budget_s": 300
+            },
+            "deck-8min": {
+              "coverage_share": 0.6297,
+              "travel_budget_s": 360
+            }
+          },
+          "travel_budget_s": 300.0,
+          "unreachable_cells": 131,
+          "unreachable_population": 184736,
+          "unreachable_share": 0.0242,
+          "weight": 0.0
+        },
+        "peak": {
+          "coverage_share": 0.2162,
+          "label": "Peak hour congestion",
+          "max_travel_s": 2432.9,
+          "mean_travel_s": 488.4,
+          "network": {
+            "arcs_usable": 250803,
+            "junction_delay_share": 0.0,
+            "mean_speed_kmh": 21.3
+          },
+          "p50_travel_s": 426.8,
+          "p90_travel_s": 822.9,
+          "population_covered": 1648495,
+          "population_outside": 5976775,
+          "report_only": false,
+          "scenario": "peak",
+          "threshold_ladder": {
+            "NFPA-travel-4min": {
+              "coverage_share": 0.1131,
+              "travel_budget_s": 240
+            },
+            "SFAC-5": {
+              "coverage_share": 0.035,
+              "travel_budget_s": 180
+            },
+            "SFAC-7": {
+              "coverage_share": 0.2162,
+              "travel_budget_s": 300
+            },
+            "deck-8min": {
+              "coverage_share": 0.3385,
+              "travel_budget_s": 360
+            }
+          },
+          "travel_budget_s": 300.0,
+          "unreachable_cells": 0,
+          "unreachable_population": 0,
+          "unreachable_share": 0.0,
+          "weight": 0.15
+        }
+      },
+      "standard": "SFAC-7",
+      "travel_budget_s": 300,
+      "worst_design_basis": "peak"
+    },
+    "fire": {
+      "design_basis_weight_sum": 1.0,
+      "expected_coverage_share": 0.2891,
+      "scenarios": {
+        "dry": {
+          "coverage_share": 0.3334,
+          "label": "Dry day, free flow",
+          "max_travel_s": 1973.5,
+          "mean_travel_s": 372.6,
+          "network": {
+            "arcs_usable": 250781,
+            "junction_delay_share": 0.0,
+            "mean_speed_kmh": 26.7
+          },
+          "p50_travel_s": 327.8,
+          "p90_travel_s": 613.7,
+          "population_covered": 2542256,
+          "population_outside": 5083014,
+          "report_only": false,
+          "scenario": "dry",
+          "threshold_ladder": {
+            "NFPA-travel-4min": {
+              "coverage_share": 0.2159,
+              "travel_budget_s": 240
+            },
+            "SFAC-5": {
+              "coverage_share": 0.0403,
+              "travel_budget_s": 160
+            },
+            "SFAC-7": {
+              "coverage_share": 0.3334,
+              "travel_budget_s": 280
+            },
+            "deck-8min": {
+              "coverage_share": 0.5389,
+              "travel_budget_s": 340
+            }
+          },
+          "travel_budget_s": 280.0,
+          "unreachable_cells": 0,
+          "unreachable_population": 0,
+          "unreachable_share": 0.0,
+          "weight": 0.7
+        },
+        "f2015": {
+          "coverage_share": 0.2753,
+          "flood": {
+            "arcs": {
+              "arcs": 250803,
+              "bridges_exempted_from_closure": 20,
+              "closed": 2806,
+              "closed_share": 0.0112,
+              "length_km_closed": 283.7,
+              "length_km_total": 23064.8,
+              "length_share_closed": 0.0123,
+              "passable": 243173,
+              "wading": 4824
+            },
+            "layer": "data/raw/chennai_inundation_points_depth.kml",
+            "zones": {
+              "area_km2": 37.6,
+              "buffer_m": 250.0,
+              "categories": {
+                "closed": 43,
+                "wading": 149
+              },
+              "closure_depth_m": 0.3,
+              "depth_m_max": 1.524,
+              "depth_m_median": 0.229,
+              "depth_missing": 0,
+              "depth_units": "inches",
+              "features": 192
+            }
+          },
+          "label": "November-December 2015 flood replay",
+          "max_travel_s": 1973.5,
+          "mean_travel_s": 409.7,
+          "network": {
+            "arcs_usable": 247975,
+            "junction_delay_share": 0.0,
+            "mean_speed_kmh": 26.25
+          },
+          "p50_travel_s": 351.7,
+          "p90_travel_s": 716.2,
+          "population_covered": 2099468,
+          "population_outside": 5525802,
+          "report_only": true,
+          "scenario": "f2015",
+          "threshold_ladder": {
+            "NFPA-travel-4min": {
+              "coverage_share": 0.1828,
+              "travel_budget_s": 240
+            },
+            "SFAC-5": {
+              "coverage_share": 0.0321,
+              "travel_budget_s": 160
+            },
+            "SFAC-7": {
+              "coverage_share": 0.2753,
+              "travel_budget_s": 280
+            },
+            "deck-8min": {
+              "coverage_share": 0.4545,
+              "travel_budget_s": 340
+            }
+          },
+          "travel_budget_s": 280.0,
+          "unreachable_cells": 62,
+          "unreachable_population": 174246,
+          "unreachable_share": 0.0229,
+          "weight": 0.0
+        },
+        "flood100": {
+          "coverage_share": 0.2232,
+          "flood": {
+            "arcs": {
+              "arcs": 250803,
+              "bridges_exempted_from_closure": 227,
+              "closed": 13885,
+              "closed_share": 0.0554,
+              "length_km_closed": 1385.0,
+              "length_km_total": 23064.8,
+              "length_share_closed": 0.06,
+              "passable": 220345,
+              "wading": 16573
+            },
+            "layer": "data/raw/chennai_flows_100yr.kml",
+            "zones": {
+              "area_km2": 266.3,
+              "categories": {
+                "HIGH": 85,
+                "LOW": 156,
+                "MODERATE": 181
+              },
+              "features": 422,
+              "invalid_repaired": 2
+            }
+          },
+          "label": "100-year return period flood",
+          "max_travel_s": 2606.2,
+          "mean_travel_s": 443.0,
+          "network": {
+            "arcs_usable": 236900,
+            "junction_delay_share": 0.0,
+            "mean_speed_kmh": 25.53
+          },
+          "p50_travel_s": 379.9,
+          "p90_travel_s": 744.0,
+          "population_covered": 1702136,
+          "population_outside": 5923133,
+          "report_only": false,
+          "scenario": "flood100",
+          "threshold_ladder": {
+            "NFPA-travel-4min": {
+              "coverage_share": 0.1465,
+              "travel_budget_s": 240
+            },
+            "SFAC-5": {
+              "coverage_share": 0.0311,
+              "travel_budget_s": 160
+            },
+            "SFAC-7": {
+              "coverage_share": 0.2232,
+              "travel_budget_s": 280
+            },
+            "deck-8min": {
+              "coverage_share": 0.3564,
+              "travel_budget_s": 340
+            }
+          },
+          "travel_budget_s": 280.0,
+          "unreachable_cells": 639,
+          "unreachable_population": 1111740,
+          "unreachable_share": 0.1458,
+          "weight": 0.05
+        },
+        "flood25": {
+          "coverage_share": 0.2479,
+          "flood": {
+            "arcs": {
+              "arcs": 250803,
+              "bridges_exempted_from_closure": 120,
+              "closed": 6766,
+              "closed_share": 0.027,
+              "length_km_closed": 723.3,
+              "length_km_total": 23064.8,
+              "length_share_closed": 0.0314,
+              "passable": 230136,
+              "wading": 13901
+            },
+            "layer": "data/raw/chennai_flows_25yr.kml",
+            "zones": {
+              "area_km2": 220.1,
+              "categories": {
+                "HIGH": 96,
+                "LOW": 278,
+                "MODERATE": 175
+              },
+              "features": 549,
+              "invalid_repaired": 1
+            }
+          },
+          "label": "25-year return period flood",
+          "max_travel_s": 2606.2,
+          "mean_travel_s": 430.1,
+          "network": {
+            "arcs_usable": 244016,
+            "junction_delay_share": 0.0,
+            "mean_speed_kmh": 25.68
+          },
+          "p50_travel_s": 371.2,
+          "p90_travel_s": 720.0,
+          "population_covered": 1890496,
+          "population_outside": 5734773,
+          "report_only": false,
+          "scenario": "flood25",
+          "threshold_ladder": {
+            "NFPA-travel-4min": {
+              "coverage_share": 0.1609,
+              "travel_budget_s": 240
+            },
+            "SFAC-5": {
+              "coverage_share": 0.0346,
+              "travel_budget_s": 160
+            },
+            "SFAC-7": {
+              "coverage_share": 0.2479,
+              "travel_budget_s": 280
+            },
+            "deck-8min": {
+              "coverage_share": 0.4003,
+              "travel_budget_s": 340
+            }
+          },
+          "travel_budget_s": 280.0,
+          "unreachable_cells": 356,
+          "unreachable_population": 527395,
+          "unreachable_share": 0.0692,
+          "weight": 0.1
+        },
+        "flood5": {
+          "coverage_share": 0.2935,
+          "flood": {
+            "arcs": {
+              "arcs": 250803,
+              "bridges_exempted_from_closure": 60,
+              "closed": 1934,
+              "closed_share": 0.0077,
+              "length_km_closed": 234.9,
+              "length_km_total": 23064.8,
+              "length_share_closed": 0.0102,
+              "passable": 244564,
+              "wading": 4305
+            },
+            "layer": "data/raw/chennai_flows_5yr.kml",
+            "zones": {
+              "area_km2": 128.6,
+              "categories": {
+                "HIGH": 76,
+                "LOW": 374,
+                "MODERATE": 129
+              },
+              "features": 579,
+              "invalid_repaired": 6
+            }
+          },
+          "label": "5-year return period flood",
+          "max_travel_s": 2606.2,
+          "mean_travel_s": 389.1,
+          "network": {
+            "arcs_usable": 248847,
+            "junction_delay_share": 0.0,
+            "mean_speed_kmh": 26.37
+          },
+          "p50_travel_s": 341.8,
+          "p90_travel_s": 639.8,
+          "population_covered": 2237767,
+          "population_outside": 5387503,
+          "report_only": true,
+          "scenario": "flood5",
+          "threshold_ladder": {
+            "NFPA-travel-4min": {
+              "coverage_share": 0.193,
+              "travel_budget_s": 240
+            },
+            "SFAC-5": {
+              "coverage_share": 0.038,
+              "travel_budget_s": 160
+            },
+            "SFAC-7": {
+              "coverage_share": 0.2935,
+              "travel_budget_s": 280
+            },
+            "deck-8min": {
+              "coverage_share": 0.4812,
+              "travel_budget_s": 340
+            }
+          },
+          "travel_budget_s": 280.0,
+          "unreachable_cells": 131,
+          "unreachable_population": 184736,
+          "unreachable_share": 0.0242,
+          "weight": 0.0
+        },
+        "peak": {
+          "coverage_share": 0.1321,
+          "label": "Peak hour congestion",
+          "max_travel_s": 2700.7,
+          "mean_travel_s": 556.2,
+          "network": {
+            "arcs_usable": 250781,
+            "junction_delay_share": 0.0,
+            "mean_speed_kmh": 18.0
+          },
+          "p50_travel_s": 490.1,
+          "p90_travel_s": 950.1,
+          "population_covered": 1007505,
+          "population_outside": 6617765,
+          "report_only": false,
+          "scenario": "peak",
+          "threshold_ladder": {
+            "NFPA-travel-4min": {
+              "coverage_share": 0.0735,
+              "travel_budget_s": 240
+            },
+            "SFAC-5": {
+              "coverage_share": 0.0154,
+              "travel_budget_s": 160
+            },
+            "SFAC-7": {
+              "coverage_share": 0.1321,
+              "travel_budget_s": 280
+            },
+            "deck-8min": {
+              "coverage_share": 0.222,
+              "travel_budget_s": 340
+            }
+          },
+          "travel_budget_s": 280.0,
+          "unreachable_cells": 0,
+          "unreachable_population": 0,
+          "unreachable_share": 0.0,
+          "weight": 0.15
+        }
+      },
+      "standard": "SFAC-7",
+      "travel_budget_s": 280,
+      "worst_design_basis": "peak"
+    }
+  },
+  "shipped_calibration": false,
+  "station_snap_max_m": 249.3,
+  "stations": 33,
+  "trip_overhead_s": 60.0
+}

@@ -7,8 +7,11 @@ now UNREACHABLE, because the two bridges serving it are cut" — which is the
 thing an emergency planner actually needs to know.
 
 Link state is keyed to the Chennai Flows CATEGORY field (LOW/MODERATE/HIGH)
-rather than to an assumed fording depth, because these layers classify severity
-and do not carry depth.
+rather than to an assumed fording depth, because the return-period layers
+classify severity and do not carry depth. The separate 2015 inundation-point
+layer DOES carry measured depth, so `load_flood_points` keys off depth against
+the A-08 closure threshold instead. Two layers, two honest mappings, rather than
+one invented depth for the layers that never measured it.
 """
 from __future__ import annotations
 
@@ -95,3 +98,54 @@ def flood_factors(states: np.ndarray, wading_speed_factor: float = 0.35) -> np.n
     f[states == WADING] = float(wading_speed_factor)
     f[states == CLOSED] = 0.0
     return f
+
+
+def load_flood_points(path: str, metric_crs: str, *, buffer_m: float,
+                      depth_field: str = "DEPTH", depth_units: str = "inches",
+                      closure_depth_m: float = 0.30
+                      ) -> tuple[gpd.GeoDataFrame, dict]:
+    """Observed inundation POINTS with measured depth -> buffered link-state zones.
+
+    The 2015 event is recorded as 192 surveyed points, not as a modelled extent.
+    Two consequences, both declared rather than smoothed over:
+
+    1. A point is buffered to a disc of `buffer_m`. The radius is an assumption
+       about how far the reported condition extends along the street, and it is
+       the dominant uncertainty in this scenario.
+    2. Depth IS available here (unlike the return-period layers, which carry only
+       a severity CATEGORY), so state is set by depth against the A-08 closure
+       threshold instead of by a category mapping.
+
+    192 points cannot describe a city-wide flood. This scenario is a lower bound
+    on 2015 disruption and is reported, never optimised against.
+    """
+    import warnings
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        g = gpd.read_file(path)
+
+    g = g[g.geometry.notna() & ~g.geometry.is_empty].copy()
+    depth = pd.to_numeric(g[depth_field], errors="coerce")
+    per_unit_m = {"inches": 0.0254, "in": 0.0254, "m": 1.0, "cm": 0.01}
+    if depth_units not in per_unit_m:
+        raise ValueError(f"unknown depth_units {depth_units!r}")
+    depth_m = depth * per_unit_m[depth_units]
+
+    g = g.to_crs(metric_crs)
+    g["geometry"] = g.geometry.buffer(float(buffer_m))
+    # An unmeasured point is still a reported inundation. Treat it as wading
+    # rather than dropping it -- dropping is the optimistic error.
+    g["_state"] = np.where(depth_m.to_numpy() >= closure_depth_m, CLOSED, WADING)
+    g.loc[depth_m.isna().to_numpy(), "_state"] = WADING
+
+    return g[["_state", "geometry"]], {
+        "features": len(g),
+        "buffer_m": float(buffer_m),
+        "depth_units": depth_units,
+        "closure_depth_m": float(closure_depth_m),
+        "depth_m_median": round(float(depth_m.median()), 3) if depth_m.notna().any() else None,
+        "depth_m_max": round(float(depth_m.max()), 3) if depth_m.notna().any() else None,
+        "depth_missing": int(depth_m.isna().sum()),
+        "categories": g["_state"].value_counts().to_dict(),
+        "area_km2": round(float(g.area.sum()) / 1e6, 1),
+    }
