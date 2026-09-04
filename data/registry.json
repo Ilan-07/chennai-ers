@@ -162,5 +162,22 @@
     "source": "osm_fire_stations_wide",
     "uri": "https://overpass-api.de/api/interpreter",
     "version_label": "2026-09-04"
+  },
+  {
+    "bytes": 6420,
+    "fetched_at": "2026-09-04T07:37:37+00:00",
+    "id": 12,
+    "licence": "Government of Tamil Nadu, public web directory",
+    "local_path": "data/reference/tnfrs_chennai_contacts.json",
+    "notes": {
+      "fields": "station, tab number, landline, CUG mobile, email",
+      "stations": 43,
+      "used_by": "E-11f identity confirmation",
+      "why": "supplies official landlines for the 9 stations the GCC page listed only as 101, and an email address for every station - a contact route that needs no phone call"
+    },
+    "sha256": "6c4547d2680271167c97eea2d679eac662917fc73cc6bf5ec95b361d2e781ddc",
+    "source": "tnfrs_chennai_station_directory",
+    "uri": "https://www.tnfrs.tn.gov.in/subsubmenu_page_content.php?menu_id=NDM2&submenu_id=ODk5&thirdlvl_id=NDEx&dept_id=443&lang=MQ==",
+    "version_label": "2026-09-04"
   }
 ]

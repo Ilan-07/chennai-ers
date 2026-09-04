@@ -4,9 +4,18 @@
   "cells": 3838,
   "cutoff": "none (exhaustive sweep)",
   "demand_total": 7625269,
+  "emri_gate": {
+    "dry_only_response_s": 456.1,
+    "note": "dry-only is reported for continuity but is not the test: a free-flow scenario is the wrong counterpart to an operational mean.",
+    "published_max_s": 450,
+    "published_min_s": 426,
+    "statistic": "A-10 weighted mean EMS response across design-basis scenarios",
+    "weighted_response_s": 487.4,
+    "within_published_range": false
+  },
   "junction_delay_scale": 0.0,
   "provisional_reason": "29 of 33 stations are geocoder positions, not surveyed",
-  "seconds": 30.9,
+  "seconds": 32.4,
   "services": {
     "ems": {
       "design_basis_weight_sum": 1.0,

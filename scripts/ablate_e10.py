@@ -39,17 +39,21 @@ ap.add_argument("--skip-decision", action="store_true",
 ap.add_argument("--out", default="data/interim/ablation_e10.json")
 args = ap.parse_args()
 
-INCUMBENT_JS = 0.10          # what config/speeds/base.yml currently ships
-INCUMBENT_OH = 45            # trip_overhead_s
 BAND_BIAS_GATE = 0.05
 t0 = time.time()
 
+OH_GRID_HINT = []
 speeds = yaml.safe_load(open("config/speeds/base.yml"))
 car = yaml.safe_load(open("config/services/car.yml"))
 cfg = yaml.safe_load(open("config/city/chennai.yml")); METRIC = cfg["crs"]["metric"]
-assert abs(float(speeds["junction_delay_scale"]) - INCUMBENT_JS) < 1e-9, \
-    "incumbent junction_delay_scale moved; this ablation compares against the shipped value"
-assert abs(float(speeds["trip_overhead_s"]) - INCUMBENT_OH) < 1e-9
+# Read the incumbent from config rather than hardcoding it. These were pinned to
+# 0.10/45 and the pin fired the moment stage 4 moved the overhead to 17.5 -- the
+# guard was right that something had changed, but an ablation should compare
+# against whatever is SHIPPED, not against a constant frozen when it was written.
+INCUMBENT_JS = float(speeds["junction_delay_scale"])
+INCUMBENT_OH = float(speeds["trip_overhead_s"])
+if INCUMBENT_OH not in OH_GRID_HINT:
+    OH_GRID_HINT.append(INCUMBENT_OH)
 
 # ---------------------------------------------------------------------------
 # ARM 1 — FIT. Against the SAME cached OSRM oracle pairs the calibration used,
@@ -131,7 +135,7 @@ print("\n=== ARM 1: FIT vs OSRM oracle ===")
 print("extending the stage-3 grid THROUGH the boundary the optimum sat on:\n")
 grid = []
 JS = [0.0, 0.025, 0.05, 0.075, 0.10, 0.15, 0.20]
-OH = [0, 15, 30, 45, 60, 75, 90]
+OH = sorted(set([0, 15, 17.5, 30, 45, 60, 75, 90] + OH_GRID_HINT))
 for js in JS:
     best_at_js = None
     for oh in OH:

@@ -55,7 +55,7 @@ unlabelled, and nothing reaches a slide, an export or a report without its label
 | A-11 | Demand tessellation | H3 resolution 9 | Sensitivity at r10 |
 | A-12 | Candidate minimum separation | 800 m | E-09 (candidate resample) |
 | A-13 | Parcel snap radius | 400 m | Reported per site |
-| A-15 | Station position uncertainty | 900 m (29) / 60 m (4) — **FALSIFIED by E-11c: 16 of 29 lie outside 900 m, up to 25 km** | E-11 (±6.7 pts, now an UNDER-estimate), E-11b (survey ranking), E-11c (Maps lookup). Survey outstanding. |
+| A-15 | Station position uncertainty | 50 m residual on the adopted Maps positions — **but only 14 of 29 have a confirmed identity** | E-11 to E-11g. The noise floor is **±0.8 pts if the 15 unconfirmed POIs are right, ±7.6 if they are not** (E-11g). Verification outstanding. |
 | A-14 | Demand snap flag threshold | 300 m | Reported per cell |
 
 ## Experiment results
@@ -384,6 +384,76 @@ problem, not a settled one.
 run, concluded, written up and nearly adopted while the inputs it depended on
 were wrong by kilometres. E-11 said the modelling was below the noise floor;
 this is what that looks like in practice.
+
+### E-11f — the official TNFRS directory confirms 12 identities, contact-free
+
+`data/reference/tnfrs_chennai_contacts.json` (registered, id 12).
+
+The Tamil Nadu Fire and Rescue Services publish their own station directory:
+43 Chennai stations with **official landlines, CUG mobiles and email addresses**.
+The GCC page this project started from carried neither addresses nor, for nine
+stations, anything but the generic `101`.
+
+That makes a verification possible that needs no contact with anyone. Where a
+Google Maps listing publishes a number matching the official TNFRS record, the
+listing is provably that station — the method that confirmed Thiruvanmiyur, now
+applicable to all 29:
+
+| confirmed on the official landline | confirmed on the official CUG mobile |
+|---|---|
+| Thiruvanmiyur, Poonamallee, Ambattur, Villivakkam, Korukkupet, J.J. Nagar, Ennore, **Avadi** | Koyambedu, Mylapore, Guindy, Manali |
+
+**12 of 29 confirmed, zero contradicted.** Avadi is resolved by it: the POI named
+only "Fire station" carries the official Avadi landline, so it is the station.
+
+This confirms IDENTITY, not the pin's precision — a listing can name the right
+station and still sit tens of metres off the building. It does, however, remove
+the failure that actually mattered: a 25 km error of the kind Nominatim made.
+
+Two revisions it forces:
+
+- **Athipattu.** TNFRS lists TWO — "Athipattu - I FS" (044-27950080, our
+  authoritative number) and "Athipattu - II FS" — which explains Google's two
+  candidates, one named "stage 2". E-11e's conclusion that *neither* is municipal
+  was therefore too strong; both may be TNFRS, with OSM's "NCTPS Fire Station"
+  a colloquial label. Neither listing publishes a phone, so it stays unresolved.
+- **Nine stations gained a real landline** where the GCC page had only `101`:
+  Ashok Nagar, Mylapore, T Nagar, Guindy, V.O.C Nagar, Royapuram, Saidapet,
+  Tondiarpet, Secretariat. The worklist now carries the published number and an
+  email address for every one of the 29.
+
+### E-11g — what the 15 UNCONFIRMED stations are worth
+
+The ±0.8 point noise floor reported after E-11c is an ASSUMPTION for 15 of the
+29 — that their Google POI really is that station. Nobody has checked. So the
+`mixed` error model measures the cost of being wrong: identity-confirmed
+stations keep a 50 m residual, unconfirmed ones are drawn from the same
+empirical displacement distribution the discredited Nominatim positions had.
+
+| error model | assumes | EMS P5–P95 | sites stable ≥95% |
+|---|---|---|---|
+| gmaps | all 29 POIs are correct | **±0.83 pts** | 6 of 10 |
+| **mixed** | the 15 unconfirmed are no better than the old geocode | **±7.63 pts** | **1 of 10** |
+
+At ±7.6 every effect this project has measured is back below the noise floor, and
+the site list is unidentified again — 64 distinct sites for 10 slots.
+
+`mixed` is a deliberate worst case: it assumes identity confirmation bought those
+15 nothing, when a POI named "Kilpauk Fire Station" and categorised as a fire
+station is plainly better evidence than a locality centroid. The truth lies
+between the two rows, and it cannot be located without checking.
+
+**What this licenses.** Reporting `61.8% ±0.8` as a bare number is not supported.
+Two honest options: send the 15 emails and earn the tighter figure, or publish
+the bracket —
+
+> Assuming the 15 unverified POIs correctly identify their stations, EMS coverage
+> is 61.8% ±0.8. If they are no better than the geocoder positions they replaced,
+> the interval is ±7.6.
+
+The bracket needs no contact with anyone and is consistent with the project's
+existing PROVISIONAL discipline. What is not defensible is quoting the narrow
+figure while 15 of its inputs rest on an unchecked assumption.
 
 ### E-11e — independent cross-check. Only OSM exists, and it settles two.
 

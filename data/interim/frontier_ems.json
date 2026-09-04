@@ -1,7 +1,7 @@
 {
   "PROVISIONAL": true,
   "all_rungs_proven_optimal": true,
-  "baseline_share": 0.5507,
+  "baseline_share": 0.6175,
   "baseline_worst_ward": 0.0,
   "beta_max": 0.0,
   "beta_max_optimality": "proven optimal",
@@ -11,26 +11,26 @@
   "frontier": [
     {
       "beta": 0.0,
-      "coverage_share": 0.6818,
+      "coverage_share": 0.751,
       "feasible": true,
       "jaccard_vs_prev": 1.0,
-      "median_ward": 0.7859,
+      "median_ward": 0.8991,
       "optimality": "proven optimal",
       "proven_optimal": true,
       "sites": [
-        63,
+        54,
+        62,
         94,
         118,
-        421,
-        480
+        421
       ],
-      "solve_s": 0.211,
-      "ward_share_std": 0.3576,
+      "solve_s": 0.224,
+      "ward_share_std": 0.3457,
       "worst_ward": 0.0
     }
   ],
   "k": 5,
-  "seconds": 34.2,
+  "seconds": 84.1,
   "service": "ems",
-  "trip_overhead_s": 45.0
+  "trip_overhead_s": 17.5
 }

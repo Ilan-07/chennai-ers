@@ -9,8 +9,11 @@ calibration:
   date: 2026-09-03
   oracle: "OSRM public demo server, car profile"
   sample: "199 stratified station->cell OD pairs, 4 distance bands, seed 20260903"
-  result: {median_abs_pct_error: 0.091, bias_pct: 0.021, worst_band_bias_pct: 0.050}
-  gate: {medape_le_15pct: true, band_bias_le_5pct: "at the boundary (5.0%)"}
+  result: {median_abs_pct_error: 0.0723, worst_band_median_ratio: 0.0257}
+  gate: {medape_le_15pct: true, band_median_ratio_le_5pct: true}
+  # The band statistic is now median(model/oracle)-1 per band. The previous
+  # sum-ratio `bias_pct` could not be gated on at this sample size (F-19), and
+  # the "at the boundary (5.0%)" note it carried was inside its own noise.
   note: >
     The pre-calibration table was 1.77x SLOWER than the oracle uniformly across
     every distance band. A scalar rescale fitted well (x1.8, MedAPE 8.2%) but was
@@ -95,4 +98,23 @@ junction_delay_scale: 0.10
 # penalties the oracle applies that this model does not.
 # NOT the same as turnout time, which is modelled separately per service and
 # must not be double-counted with this.
-trip_overhead_s: 45
+#
+# STAGE 4 (data/interim/calibration_stage4.json). Was 45 s, which is 21% of a
+# median 0-2 km trip and 3% of a 10-20 km one -- so it distorted short trips
+# badly. The old band gate could not see this: it scored a ratio of SUMS, which
+# inside a band is dominated by the longest trips (F-19).
+#
+#                    worst band (median ratio)   MedAPE
+#   45 s                      15.05%              9.37%
+#   17.5 s                     2.57%              7.23%
+#
+# Cross-validated 40x on held-out halves: the refit wins worst-band in 95% of
+# splits and MedAPE in 100%. A two-part overhead (a + b*km) was fitted and
+# rejected -- it does not beat a single smaller constant out of sample.
+#
+# On the 108/EMRI comparison this is also an improvement, once compared like for
+# like. EMRI publishes an OPERATIONAL mean across real dispatches in real
+# traffic; the right counterpart is the A-10 weighted response, not the dry one:
+#   45 s   -> weighted 480.1 s   (30.1 s outside the published 426-450 s)
+#   17.5 s -> weighted 452.6 s   ( 2.6 s outside)
+trip_overhead_s: 17.5

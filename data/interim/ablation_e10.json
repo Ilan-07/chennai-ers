@@ -7,122 +7,122 @@
   "criteria": {
     "ablated_passes_band_bias_gate": false,
     "ablated_passes_medape_gate": true,
-    "fit_no_worse": false
+    "fit_no_worse": true
   },
   "decision": {
     "ablated_report": "data/interim/degradation_report_e10_ablated.json",
     "expected_coverage": {
       "ems": {
         "ablated": 0.4634,
-        "incumbent": 0.4882
+        "incumbent": 0.5519
       },
       "fire": {
         "ablated": 0.321,
-        "incumbent": 0.3531
+        "incumbent": 0.4174
       }
     },
-    "max_abs_delta_points": 3.53,
+    "max_abs_delta_points": 10.47,
     "rows": [
       {
         "ablated_coverage": 0.525,
-        "delta_points": -2.57,
+        "delta_points": -9.25,
         "delta_unreachable_population": 0,
-        "incumbent_coverage": 0.5507,
+        "incumbent_coverage": 0.6175,
         "scenario": "dry",
         "service": "ems"
       },
       {
         "ablated_coverage": 0.4561,
-        "delta_points": -2.4,
+        "delta_points": -8.47,
         "delta_unreachable_population": 0,
-        "incumbent_coverage": 0.4801,
+        "incumbent_coverage": 0.5408,
         "scenario": "f2015",
         "service": "ems"
       },
       {
         "ablated_coverage": 0.3489,
-        "delta_points": -2.43,
+        "delta_points": -8.43,
         "delta_unreachable_population": 0,
-        "incumbent_coverage": 0.3732,
+        "incumbent_coverage": 0.4332,
         "scenario": "flood100",
         "service": "ems"
       },
       {
         "ablated_coverage": 0.414,
-        "delta_points": -2.26,
+        "delta_points": -8.36,
         "delta_unreachable_population": 0,
-        "incumbent_coverage": 0.4366,
+        "incumbent_coverage": 0.4976,
         "scenario": "flood25",
         "service": "ems"
       },
       {
         "ablated_coverage": 0.4672,
-        "delta_points": -2.71,
+        "delta_points": -9.67,
         "delta_unreachable_population": 0,
-        "incumbent_coverage": 0.4943,
+        "incumbent_coverage": 0.5639,
         "scenario": "flood5",
         "service": "ems"
       },
       {
         "ablated_coverage": 0.2469,
-        "delta_points": -2.23,
+        "delta_points": -7.48,
         "delta_unreachable_population": 0,
-        "incumbent_coverage": 0.2692,
+        "incumbent_coverage": 0.3217,
         "scenario": "peak",
         "service": "ems"
       },
       {
         "ablated_coverage": 0.3697,
-        "delta_points": -3.53,
+        "delta_points": -10.47,
         "delta_unreachable_population": 0,
-        "incumbent_coverage": 0.405,
+        "incumbent_coverage": 0.4744,
         "scenario": "dry",
         "service": "fire"
       },
       {
         "ablated_coverage": 0.3209,
-        "delta_points": -3.18,
+        "delta_points": -9.15,
         "delta_unreachable_population": 0,
-        "incumbent_coverage": 0.3527,
+        "incumbent_coverage": 0.4124,
         "scenario": "f2015",
         "service": "fire"
       },
       {
         "ablated_coverage": 0.2292,
-        "delta_points": -2.42,
+        "delta_points": -8.08,
         "delta_unreachable_population": 0,
-        "incumbent_coverage": 0.2534,
+        "incumbent_coverage": 0.31,
         "scenario": "flood100",
         "service": "fire"
       },
       {
         "ablated_coverage": 0.2784,
-        "delta_points": -3.06,
+        "delta_points": -9.04,
         "delta_unreachable_population": 0,
-        "incumbent_coverage": 0.309,
+        "incumbent_coverage": 0.3688,
         "scenario": "flood25",
         "service": "fire"
       },
       {
         "ablated_coverage": 0.322,
-        "delta_points": -3.04,
+        "delta_points": -9.78,
         "delta_unreachable_population": 0,
-        "incumbent_coverage": 0.3524,
+        "incumbent_coverage": 0.4198,
         "scenario": "flood5",
         "service": "fire"
       },
       {
         "ablated_coverage": 0.1525,
-        "delta_points": -2.08,
+        "delta_points": -6.73,
         "delta_unreachable_population": 0,
-        "incumbent_coverage": 0.1733,
+        "incumbent_coverage": 0.2198,
         "scenario": "peak",
         "service": "fire"
       }
     ],
     "scenario_ranking_preserved": {
       "ems": true,
-      "fire": false
+      "fire": true
     }
   },
   "experiment": "E-10",
@@ -151,18 +151,18 @@
       "worst_band_bias": 0.0809
     },
     "incumbent": {
-      "bias_pct": 0.0123,
+      "bias_pct": -0.025,
       "gate_band_bias_le_5pct": false,
       "gate_medape_le_15pct": true,
       "junction_delay_share": 0.0389,
       "junction_scale": 0.1,
-      "medape": 0.0937,
-      "objective": 0.1259,
-      "overhead_s": 45,
-      "worst_band_bias": 0.0699
+      "medape": 0.0723,
+      "objective": 0.17,
+      "overhead_s": 17.5,
+      "worst_band_bias": 0.1227
     },
     "incumbent_passes_band_gate": false,
-    "verdict": "ablation fits worse"
+    "verdict": "ablation fits at least as well"
   },
   "grid": [
     {
@@ -186,6 +186,17 @@
       "objective": 0.2786,
       "overhead_s": 15,
       "worst_band_bias": 0.1724
+    },
+    {
+      "bias_pct": -0.0745,
+      "gate_band_bias_le_5pct": false,
+      "gate_medape_le_15pct": true,
+      "junction_delay_share": 0.0,
+      "junction_scale": 0.0,
+      "medape": 0.0768,
+      "objective": 0.2689,
+      "overhead_s": 17.5,
+      "worst_band_bias": 0.1676
     },
     {
       "bias_pct": -0.0575,
@@ -265,6 +276,17 @@
       "worst_band_bias": 0.1612
     },
     {
+      "bias_pct": -0.062,
+      "gate_band_bias_le_5pct": false,
+      "gate_medape_le_15pct": true,
+      "junction_delay_share": 0.01,
+      "junction_scale": 0.025,
+      "medape": 0.0685,
+      "objective": 0.2369,
+      "overhead_s": 17.5,
+      "worst_band_bias": 0.1564
+    },
+    {
       "bias_pct": -0.045,
       "gate_band_bias_le_5pct": false,
       "gate_medape_le_15pct": true,
@@ -340,6 +362,17 @@
       "objective": 0.2164,
       "overhead_s": 15,
       "worst_band_bias": 0.1497
+    },
+    {
+      "bias_pct": -0.0496,
+      "gate_band_bias_le_5pct": false,
+      "gate_medape_le_15pct": true,
+      "junction_delay_share": 0.0198,
+      "junction_scale": 0.05,
+      "medape": 0.0622,
+      "objective": 0.2067,
+      "overhead_s": 17.5,
+      "worst_band_bias": 0.1449
     },
     {
       "bias_pct": -0.0327,
@@ -419,6 +452,17 @@
       "worst_band_bias": 0.1386
     },
     {
+      "bias_pct": -0.0373,
+      "gate_band_bias_le_5pct": false,
+      "gate_medape_le_15pct": true,
+      "junction_delay_share": 0.0294,
+      "junction_scale": 0.075,
+      "medape": 0.065,
+      "objective": 0.1861,
+      "overhead_s": 17.5,
+      "worst_band_bias": 0.1338
+    },
+    {
       "bias_pct": -0.0203,
       "gate_band_bias_le_5pct": false,
       "gate_medape_le_15pct": true,
@@ -494,6 +538,17 @@
       "objective": 0.1771,
       "overhead_s": 15,
       "worst_band_bias": 0.1275
+    },
+    {
+      "bias_pct": -0.025,
+      "gate_band_bias_le_5pct": false,
+      "gate_medape_le_15pct": true,
+      "junction_delay_share": 0.0389,
+      "junction_scale": 0.1,
+      "medape": 0.0723,
+      "objective": 0.17,
+      "overhead_s": 17.5,
+      "worst_band_bias": 0.1227
     },
     {
       "bias_pct": -0.008,
@@ -573,6 +628,17 @@
       "worst_band_bias": 0.1052
     },
     {
+      "bias_pct": -0.0005,
+      "gate_band_bias_le_5pct": false,
+      "gate_medape_le_15pct": true,
+      "junction_delay_share": 0.0572,
+      "junction_scale": 0.15,
+      "medape": 0.086,
+      "objective": 0.1369,
+      "overhead_s": 17.5,
+      "worst_band_bias": 0.1004
+    },
+    {
       "bias_pct": 0.0165,
       "gate_band_bias_le_5pct": false,
       "gate_medape_le_15pct": true,
@@ -650,6 +716,17 @@
       "worst_band_bias": 0.0832
     },
     {
+      "bias_pct": 0.024,
+      "gate_band_bias_le_5pct": false,
+      "gate_medape_le_15pct": true,
+      "junction_delay_share": 0.0748,
+      "junction_scale": 0.2,
+      "medape": 0.1022,
+      "objective": 0.1546,
+      "overhead_s": 17.5,
+      "worst_band_bias": 0.0784
+    },
+    {
       "bias_pct": 0.041,
       "gate_band_bias_le_5pct": false,
       "gate_medape_le_15pct": true,
@@ -708,5 +785,5 @@
   "hypothesis": "the junction-delay term should be deleted entirely (scale = 0)",
   "hypothesis_supported": false,
   "recommendation": "Retain the junction term at the shipped scale; the ablation did not clear the stated criteria.",
-  "seconds": 39.8
+  "seconds": 45.1
 }

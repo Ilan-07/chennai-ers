@@ -133,17 +133,24 @@ from ers.geo.graph import connectivity_report
 conn = connectivity_report(build_graph(nodes, edges, "tau_ds_ems").csr)
 print("\nconnectivity:", json.dumps(conn))
 
-# GATE: does the calibrated model reproduce the operator's own published figure?
+# CONTEXT, NOT A GATE. 108/EMRI publish an OPERATIONAL mean response, measured
+# across real dispatches in real traffic. The dry scenario is defined as free
+# flow, so comparing the two is not like for like -- and treating it as a gate
+# once let an inflated trip overhead pass by cancelling against the wrong
+# comparison. The like-for-like test is the A-10 weighted response, and it lives
+# in scripts/degradation.py where the weighted figure actually exists.
 ems = results["ems"]
 modelled_response_s = ems["mean_travel_s"] + ems["t_alarm_s"] + ems["t_turnout_s"]
 tgt = SPEEDS["calibration_target"]
 in_range = tgt["value_min_s"] <= modelled_response_s <= tgt["value_max_s"]
-print(f"\n--- calibration check vs 108/EMRI published Chennai metro response ---")
-print(f"  modelled EMS response = {ems['mean_travel_s']:.0f}s travel + {ems['t_alarm_s']}s alarm"
+print(f"\n--- 108/EMRI comparison (DRY scenario -- context only) ---")
+print(f"  modelled EMS dry response = {ems['mean_travel_s']:.0f}s travel + {ems['t_alarm_s']}s alarm"
       f" + {ems['t_turnout_s']}s turnout = {modelled_response_s:.0f}s ({modelled_response_s/60:.2f} min)")
-print(f"  published range        = {tgt['value_min_s']}-{tgt['value_max_s']}s "
+print(f"  published range           = {tgt['value_min_s']}-{tgt['value_max_s']}s "
       f"({tgt['value_min_s']/60:.1f}-{tgt['value_max_s']/60:.1f} min)")
-print(f"  GATE (within published range): {in_range}")
+print(f"  within range: {in_range}  —  NOT a gate: a free-flow scenario is the wrong")
+print(f"  counterpart to an operational mean. See degradation_report.json for the")
+print(f"  A-10 weighted comparison, which is the like-for-like one.")
 
 report = {
     "connectivity": conn,
@@ -157,7 +164,11 @@ report = {
         if SENS else
         "Station position uncertainty is NOT quantified for this run; the coverage "
         "shares below are point estimates with an unknown error bar."),
-    "calibration_check": {
+    "emri_comparison_dry_context_only": {
+        "is_gate": False,
+        "why_not": "EMRI publish an operational mean across real dispatches; the dry "
+                   "scenario is free-flow. The like-for-like test is the A-10 weighted "
+                   "response, gated in degradation_report.json.",
         "modelled_response_s": round(modelled_response_s, 1),
         "published_min_s": tgt["value_min_s"], "published_max_s": tgt["value_max_s"],
         "within_published_range": bool(in_range),

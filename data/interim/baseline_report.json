@@ -1,12 +1,5 @@
 {
   "PROVISIONAL": true,
-  "calibration_check": {
-    "modelled_response_s": 448.7,
-    "published_max_s": 450,
-    "published_min_s": 426,
-    "source": "108 / EMRI published Chennai metro mean response",
-    "within_published_range": true
-  },
   "cells": 3838,
   "connectivity": {
     "largest_strong_nodes": 88096,
@@ -20,6 +13,15 @@
     "weak_components": 1
   },
   "demand_total": 7625269,
+  "emri_comparison_dry_context_only": {
+    "is_gate": false,
+    "modelled_response_s": 421.2,
+    "published_max_s": 450,
+    "published_min_s": 426,
+    "source": "108 / EMRI published Chennai metro mean response",
+    "why_not": "EMRI publish an operational mean across real dispatches; the dry scenario is free-flow. The like-for-like test is the A-10 weighted response, gated in degradation_report.json.",
+    "within_published_range": false
+  },
   "headline_caveat": "Coverage shares carry a P5-P95 interval from E-11 station position uncertainty; see results.<svc>.position_uncertainty. The point estimate also sits above the mean draw.",
   "position_uncertainty_measured": true,
   "provisional_reason": "29 of 33 stations are geocoder positions, not surveyed",
@@ -27,20 +29,20 @@
     "ems": {
       "cell_snap_max_m": 1208.2,
       "cells_snap_over_300m": 488,
-      "coverage_share": 0.5507,
-      "max_travel_s": 1772.1,
-      "mean_travel_s": 328.7,
-      "p50_travel_s": 283.0,
-      "p90_travel_s": 550.6,
-      "population_covered": 4199068,
-      "population_outside": 3426202,
+      "coverage_share": 0.6175,
+      "max_travel_s": 1744.6,
+      "mean_travel_s": 301.2,
+      "p50_travel_s": 255.5,
+      "p90_travel_s": 523.1,
+      "population_covered": 4708346,
+      "population_outside": 2916923,
       "position_uncertainty": {
-        "coverage_p5": 0.5422,
-        "coverage_p95": 0.5541,
-        "coverage_sd_points": 0.36,
+        "coverage_p5": 0.6131,
+        "coverage_p95": 0.6215,
+        "coverage_sd_points": 0.27,
         "draws": 300,
-        "mean_bias_points": -0.2,
-        "p5_p95_spread_points": 1.2,
+        "mean_bias_points": -0.01,
+        "p5_p95_spread_points": 0.83,
         "seed": 20260904,
         "source": "data/interim/sensitivity_stations_ems.json"
       },
@@ -51,19 +53,19 @@
       "t_turnout_s": 60,
       "threshold_ladder": {
         "NFPA-travel-4min": {
-          "coverage_share": 0.3624,
+          "coverage_share": 0.4515,
           "travel_budget_s": 240
         },
         "SFAC-5": {
-          "coverage_share": 0.1711,
+          "coverage_share": 0.2518,
           "travel_budget_s": 180
         },
         "SFAC-7": {
-          "coverage_share": 0.5507,
+          "coverage_share": 0.6175,
           "travel_budget_s": 300
         },
         "deck-8min": {
-          "coverage_share": 0.6842,
+          "coverage_share": 0.7332,
           "travel_budget_s": 360
         }
       },
@@ -75,20 +77,20 @@
     "fire": {
       "cell_snap_max_m": 1208.2,
       "cells_snap_over_300m": 488,
-      "coverage_share": 0.405,
-      "max_travel_s": 1982.0,
-      "mean_travel_s": 367.2,
-      "p50_travel_s": 315.5,
-      "p90_travel_s": 622.2,
-      "population_covered": 3088377,
-      "population_outside": 4536892,
+      "coverage_share": 0.4744,
+      "max_travel_s": 1954.5,
+      "mean_travel_s": 339.7,
+      "p50_travel_s": 288.0,
+      "p90_travel_s": 594.7,
+      "population_covered": 3617270,
+      "population_outside": 4007999,
       "position_uncertainty": {
-        "coverage_p5": 0.3931,
-        "coverage_p95": 0.4069,
-        "coverage_sd_points": 0.43,
+        "coverage_p5": 0.4653,
+        "coverage_p95": 0.4772,
+        "coverage_sd_points": 0.36,
         "draws": 300,
-        "mean_bias_points": -0.41,
-        "p5_p95_spread_points": 1.38,
+        "mean_bias_points": -0.31,
+        "p5_p95_spread_points": 1.19,
         "seed": 20260904,
         "source": "data/interim/sensitivity_stations_fire.json"
       },
@@ -99,19 +101,19 @@
       "t_turnout_s": 80,
       "threshold_ladder": {
         "NFPA-travel-4min": {
-          "coverage_share": 0.2872,
+          "coverage_share": 0.3632,
           "travel_budget_s": 240
         },
         "SFAC-5": {
-          "coverage_share": 0.0763,
+          "coverage_share": 0.1424,
           "travel_budget_s": 160
         },
         "SFAC-7": {
-          "coverage_share": 0.405,
+          "coverage_share": 0.4744,
           "travel_budget_s": 280
         },
         "deck-8min": {
-          "coverage_share": 0.5571,
+          "coverage_share": 0.6135,
           "travel_budget_s": 340
         }
       },
@@ -121,7 +123,7 @@
       "unreachable_share": 0.0
     }
   },
-  "seconds": 4.1,
+  "seconds": 7.4,
   "stale_intervals_ignored": {},
   "station_gate": {
     "by_confidence": {

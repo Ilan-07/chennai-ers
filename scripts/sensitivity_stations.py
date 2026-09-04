@@ -45,12 +45,15 @@ ap.add_argument("draws", nargs="?", type=int, default=200)
 ap.add_argument("--k", type=int, default=10, help="stations to site in the decision arm")
 ap.add_argument("--seed", type=int, default=20260904)
 ap.add_argument("--max-snap-m", type=float, default=300.0)
-ap.add_argument("--error-model", default="disc", choices=["disc", "empirical", "gmaps"],
+ap.add_argument("--error-model", default="disc", choices=["disc", "empirical", "gmaps", "mixed"],
                 help="disc: A-15's assumed 900 m uncertainty disc (FALSIFIED by E-11c). "
                      "empirical: bootstrap the 29 displacements actually observed "
                      "between the Nominatim positions and the Google Maps POIs. "
                      "gmaps: Maps positions with a small residual, sampling between "
-                     "candidates where the POI is ambiguous.")
+                     "candidates where the POI is ambiguous. "
+                     "mixed: stations whose identity is confirmed against the official "
+                     "TNFRS directory get a tight residual; the rest are treated "
+                     "pessimistically, as if no better than the old geocode.")
 ap.add_argument("--lookup", default="data/interim/stations_gmaps_lookup.csv")
 ap.add_argument("--skip-decision", action="store_true")
 ap.add_argument("--out", default=None)
@@ -81,7 +84,26 @@ EMPIRICAL = None
 if args.error_model != "disc":
     look = pd.read_csv(args.lookup)
     j = st[["station_name"]].merge(look, on="station_name", how="left")
-    if args.error_model == "empirical":
+    if args.error_model == "mixed":
+        # The question this answers: do the stations we have NOT confirmed still
+        # move the answer? Confirmed ones (a Google listing publishing the
+        # station's official TNFRS number) keep a 50 m residual. Unconfirmed ones
+        # are treated as pessimistically as the evidence allows -- drawn from the
+        # SAME empirical displacement distribution the discredited Nominatim
+        # positions had. That is a deliberate worst case: it assumes confirming
+        # identity bought nothing at all for them.
+        lat = j["gmaps_lat"].fillna(pd.Series(st["lat"].to_numpy())).to_numpy()
+        lon = j["gmaps_lon"].fillna(pd.Series(st["lon"].to_numpy())).to_numpy()
+        xy0 = _project(lat, lon)
+        conf = j["identity_confirmed_by"].fillna("").isin(
+            ["tnfrs_landline", "tnfrs_cug_mobile", "osm_proximity"]).to_numpy()
+        EMPIRICAL = look["shift_from_provisional_m"].dropna().to_numpy(dtype="float64")
+        unc = np.where(conf, 50.0, np.nan)          # NaN marks "use EMPIRICAL"
+        unc = np.where(np.isnan(unc), -1.0, unc)    # -1 sentinel, handled in draw
+        print(f"  mixed model: {int(conf.sum())} identity-confirmed at 50 m residual, "
+              f"{int((~conf).sum())} unconfirmed drawn from the empirical error "
+              f"distribution (median {np.median(EMPIRICAL):.0f} m, max {EMPIRICAL.max():.0f} m)")
+    elif args.error_model == "empirical":
         # A-15 assumed a 900 m disc. E-11c falsified it: 16 of 29 true positions
         # lie outside that disc, up to 25 km. The honest error model is the
         # distribution actually observed. Magnitudes are bootstrapped across
@@ -144,17 +166,22 @@ def draw_positions():
         centres[use_alt] = XY_ALT[use_alt]
     xy = centres.copy()
     settled = np.zeros(n, dtype=bool)
-    settled[unc <= 0] = True
+    settled[unc == 0] = True
     rejected = 0
     for _ in range(MAX_ATTEMPTS):
         todo = ~settled
         if not todo.any():
             break
         m = int(todo.sum())
-        if EMPIRICAL is not None:
+        u = unc[todo]
+        if EMPIRICAL is not None and (u < 0).any():
+            # sentinel -1 means "this station is unconfirmed": empirical draw
+            r = np.where(u < 0, rng.choice(EMPIRICAL, size=m, replace=True),
+                         np.abs(u) * np.sqrt(rng.random(m)))
+        elif EMPIRICAL is not None:
             r = rng.choice(EMPIRICAL, size=m, replace=True)
         else:
-            r = unc[todo] * np.sqrt(rng.random(m))
+            r = u * np.sqrt(rng.random(m))
         th = rng.random(m) * 2 * np.pi
         trial = centres[todo] + np.column_stack([r * np.cos(th), r * np.sin(th)])
         _, dist = snap(ctx.graph, trial[:, 0], trial[:, 1])

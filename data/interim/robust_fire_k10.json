@@ -14,7 +14,7 @@
     "cell_snap_max_m": 1208.2,
     "cells": 3838,
     "service": "fire",
-    "trip_overhead_s": 45.0
+    "trip_overhead_s": 17.5
   },
   "provisional_reason": "29 of 33 stations are geocoder positions, not surveyed",
   "report_only": [
@@ -24,15 +24,15 @@
   "scenario_stats": {
     "dry": {
       "arcs_usable": 250781,
-      "baseline_share": 0.405,
-      "cells_no_candidate_reaches": 881,
+      "baseline_share": 0.4744,
+      "cells_no_candidate_reaches": 762,
       "flood": {},
-      "matrix_nnz": 15258
+      "matrix_nnz": 20580
     },
     "f2015": {
       "arcs_usable": 247975,
-      "baseline_share": 0.3527,
-      "cells_no_candidate_reaches": 1033,
+      "baseline_share": 0.4124,
+      "cells_no_candidate_reaches": 891,
       "flood": {
         "arcs": 250803,
         "bridges_exempted_from_closure": 20,
@@ -44,12 +44,12 @@
         "passable": 243173,
         "wading": 4824
       },
-      "matrix_nnz": 13020
+      "matrix_nnz": 17380
     },
     "flood100": {
       "arcs_usable": 236900,
-      "baseline_share": 0.2534,
-      "cells_no_candidate_reaches": 1443,
+      "baseline_share": 0.31,
+      "cells_no_candidate_reaches": 1316,
       "flood": {
         "arcs": 250803,
         "bridges_exempted_from_closure": 227,
@@ -61,12 +61,12 @@
         "passable": 220345,
         "wading": 16573
       },
-      "matrix_nnz": 9828
+      "matrix_nnz": 12873
     },
     "flood25": {
       "arcs_usable": 244016,
-      "baseline_share": 0.309,
-      "cells_no_candidate_reaches": 1228,
+      "baseline_share": 0.3688,
+      "cells_no_candidate_reaches": 1102,
       "flood": {
         "arcs": 250803,
         "bridges_exempted_from_closure": 120,
@@ -78,12 +78,12 @@
         "passable": 230136,
         "wading": 13901
       },
-      "matrix_nnz": 11304
+      "matrix_nnz": 14935
     },
     "flood5": {
       "arcs_usable": 248847,
-      "baseline_share": 0.3524,
-      "cells_no_candidate_reaches": 1003,
+      "baseline_share": 0.4198,
+      "cells_no_candidate_reaches": 874,
       "flood": {
         "arcs": 250803,
         "bridges_exempted_from_closure": 60,
@@ -95,87 +95,87 @@
         "passable": 244564,
         "wading": 4305
       },
-      "matrix_nnz": 13465
+      "matrix_nnz": 17993
     },
     "peak": {
       "arcs_usable": 250781,
-      "baseline_share": 0.1733,
-      "cells_no_candidate_reaches": 1278,
+      "baseline_share": 0.2198,
+      "cells_no_candidate_reaches": 1071,
       "flood": {},
-      "matrix_nnz": 4834
+      "matrix_nnz": 6317
     }
   },
-  "seconds": 41.2,
+  "seconds": 43.4,
   "service": "fire",
   "strategies": [
     {
       "coverage_by_scenario": {
-        "dry": 0.5892,
-        "f2015": 0.5082,
-        "flood100": 0.3988,
-        "flood25": 0.4626,
-        "flood5": 0.5267,
-        "peak": 0.2481
+        "dry": 0.6774,
+        "f2015": 0.595,
+        "flood100": 0.4524,
+        "flood25": 0.5185,
+        "flood5": 0.6086,
+        "peak": 0.3118
       },
-      "expected_coverage": 0.5159,
+      "expected_coverage": 0.5954,
       "optimality": "proven optimal",
       "proven_optimal": true,
       "sites": [
-        34,
+        4,
         54,
         63,
+        65,
         94,
-        118,
+        116,
         175,
-        195,
-        325,
         404,
-        408
+        408,
+        482
       ],
-      "solve_s": 0.208,
+      "solve_s": 0.255,
       "strategy": "dry-only",
-      "worst_coverage": 0.2481,
+      "worst_coverage": 0.3118,
       "worst_design_basis": "peak"
     },
     {
       "coverage_by_scenario": {
-        "dry": 0.5881,
-        "f2015": 0.5062,
-        "flood100": 0.3971,
-        "flood25": 0.4629,
-        "flood5": 0.5142,
-        "peak": 0.2575
+        "dry": 0.6767,
+        "f2015": 0.5947,
+        "flood100": 0.4709,
+        "flood25": 0.5357,
+        "flood5": 0.6103,
+        "peak": 0.3177
       },
-      "expected_coverage": 0.5164,
+      "expected_coverage": 0.5985,
       "optimality": "proven optimal",
       "proven_optimal": true,
       "sites": [
-        25,
+        4,
         32,
         54,
         63,
         94,
-        118,
+        116,
         175,
         404,
         408,
-        480
+        482
       ],
-      "solve_s": 0.808,
+      "solve_s": 1.238,
       "strategy": "expected",
-      "worst_coverage": 0.2575,
+      "worst_coverage": 0.3177,
       "worst_design_basis": "peak"
     },
     {
       "coverage_by_scenario": {
-        "dry": 0.5477,
-        "f2015": 0.4994,
-        "flood100": 0.3488,
-        "flood25": 0.4147,
-        "flood5": 0.4917,
-        "peak": 0.2783
+        "dry": 0.6305,
+        "f2015": 0.5625,
+        "flood100": 0.4123,
+        "flood25": 0.4821,
+        "flood5": 0.5799,
+        "peak": 0.3417
       },
-      "expected_coverage": 0.484,
+      "expected_coverage": 0.5614,
       "optimality": "proven optimal",
       "proven_optimal": true,
       "sites": [
@@ -183,16 +183,16 @@
         15,
         25,
         32,
-        51,
-        93,
-        126,
+        63,
+        65,
+        94,
+        129,
         138,
-        166,
-        319
+        163
       ],
-      "solve_s": 2.267,
+      "solve_s": 1.719,
       "strategy": "maximin",
-      "worst_coverage": 0.2783,
+      "worst_coverage": 0.3417,
       "worst_design_basis": "peak"
     }
   ]

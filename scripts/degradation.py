@@ -195,5 +195,35 @@ if __name__ == "__main__":
             print(f"  {svc:4s} {c['degradation_dry']:.4f} vs {c['baseline_step09']:.4f}  "
                   f"{'MATCH' if c['match'] else 'MISMATCH'}")
 
+    # GATE: the like-for-like 108/EMRI comparison. Their figure is an operational
+    # mean across every condition, so its counterpart is the A-10 weighted mean
+    # response, not the dry one. Gating on dry once let an inflated trip overhead
+    # survive by cancelling against the wrong comparison.
+    speeds = yaml.safe_load(open("config/speeds/base.yml"))
+    tgt = speeds.get("calibration_target")
+    if tgt and "ems" in rep["services"]:
+        res = rep["services"]["ems"]
+        svc = yaml.safe_load(open("config/services/ems.yml"))
+        off = svc["t_alarm_s"] + svc["t_turnout_s"]
+        db = {k: v for k, v in res["scenarios"].items()
+              if not v["report_only"] and v["weight"] > 0}
+        wsum = sum(v["weight"] for v in db.values())
+        wmean = sum(v["weight"] * v["mean_travel_s"] for v in db.values()) / wsum
+        dry = res["scenarios"]["dry"]["mean_travel_s"]
+        ok = tgt["value_min_s"] <= wmean + off <= tgt["value_max_s"]
+        rep["emri_gate"] = {
+            "statistic": "A-10 weighted mean EMS response across design-basis scenarios",
+            "weighted_response_s": round(wmean + off, 1),
+            "dry_only_response_s": round(dry + off, 1),
+            "published_min_s": tgt["value_min_s"], "published_max_s": tgt["value_max_s"],
+            "within_published_range": bool(ok),
+            "note": "dry-only is reported for continuity but is not the test: a free-flow "
+                    "scenario is the wrong counterpart to an operational mean.",
+        }
+        print(f"\n--- 108/EMRI gate (A-10 weighted, the like-for-like comparison) ---")
+        print(f"  weighted EMS response {wmean + off:6.1f}s   vs published "
+              f"{tgt['value_min_s']}-{tgt['value_max_s']}s   within range: {ok}")
+        print(f"  (dry-only, for continuity: {dry + off:.1f}s — not the test)")
+
     json.dump(rep, open(args.out, "w"), indent=2, sort_keys=True)
     print(f"\nwrote {args.out}  ({rep['seconds']}s)")
