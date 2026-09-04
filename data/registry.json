@@ -179,5 +179,22 @@
     "source": "tnfrs_chennai_station_directory",
     "uri": "https://www.tnfrs.tn.gov.in/subsubmenu_page_content.php?menu_id=NDM2&submenu_id=ODk5&thirdlvl_id=NDEx&dept_id=443&lang=MQ==",
     "version_label": "2026-09-04"
+  },
+  {
+    "bytes": 2285462,
+    "fetched_at": "2026-09-04T08:11:40+00:00",
+    "id": 13,
+    "licence": "ODbL (OpenStreetMap contributors)",
+    "local_path": "data/raw/osm_water_overpass.json",
+    "notes": {
+      "elements": 1406,
+      "query": "waterway river|canal|stream + natural=water over the GCC bbox",
+      "used_by": "scripts/export_basemap.py",
+      "why": "rivers, canals and tanks for the console basemap - a flood study whose map shows no water is hard to read"
+    },
+    "sha256": "0eec5c36fd160fd2f9151e42e4931c0952e827b360ac7135f3c492155ffc45b5",
+    "source": "osm_water_chennai",
+    "uri": "https://overpass-api.de/api/interpreter",
+    "version_label": "2026-09-04"
   }
 ]
