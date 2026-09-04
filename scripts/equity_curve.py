@@ -127,11 +127,19 @@ OUT = f"data/interim/equity_curve_{SVC}.json"
 merged = {}
 if pathlib.Path(OUT).exists():
     prev = json.load(open(OUT))
-    if abs(prev.get("baseline_share", ctx.baseline_share) - ctx.baseline_share) > 5e-4:
+    stale = abs(prev.get("baseline_share", ctx.baseline_share) - ctx.baseline_share) > 5e-4
+    kept = [r["k"] for r in prev.get("curve", []) if r["k"] not in {x["k"] for x in rows}]
+    # The guard exists to stop stale rows MIXING with fresh ones. If this run
+    # recomputed every k the old file held, there is nothing stale to carry
+    # forward and the file is simply replaced.
+    if stale and kept:
         raise SystemExit(f"{OUT} was built against a different baseline "
-                         f"({prev['baseline_share']} vs {ctx.baseline_share:.4f}); "
-                         f"re-run the whole curve rather than merging into it")
-    merged = {r["k"]: r for r in prev.get("curve", [])}
+                         f"({prev['baseline_share']} vs {ctx.baseline_share:.4f}) and "
+                         f"this run does not recompute k={kept}; re-run the whole curve")
+    if stale:
+        print(f"  replacing curve built against baseline {prev['baseline_share']} "
+              f"(now {ctx.baseline_share:.4f}) — every k recomputed", flush=True)
+    merged = {} if stale else {r["k"]: r for r in prev.get("curve", [])}
 merged.update({r["k"]: r for r in rows})
 rows = [merged[k] for k in sorted(merged)]
 

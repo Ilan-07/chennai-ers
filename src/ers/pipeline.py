@@ -118,6 +118,21 @@ def load_service(service: str, *, root: str | Path = ".",
     )
 
 
+def station_signature(stations: pd.DataFrame) -> str:
+    """Stable fingerprint of the station positions a result was computed from.
+
+    Any artefact derived from station positions must record this, and any
+    consumer must check it. Positions have already been superseded once (E-11c
+    adopted Google Maps POIs over Nominatim locality centroids); without a
+    fingerprint, an interval computed for the old positions is indistinguishable
+    from one computed for the new, and gets published against the wrong number.
+    """
+    import hashlib
+    rows = stations.sort_values("station_name")[["station_name", "lat", "lon"]]
+    payload = "|".join(f"{r.station_name}:{r.lat:.6f},{r.lon:.6f}" for r in rows.itertuples())
+    return hashlib.sha256(payload.encode()).hexdigest()[:16]
+
+
 def ward_shares(ward: np.ndarray, demand: np.ndarray, covered: np.ndarray) -> pd.Series:
     """Population-weighted coverage share per ward."""
     df = pd.DataFrame({"w": ward, "d": demand, "c": covered.astype(float)})

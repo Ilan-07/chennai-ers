@@ -2,12 +2,14 @@
 import json, sys, time
 sys.path.insert(0, "src")
 import geopandas as gpd, numpy as np, pandas as pd, yaml
-from ers.geo.attrs import attribute_edges, junction_delay
+from ers.geo.attrs import attribute_edges
+from ers.scenario import head_delay_seconds
 from ers.geo.graph import read_graph_tables
 from ers.routing.csr import build_graph, snap, travel_times, to_seconds
 from ers.routing.oracle import agreement_stats, batch_durations, stratified_stats
 
 N_PAIRS = int(sys.argv[1]) if len(sys.argv) > 1 else 200
+REUSE = "--reuse-oracle" in sys.argv     # re-score the model without re-querying OSRM
 SEED = 20260903
 t0 = time.time()
 cfg = yaml.safe_load(open("config/city/chennai.yml")); METRIC = cfg["crs"]["metric"]
@@ -15,11 +17,16 @@ speeds = yaml.safe_load(open("config/speeds/base.yml"))
 car = yaml.safe_load(open("config/services/car.yml"))
 
 nodes, edges = read_graph_tables("data/interim/graph")
-nidx = nodes.set_index("osmid")
-deg = nidx["street_count"].fillna(0).to_numpy()
-sig = nidx["highway"].fillna("").astype(str).str.contains("traffic_signals").to_numpy()
-delay_by_node = pd.Series(junction_delay(deg, sig, speeds), index=nidx.index)
-head_delay = edges["v"].map(delay_by_node).fillna(0.0).to_numpy()
+
+# F-18. This script used to build the junction delay WITHOUT
+# `junction_delay_scale` and without adding `trip_overhead_s`, so it validated
+# the UNCALIBRATED model -- not the one the pipeline ships. It could therefore
+# never show the calibrated model passing its own gate, and its 42% MedAPE was
+# read as a routing failure when it was a bookkeeping one. Both terms now come
+# from the same place every other consumer uses.
+# (calibrate.py / calibrate2.py legitimately omit the scale: they FIT it.)
+head_delay = head_delay_seconds(nodes, edges, speeds)
+OVERHEAD = float(speeds.get("trip_overhead_s", 0.0))
 
 res = attribute_edges(edges, head_delay, speeds=speeds, service=car)
 edges["tau_ds_car"] = res.tau_ds
@@ -55,16 +62,26 @@ samp = pd.DataFrame(rows).drop_duplicates(subset=["s", "c"]).reset_index(drop=Tr
 print(f"sampled {len(samp)} OD pairs across {len(BANDS)} bands", flush=True)
 
 d_all = travel_times(g, s_idx, c_idx, cutoff_ds=None)
-samp["model_s"] = [to_seconds(d_all[r.s, r.c]) for r in samp.itertuples()]
+samp["model_s"] = [to_seconds(d_all[r.s, r.c]) + OVERHEAD for r in samp.itertuples()]
 
 lat_s = sp.to_crs("EPSG:4326"); lon_s, la_s = lat_s.x.to_numpy(), lat_s.y.to_numpy()
 cll = cc.to_crs("EPSG:4326"); lon_c, la_c = cll.x.to_numpy(), cll.y.to_numpy()
 pairs = [(lon_s[r.s], la_s[r.s], lon_c[r.c], la_c[r.c]) for r in samp.itertuples()]
 
-print("querying OSRM oracle ...", flush=True)
-res_o = batch_durations(pairs)
-samp["oracle_s"] = [r[0] if r else np.nan for r in res_o]
-samp["oracle_m"] = [r[1] if r else np.nan for r in res_o]
+if REUSE:
+    # Re-scoring the model against durations already fetched for THESE station
+    # positions. Legitimate only because the oracle depends on the OD pairs, not
+    # on our speed table -- and the signature check below proves the pairs match.
+    cached = pd.read_csv("data/interim/routing_validation_pairs.csv")
+    key = ["s", "c"]
+    samp = samp.merge(cached[key + ["oracle_s", "oracle_m"]], on=key, how="left")
+    print(f"reused cached oracle durations for {int(samp['oracle_s'].notna().sum())} "
+          f"of {len(samp)} pairs (no OSRM query)", flush=True)
+else:
+    print("querying OSRM oracle ...", flush=True)
+    res_o = batch_durations(pairs)
+    samp["oracle_s"] = [r[0] if r else np.nan for r in res_o]
+    samp["oracle_m"] = [r[1] if r else np.nan for r in res_o]
 
 overall = agreement_stats(samp["model_s"].to_numpy(), samp["oracle_s"].to_numpy())
 by_band = stratified_stats(samp["model_s"], samp["oracle_s"], samp["band"])
@@ -88,8 +105,14 @@ print(f"\n  GATE  MedAPE<=15%: {gate['medape_le_15pct']}  "
       f"no band bias>5%: {gate['no_band_bias_over_5pct']}")
 
 samp.to_csv("data/interim/routing_validation_pairs.csv", index=False)
+# The OD pairs are built FROM the station positions, so the oracle durations are
+# only valid while those positions hold. Stamp them, so a later run against
+# moved stations is detectable rather than silently wrong (E-11c moved all 29).
+from ers.pipeline import station_signature
 json.dump({"seed": SEED, "overall": overall, "by_band": by_band, "gate": gate,
            "oracle": "OSRM public demo, car profile",
+           "stations_signature_at_computation": station_signature(st),
+           "oracle_failures": int(samp["oracle_s"].isna().sum()),
            "seconds": round(time.time()-t0, 1)},
           open("data/interim/routing_validation.json", "w"), indent=2, sort_keys=True)
 print(f"\ndone {time.time()-t0:.0f}s")

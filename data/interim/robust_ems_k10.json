@@ -24,14 +24,14 @@
   "scenario_stats": {
     "dry": {
       "arcs_usable": 250803,
-      "baseline_share": 0.5568,
+      "baseline_share": 0.5507,
       "cells_no_candidate_reaches": 740,
       "flood": {},
       "matrix_nnz": 27584
     },
     "f2015": {
       "arcs_usable": 247997,
-      "baseline_share": 0.4718,
+      "baseline_share": 0.4801,
       "cells_no_candidate_reaches": 845,
       "flood": {
         "arcs": 250803,
@@ -48,7 +48,7 @@
     },
     "flood100": {
       "arcs_usable": 236918,
-      "baseline_share": 0.3655,
+      "baseline_share": 0.3732,
       "cells_no_candidate_reaches": 1270,
       "flood": {
         "arcs": 250803,
@@ -65,7 +65,7 @@
     },
     "flood25": {
       "arcs_usable": 244037,
-      "baseline_share": 0.4127,
+      "baseline_share": 0.4366,
       "cells_no_candidate_reaches": 1059,
       "flood": {
         "arcs": 250803,
@@ -82,7 +82,7 @@
     },
     "flood5": {
       "arcs_usable": 248869,
-      "baseline_share": 0.4964,
+      "baseline_share": 0.4943,
       "cells_no_candidate_reaches": 846,
       "flood": {
         "arcs": 250803,
@@ -99,100 +99,100 @@
     },
     "peak": {
       "arcs_usable": 250803,
-      "baseline_share": 0.2399,
+      "baseline_share": 0.2692,
       "cells_no_candidate_reaches": 960,
       "flood": {},
       "matrix_nnz": 8447
     }
   },
-  "seconds": 40.3,
+  "seconds": 52.9,
   "service": "ems",
   "strategies": [
     {
       "coverage_by_scenario": {
-        "dry": 0.7523,
-        "f2015": 0.6337,
-        "flood100": 0.5249,
-        "flood25": 0.5843,
-        "flood5": 0.7026,
-        "peak": 0.3543
+        "dry": 0.7554,
+        "f2015": 0.6556,
+        "flood100": 0.5293,
+        "flood25": 0.6034,
+        "flood5": 0.6812,
+        "peak": 0.3787
       },
-      "expected_coverage": 0.6644,
+      "expected_coverage": 0.6724,
       "optimality": "proven optimal",
       "proven_optimal": true,
       "sites": [
-        50,
+        54,
         63,
-        65,
         94,
         118,
+        175,
         275,
         404,
+        480,
         482,
-        505,
         528
       ],
-      "solve_s": 0.194,
+      "solve_s": 0.303,
       "strategy": "dry-only",
-      "worst_coverage": 0.3543,
+      "worst_coverage": 0.3787,
       "worst_design_basis": "peak"
     },
     {
       "coverage_by_scenario": {
-        "dry": 0.7488,
-        "f2015": 0.6346,
-        "flood100": 0.5294,
-        "flood25": 0.5892,
-        "flood5": 0.701,
-        "peak": 0.3726
+        "dry": 0.7535,
+        "f2015": 0.6724,
+        "flood100": 0.5323,
+        "flood25": 0.6135,
+        "flood5": 0.6868,
+        "peak": 0.3861
       },
-      "expected_coverage": 0.6654,
+      "expected_coverage": 0.6733,
       "optimality": "proven optimal",
       "proven_optimal": true,
       "sites": [
-        32,
-        50,
+        56,
         63,
-        65,
         94,
-        118,
+        116,
+        175,
         275,
         404,
-        482,
-        505
+        408,
+        480,
+        482
       ],
-      "solve_s": 0.765,
+      "solve_s": 1.061,
       "strategy": "expected",
-      "worst_coverage": 0.3726,
+      "worst_coverage": 0.3861,
       "worst_design_basis": "peak"
     },
     {
       "coverage_by_scenario": {
-        "dry": 0.7059,
-        "f2015": 0.6259,
-        "flood100": 0.5124,
-        "flood25": 0.5743,
-        "flood5": 0.6519,
-        "peak": 0.4011
+        "dry": 0.6951,
+        "f2015": 0.6352,
+        "flood100": 0.4909,
+        "flood25": 0.5649,
+        "flood5": 0.6449,
+        "peak": 0.4206
       },
-      "expected_coverage": 0.6373,
+      "expected_coverage": 0.6307,
       "optimality": "proven optimal",
       "proven_optimal": true,
       "sites": [
         2,
-        25,
         32,
         63,
-        84,
+        92,
         94,
-        163,
+        138,
+        166,
         195,
-        240,
+        325,
         404
       ],
-      "solve_s": 0.974,
+      "solve_s": 1.085,
       "strategy": "maximin",
-      "worst_coverage": 0.4011,
+      "worst_coverage": 0.4206,
       "worst_design_basis": "peak"
     }
   ]

@@ -43,7 +43,7 @@ unlabelled, and nothing reaches a slide, an export or a report without its label
 | # | Assumption | Value | Tested by |
 |---|---|---|---|
 | A-01 | Free-flow speed by highway class | `config/speeds/base.yml` | Step 07 calibration; E-09 (±20%) |
-| A-02 | Junction delay | 12 s signalised / 5 s degree≥3, scaled ×0.10 | **E-10 DONE — ablation supported, term should be deleted. Not yet adopted.** |
+| A-02 | Junction delay | 12 s signalised / 5 s degree≥3, scaled ×0.10 | **E-10 re-run on corrected positions: ablation NOT supported. RETAIN. The earlier 'delete it' verdict is withdrawn.** |
 | A-03 | Emergency multiplier within the RSCH envelope | 1.0–1.20 | Step 07 calibration; E-10 ablation (not yet run) |
 | A-04 | Alarm + turnout offsets | EMS 60+60 s; fire 60+80 s | Step 07 calibration |
 | A-05 | Population growth 2011 → now | 1.13 city-wide | E-10 |
@@ -55,7 +55,7 @@ unlabelled, and nothing reaches a slide, an export or a report without its label
 | A-11 | Demand tessellation | H3 resolution 9 | Sensitivity at r10 |
 | A-12 | Candidate minimum separation | 800 m | E-09 (candidate resample) |
 | A-13 | Parcel snap radius | 400 m | Reported per site |
-| A-15 | Station position uncertainty | 900 m (29 stations) / 60 m (4) | **E-11 DONE — moves EMS coverage ±6.7 pts P5-P95 and makes the site list irreproducible. Dominates every other effect measured. E-11b ranks the survey: 10 of 29 visits remove 60% of the noise.** |
+| A-15 | Station position uncertainty | 900 m (29) / 60 m (4) — **FALSIFIED by E-11c: 16 of 29 lie outside 900 m, up to 25 km** | E-11 (±6.7 pts, now an UNDER-estimate), E-11b (survey ranking), E-11c (Maps lookup). Survey outstanding. |
 | A-14 | Demand snap flag threshold | 300 m | Reported per cell |
 
 ## Experiment results
@@ -256,6 +256,163 @@ exist and are unfilled. That is the work.
 
 This does not invalidate the METHOD; the pipeline, the gates and the corrections
 (F-13 to F-17) stand. It bounds what the current OUTPUTS can be used to claim.
+
+### F-18 — the validation script scored a model the pipeline does not ship
+
+Found while restoring the calibration chain after E-11c. `validate_routing.py`
+built its junction delay WITHOUT `junction_delay_scale` and never added
+`trip_overhead_s`, so it validated the UNCALIBRATED model. It could therefore
+never show the shipped model passing its own gate, and its 42% MedAPE read as a
+routing failure when it was a bookkeeping one:
+
+| `validate_routing.py` | MedAPE | bias | MedAPE gate |
+|---|---|---|---|
+| as written (uncalibrated) | 42.0% | +36.4% | FAIL |
+| scoring the shipped model | **9.4%** | **+1.2%** | **PASS** |
+
+(`calibrate.py` and `calibrate2.py` legitimately omit the scale — they FIT it.
+Only the validator was wrong.) Both terms now come from `head_delay_seconds`,
+the same source every other consumer uses. A `--reuse-oracle` mode re-scores the
+model against durations already fetched, so fixing a model-side bug no longer
+costs 199 queries against a public service.
+
+### E-10 REVERSED — the junction term should be RETAINED
+
+The E-10 verdict recorded earlier in this file was **SUPPORTED**: delete the
+junction term. That result was obtained against OD pairs sampled from the
+Nominatim station positions, which E-11c showed were wrong by up to 25 km, and
+scored by a validator that had the calibration wrong (F-18). Re-run on corrected
+positions, a re-queried oracle and a fixed validator, the answer flips:
+
+| model | MedAPE | bias | worst-band bias | objective |
+|---|---|---|---|---|
+| incumbent `×0.10 + 45 s` | 9.37% | +1.23% | 6.99% | **0.1259** |
+| ablated `×0.00 + 60 s` | 8.60% | −1.67% | 8.60% | 0.1387 |
+| grid best `×0.075 + 45 s` | 8.42% | +0.00% | 8.09% | 0.1151 |
+
+Deleting the term now fits WORSE on the stated objective, and it fails the
+band-bias gate it previously cleared. **Verdict: NOT SUPPORTED — retain the
+junction term.** The earlier recommendation to delete it, and to retire A-02, is
+withdrawn.
+
+Two further notes. The grid optimum is no longer on the boundary — it sits at
+×0.075, interior, which was the original reason for suspecting ×0.10. And no
+configuration now clears the band-bias gate: the best worst-band bias available
+anywhere on the grid is 6.99%, against a 5% gate. That is an open calibration
+problem, not a settled one.
+
+**The lesson is about ordering, not about junctions.** A parameter ablation was
+run, concluded, written up and nearly adopted while the inputs it depended on
+were wrong by kilometres. E-11 said the modelling was below the noise floor;
+this is what that looks like in practice.
+
+### E-11c — Google Maps lookup. A-15's 900 m ERROR MODEL IS WRONG.
+
+`data/interim/stations_gmaps_lookup.csv`. All 29 unsurveyed stations looked up as
+Google Maps POIs. **This is a better geocode, NOT a survey** — the positions carry
+confidence `google_maps_poi`, `verified_lat/lon/by` remain empty, and the publish
+gate stays closed.
+
+The finding is not the new coordinates, it is the size of the old error:
+
+| displacement from the Nominatim provisional position | stations |
+|---|---|
+| within the assumed 900 m | 13 |
+| 900 m – 5 km | 11 |
+| **over 5 km** | **5** |
+
+Median 1,042 m; maximum **25.5 km** (Athipattu), then J.J. Nagar 23.0 km, Avadi
+13.6 km, Redhills 10.7 km, Poonamallee 10.1 km. Every one of those is a Suburban
+division station whose Nominatim result had landed somewhere in the city centre
+instead of in the town it is named after.
+
+**Consequence for E-11.** A-15 assumed a 900 m uncertainty disc, and E-11 drew
+perturbations from it. That model is falsified: 16 of 29 true positions lie
+outside the disc entirely, so the +/-6.7 point noise floor is an UNDER-estimate,
+computed from an error model narrower than the real error.
+
+**But the coverage effect is small,** because the errors substantially cancel:
+
+| | published | with Google Maps positions | change |
+|---|---|---|---|
+| EMS | 55.68% | 55.07% | **−0.61 pts** |
+| fire | 36.75% | 40.50% | **+3.75 pts** |
+
+The badly-misplaced stations are suburban: their wrong positions sat inside the
+city adding coverage they should not have had, while their true positions sit at
+or beyond the GCC edge. Some of that loss is offset by other stations moving to
+better positions inside the city. A 25 km error in a single station's position
+therefore moved the city-wide total by less than a point — which is a statement
+about how redundant the network is at the periphery, not about the error being
+harmless.
+
+**Five remain ambiguous** and are flagged in the file: Avadi (POI named only
+"Fire station"), Athipattu (two candidates 700 m apart), Tondiarpet (two 1.9 km
+apart), Secretariat (two 330 m apart), Tambaram (two 280 m apart). One useful
+disambiguation: the second "Vyasarpadi Fire Station" POI is categorised
+*Apartment building* and was discarded as mis-tagged.
+
+**What this does and does not change.** It does not open the publish gate: a
+Maps POI is somebody else's data entry, not a verified position, and the
+Thiruvanmiyur phone match (Maps `044 2440 1213` = authoritative `044-24401213`)
+is corroboration for one station, not for twenty-nine. What it does change is
+the error model: A-15's 900 m is not defensible and the E-11 noise floor should
+be re-derived, or the survey done.
+
+### E-11d — E-11 re-run under a corrected error model
+
+E-11 drew perturbations from A-15's assumed 900 m disc, which E-11c falsified.
+Re-run with the error distribution ACTUALLY OBSERVED — the 29 displacements
+between the Nominatim positions and the Maps POIs, bootstrapped by magnitude and
+applied in a uniform random direction — and again with the Maps positions
+themselves. 300 draws each, seed 20260904.
+
+| error model | svc | mean coverage | P5–P95 | bias | distinct sites (10 slots) | stable ≥95% |
+|---|---|---|---|---|---|---|
+| disc — A-15, falsified | EMS | 52.53% | 6.66 pts | −3.16 | 64 | 1 |
+| **empirical — observed** | **EMS** | **50.69%** | **9.83 pts** | **−5.00** | **106** | **0** |
+| gmaps positions | EMS | 54.86% | **1.20 pts** | −0.82 | 14 | 6 |
+| disc — A-15, falsified | fire | 35.69% | 5.55 pts | −1.05 | 58 | 3 |
+| **empirical — observed** | **fire** | **33.81%** | **8.80 pts** | **−2.94** | **85** | **0** |
+| gmaps positions | fire | 40.09% | **1.38 pts** | +3.35 | 17 | 5 |
+
+**E-11 understated the problem, as E-11c predicted.** Under the real error
+distribution the EMS noise floor is **±9.8 points, not ±6.7**, and the published
+point estimate sits **5.0 points above** the mean draw rather than 3.2. The site
+list is worse still: **106 distinct sites competed for 10 slots and NOT ONE was
+selected in 95% of draws.** The published recommendation is not weakly
+identified, it is unidentified.
+
+The conclusion of E-11 is unchanged and strengthened: every effect measured in
+this project (E-10 3.4 pts, maximin 4.7, equity 5.0) sits far below a 9.8 point
+noise floor.
+
+**Adopting the Maps positions would do most of what the survey was for.** The
+noise floor collapses to ±1.2 points — an 88% reduction, and below all three
+effect sizes, which is the threshold at which the modelling becomes decidable.
+Distinct sites fall from 106 to 14, with 6 of 10 slots stable at ≥95%.
+
+Provenance: the `disc` row's artefact was overwritten when the canonical
+`sensitivity_stations_{svc}.json` was regenerated against the adopted positions.
+Those numbers are preserved in this table and in git at commit `c30e3b4`. The
+`gmaps` row is now reproduced by the canonical file itself.
+
+Three caveats, none of which the numbers show on their own:
+
+1. The `exact reproduction` and Jaccard columns compare against the site set
+   chosen from the OLD positions, which is not the right reference under the
+   gmaps model. Read `distinct sites` and `stable ≥95%` instead.
+2. Two Maps POIs sit off the routable network — Athipattu at 922 m and
+   Raj Bhavan at 383 m — so the plausibility filter had to be relaxed to 1 km
+   for that model. Athipattu is also the largest displacement (25 km) AND
+   ambiguous; it is the least trustworthy position in the set.
+3. Five stations remain ambiguous. A ±1.2 point noise floor assumes the POI
+   chosen for each is the right one, which for those five is an open question.
+
+**This still does not open the publish gate.** It replaces a bad geocode with a
+good one; it does not verify anything. What it does establish is that the survey
+would buy less than E-11b suggested IF the Maps positions are adopted first —
+the remaining uncertainty after adoption is ±1.2 points, not ±6.3.
 
 ### E-11b — which stations to survey first
 

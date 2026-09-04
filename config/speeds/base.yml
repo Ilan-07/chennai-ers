@@ -71,22 +71,23 @@ junction_delay_s:
 # slower than the OSRM oracle. The work the junction term was doing is done
 # properly by trip_overhead_s below.
 #
-# E-10 ABLATION RESULT (data/interim/ablation_e10.json). The hypothesis was
-# tested and SUPPORTED. Deleting the term outright and refitting the trip
-# overhead to 60 s fits the OSRM oracle BETTER on every measure:
+# E-10 ABLATION, RE-RUN AND REVERSED (data/interim/ablation_e10.json).
 #
-#                        MedAPE    bias     worst band bias   band gate
-#   shipped  x0.10 + 45s   9.13%   +2.06%        5.04%          FAIL
-#   ablated  x0.00 + 60s   7.91%   -0.92%        4.38%          PASS
+# An earlier run concluded this term should be deleted. That run scored the model
+# against OD pairs sampled from station positions later shown (E-11c) to be wrong
+# by up to 25 km, using a validator that omitted this very scale (F-18). On
+# corrected positions, a re-queried oracle and a fixed validator:
 #
-# Stage-3 calibration had searched junction_scale over [0.10, 0.30] and settled
-# on 0.10 -- exactly the lower bound. An optimum on a grid boundary is not an
-# optimum, and extending the grid through it found the real one at zero.
+#                        MedAPE    bias     worst band bias   objective
+#   shipped  x0.10 + 45s   9.37%   +1.23%        6.99%          0.1259
+#   ablated  x0.00 + 60s   8.60%   -1.67%        8.60%          0.1387   <- worse
+#   grid best x0.075+45s   8.42%   +0.00%        8.09%          0.1151
 #
-# NOT YET ADOPTED. Adopting it moves baseline coverage by up to 3.4 points and
-# therefore invalidates every published coverage figure and every optimisation
-# downstream of step 06. That is a re-run of the whole chain, not a config edit,
-# and it is a decision to take deliberately.
+# Deleting the term fits WORSE and fails the band-bias gate. RETAIN IT.
+#
+# Two open items. The grid optimum is now INTERIOR (x0.075), so the boundary
+# artifact that motivated the ablation is gone. And nothing on the grid clears
+# the 5% band-bias gate -- the best available is 6.99%. That is unresolved.
 junction_delay_scale: 0.10
 
 # Fixed per-trip overhead, seconds, added to every origin-destination travel time.

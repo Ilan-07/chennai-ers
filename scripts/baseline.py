@@ -85,16 +85,30 @@ for svc in ("ems", "fire"):
 # E-11: station position uncertainty puts a measured interval under every figure
 # below. A bare point estimate implies a precision this data does not have, so the
 # headline is reported WITH its interval or explicitly marked as lacking one.
-SENS = {}
+from ers.pipeline import station_signature
+SIG = station_signature(st)
+SENS, STALE = {}, {}
 for svc in ("ems", "fire"):
     f = Path(f"data/interim/sensitivity_stations_{svc}.json")
-    if f.exists():
-        SENS[svc] = json.loads(f.read_text())
+    if not f.exists():
+        continue
+    sn = json.loads(f.read_text())
+    # An interval computed for different station positions is not this model's
+    # interval. Refuse it rather than print it beside a number it does not bound.
+    if sn.get("stations_signature") == SIG:
+        SENS[svc] = sn
+    else:
+        STALE[svc] = sn.get("stations_signature", "unstamped")
 
 print("\n--- E-11 station position uncertainty ---")
+if STALE:
+    for svc, sig in STALE.items():
+        print(f"  {svc.upper():4s} STALE INTERVAL IGNORED — computed for station positions "
+              f"{sig}, current are {SIG}. Re-run scripts/sensitivity_stations.py.")
 if not SENS:
-    print("  NOT MEASURED. Run scripts/sensitivity_stations.py; until then every "
-          "coverage figure above is a point estimate with an unquantified error bar.")
+    print("  NOT MEASURED for the current station positions. Run "
+          "scripts/sensitivity_stations.py; until then every coverage figure above "
+          "is a point estimate with an unquantified error bar.")
 else:
     for svc, sn in SENS.items():
         c, r = sn["coverage"], results[svc]
@@ -134,6 +148,8 @@ print(f"  GATE (within published range): {in_range}")
 report = {
     "connectivity": conn,
     "position_uncertainty_measured": bool(SENS),
+    "stations_signature": SIG,
+    "stale_intervals_ignored": STALE,
     "headline_caveat": (
         "Coverage shares carry a P5-P95 interval from E-11 station position "
         "uncertainty; see results.<svc>.position_uncertainty. The point estimate "

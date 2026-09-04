@@ -36,7 +36,7 @@ from scipy import sparse
 from ers import coverage as cov
 from ers.model.problem import SitingProblem
 from ers.optimise import exact
-from ers.pipeline import load_service
+from ers.pipeline import load_service, station_signature
 from ers.routing.csr import snap
 
 ap = argparse.ArgumentParser()
@@ -45,6 +45,13 @@ ap.add_argument("draws", nargs="?", type=int, default=200)
 ap.add_argument("--k", type=int, default=10, help="stations to site in the decision arm")
 ap.add_argument("--seed", type=int, default=20260904)
 ap.add_argument("--max-snap-m", type=float, default=300.0)
+ap.add_argument("--error-model", default="disc", choices=["disc", "empirical", "gmaps"],
+                help="disc: A-15's assumed 900 m uncertainty disc (FALSIFIED by E-11c). "
+                     "empirical: bootstrap the 29 displacements actually observed "
+                     "between the Nominatim positions and the Google Maps POIs. "
+                     "gmaps: Maps positions with a small residual, sampling between "
+                     "candidates where the POI is ambiguous.")
+ap.add_argument("--lookup", default="data/interim/stations_gmaps_lookup.csv")
 ap.add_argument("--skip-decision", action="store_true")
 ap.add_argument("--out", default=None)
 args = ap.parse_args()
@@ -60,11 +67,46 @@ demand, tot = ctx.demand, ctx.total_demand
 CUTOFF = budget * 10 * 3
 
 unc = st["uncertainty_m"].to_numpy(dtype="float64")
-sp = gpd.GeoSeries(gpd.points_from_xy(st["lon"], st["lat"]),
-                   crs="EPSG:4326").to_crs(ctx.metric_crs)
-xy0 = np.column_stack([sp.x.to_numpy(), sp.y.to_numpy()])
 
-print(f"[{SVC}] {N} draws, seed {args.seed} | budget {budget}s")
+
+def _project(lat, lon):
+    g = gpd.GeoSeries(gpd.points_from_xy(lon, lat), crs="EPSG:4326").to_crs(ctx.metric_crs)
+    return np.column_stack([g.x.to_numpy(), g.y.to_numpy()])
+
+
+xy0 = _project(st["lat"].to_numpy(), st["lon"].to_numpy())
+XY_ALT = None
+EMPIRICAL = None
+
+if args.error_model != "disc":
+    look = pd.read_csv(args.lookup)
+    j = st[["station_name"]].merge(look, on="station_name", how="left")
+    if args.error_model == "empirical":
+        # A-15 assumed a 900 m disc. E-11c falsified it: 16 of 29 true positions
+        # lie outside that disc, up to 25 km. The honest error model is the
+        # distribution actually observed. Magnitudes are bootstrapped across
+        # stations and applied in a uniform random direction -- we know the
+        # SIZE of geocoder error empirically, not its bearing, and pooling
+        # assumes the 29 are exchangeable, which the suburban/city split
+        # strains. Both assumptions are stated rather than hidden.
+        EMPIRICAL = look["shift_from_provisional_m"].dropna().to_numpy(dtype="float64")
+        print(f"  empirical displacement model: n={len(EMPIRICAL)} observed shifts, "
+              f"median {np.median(EMPIRICAL):.0f} m, max {EMPIRICAL.max():.0f} m")
+    else:
+        # Centre on the Maps POI. Ambiguous stations sample between candidates.
+        lat = j["gmaps_lat"].fillna(pd.Series(st["lat"].to_numpy())).to_numpy()
+        lon = j["gmaps_lon"].fillna(pd.Series(st["lon"].to_numpy())).to_numpy()
+        xy0 = _project(lat, lon)
+        has_alt = j["alt_lat"].notna().to_numpy()
+        XY_ALT = np.where(has_alt[:, None],
+                          _project(j["alt_lat"].fillna(0).to_numpy(),
+                                   j["alt_lon"].fillna(0).to_numpy()), np.nan)
+        unc = j["residual_m"].fillna(60.0).to_numpy(dtype="float64")
+        print(f"  gmaps model: {int(has_alt.sum())} stations sample between two "
+              f"candidate POIs; residual radius {np.unique(unc)} m")
+
+print(f"[{SVC}] {N} draws, seed {args.seed} | budget {budget}s | "
+      f"error model: {args.error_model}")
 print(f"  stations {len(st)} | uncertainty (m): "
       f"{dict(pd.Series(unc).value_counts().sort_index())}")
 print(f"  point-estimate coverage {ctx.baseline_share:.2%} "
@@ -93,7 +135,14 @@ def draw_positions():
     the filter rather than the uncertainty would then decide the answer.
     """
     n = len(xy0)
-    xy = xy0.copy()
+    # Under `gmaps`, an ambiguous station is one of two real candidates, so the
+    # draw picks a candidate first and only then perturbs within it.
+    centres = xy0.copy()
+    if XY_ALT is not None:
+        pick = rng.random(n) < 0.5
+        use_alt = pick & np.isfinite(XY_ALT[:, 0])
+        centres[use_alt] = XY_ALT[use_alt]
+    xy = centres.copy()
     settled = np.zeros(n, dtype=bool)
     settled[unc <= 0] = True
     rejected = 0
@@ -102,16 +151,19 @@ def draw_positions():
         if not todo.any():
             break
         m = int(todo.sum())
-        r = unc[todo] * np.sqrt(rng.random(m))
+        if EMPIRICAL is not None:
+            r = rng.choice(EMPIRICAL, size=m, replace=True)
+        else:
+            r = unc[todo] * np.sqrt(rng.random(m))
         th = rng.random(m) * 2 * np.pi
-        trial = xy0[todo] + np.column_stack([r * np.cos(th), r * np.sin(th)])
+        trial = centres[todo] + np.column_stack([r * np.cos(th), r * np.sin(th)])
         _, dist = snap(ctx.graph, trial[:, 0], trial[:, 1])
         ok = dist <= args.max_snap_m
         rejected += int((~ok).sum())
         sel = np.flatnonzero(todo)[ok]
         xy[sel] = trial[ok]
         settled[sel] = True
-    if not settled.all():
+    if not settled.all():  # noqa: E501
         # Do not silently fall back to the unperturbed position: that would pull
         # the draw toward the point estimate and shrink the spread.
         raise SystemExit(f"{int((~settled).sum())} station(s) found no plausible "
@@ -160,6 +212,12 @@ lo, hi = np.percentile(a, [5, 95])
 spread_pts = 100 * (hi - lo)
 report = {
     "experiment": "E-11", "service": SVC, "draws": N, "seed": args.seed,
+    "error_model": args.error_model,
+    # Signature of the station positions this interval was computed FROM. A
+    # consumer that finds a different signature is holding a stale interval --
+    # which is how fire briefly published a 40.5% point estimate under a
+    # 33.2-38.7% band computed for superseded positions.
+    "stations_signature": station_signature(st),
     "k": K, "max_snap_m": args.max_snap_m, "rejected_station_draws": rejects,
     "rejection_rate_per_station_draw": round(rejects / (rejects + N * len(xy0)), 4),
     "uncertainty_m": {str(k): int(v) for k, v in

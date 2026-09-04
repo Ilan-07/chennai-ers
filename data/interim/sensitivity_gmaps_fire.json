@@ -1,0 +1,87 @@
+{
+  "PROVISIONAL": true,
+  "coverage": {
+    "bias_vs_point_estimate_points": 3.35,
+    "max": 0.4099,
+    "mean": 0.4009,
+    "min": 0.3863,
+    "p5": 0.3931,
+    "p5_p95_spread_points": 1.38,
+    "p95": 0.4069,
+    "sd": 0.0043
+  },
+  "decision": {
+    "distinct_sites_ever_selected": 17,
+    "draws_reproducing_the_point_estimate_set": 0,
+    "mean_jaccard_vs_point_estimate": 0.398,
+    "point_estimate_sites": [
+      25,
+      34,
+      50,
+      63,
+      65,
+      94,
+      118,
+      174,
+      404,
+      505
+    ],
+    "site_selection_frequency": {
+      "118": 1.0,
+      "174": 0.437,
+      "175": 0.563,
+      "195": 0.707,
+      "222": 0.437,
+      "25": 0.293,
+      "325": 0.707,
+      "33": 0.063,
+      "34": 0.937,
+      "404": 1.0,
+      "408": 0.317,
+      "480": 0.293,
+      "54": 1.0,
+      "575": 0.17,
+      "63": 1.0,
+      "678": 0.077,
+      "94": 1.0
+    },
+    "sites_selected_in_95pct_of_draws": [
+      54,
+      63,
+      94,
+      118,
+      404
+    ]
+  },
+  "draws": 300,
+  "effects_vs_noise": {
+    "E-10 junction term": {
+      "above_noise": true,
+      "effect_points": 3.4
+    },
+    "equity cost at k=20": {
+      "above_noise": true,
+      "effect_points": 5.0
+    },
+    "maximin vs dry-only siting": {
+      "above_noise": true,
+      "effect_points": 4.7
+    }
+  },
+  "error_model": "gmaps",
+  "experiment": "E-11",
+  "k": 10,
+  "max_snap_m": 1000.0,
+  "noise_floor_points": 1.38,
+  "point_estimate_coverage": 0.3675,
+  "rejected_station_draws": 0,
+  "rejection_rate_per_station_draw": 0.0,
+  "seconds": 123.8,
+  "seed": 20260904,
+  "service": "fire",
+  "uncertainty_m": {
+    "300.0": 1,
+    "50.0": 28,
+    "60.0": 4
+  }
+}

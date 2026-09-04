@@ -6,43 +6,43 @@
   "demand_total": 7625269,
   "junction_delay_scale": 0.0,
   "provisional_reason": "29 of 33 stations are geocoder positions, not surveyed",
-  "seconds": 27.6,
+  "seconds": 30.9,
   "services": {
     "ems": {
       "design_basis_weight_sum": 1.0,
-      "expected_coverage_share": 0.4549,
+      "expected_coverage_share": 0.4634,
       "scenarios": {
         "dry": {
-          "coverage_share": 0.5237,
+          "coverage_share": 0.525,
           "label": "Dry day, free flow",
-          "max_travel_s": 1818.8,
-          "mean_travel_s": 333.5,
+          "max_travel_s": 1748.2,
+          "mean_travel_s": 336.1,
           "network": {
             "arcs_usable": 250803,
             "junction_delay_share": 0.0,
             "mean_speed_kmh": 31.61
           },
-          "p50_travel_s": 291.9,
-          "p90_travel_s": 540.2,
-          "population_covered": 3993359,
-          "population_outside": 3631910,
+          "p50_travel_s": 291.1,
+          "p90_travel_s": 552.0,
+          "population_covered": 4003550,
+          "population_outside": 3621720,
           "report_only": false,
           "scenario": "dry",
           "threshold_ladder": {
             "NFPA-travel-4min": {
-              "coverage_share": 0.2868,
+              "coverage_share": 0.3295,
               "travel_budget_s": 240
             },
             "SFAC-5": {
-              "coverage_share": 0.1037,
+              "coverage_share": 0.1341,
               "travel_budget_s": 180
             },
             "SFAC-7": {
-              "coverage_share": 0.5237,
+              "coverage_share": 0.525,
               "travel_budget_s": 300
             },
             "deck-8min": {
-              "coverage_share": 0.6926,
+              "coverage_share": 0.6772,
               "travel_budget_s": 360
             }
           },
@@ -53,7 +53,7 @@
           "weight": 0.7
         },
         "f2015": {
-          "coverage_share": 0.4409,
+          "coverage_share": 0.4561,
           "flood": {
             "arcs": {
               "arcs": 250803,
@@ -83,34 +83,34 @@
             }
           },
           "label": "November-December 2015 flood replay",
-          "max_travel_s": 1818.8,
-          "mean_travel_s": 364.5,
+          "max_travel_s": 1748.2,
+          "mean_travel_s": 366.5,
           "network": {
             "arcs_usable": 247997,
             "junction_delay_share": 0.0,
             "mean_speed_kmh": 31.07
           },
-          "p50_travel_s": 314.8,
-          "p90_travel_s": 630.2,
-          "population_covered": 3361933,
-          "population_outside": 4263336,
+          "p50_travel_s": 312.3,
+          "p90_travel_s": 636.7,
+          "population_covered": 3477649,
+          "population_outside": 4147620,
           "report_only": true,
           "scenario": "f2015",
           "threshold_ladder": {
             "NFPA-travel-4min": {
-              "coverage_share": 0.2432,
+              "coverage_share": 0.2848,
               "travel_budget_s": 240
             },
             "SFAC-5": {
-              "coverage_share": 0.0873,
+              "coverage_share": 0.1213,
               "travel_budget_s": 180
             },
             "SFAC-7": {
-              "coverage_share": 0.4409,
+              "coverage_share": 0.4561,
               "travel_budget_s": 300
             },
             "deck-8min": {
-              "coverage_share": 0.6078,
+              "coverage_share": 0.5932,
               "travel_budget_s": 360
             }
           },
@@ -121,7 +121,7 @@
           "weight": 0.0
         },
         "flood100": {
-          "coverage_share": 0.3462,
+          "coverage_share": 0.3489,
           "flood": {
             "arcs": {
               "arcs": 250803,
@@ -147,45 +147,45 @@
             }
           },
           "label": "100-year return period flood",
-          "max_travel_s": 2366.6,
-          "mean_travel_s": 392.1,
+          "max_travel_s": 2242.1,
+          "mean_travel_s": 382.4,
           "network": {
             "arcs_usable": 236918,
             "junction_delay_share": 0.0,
             "mean_speed_kmh": 30.21
           },
-          "p50_travel_s": 338.4,
-          "p90_travel_s": 646.3,
-          "population_covered": 2640086,
-          "population_outside": 4985183,
+          "p50_travel_s": 331.4,
+          "p90_travel_s": 614.1,
+          "population_covered": 2660558,
+          "population_outside": 4964711,
           "report_only": false,
           "scenario": "flood100",
           "threshold_ladder": {
             "NFPA-travel-4min": {
-              "coverage_share": 0.1919,
+              "coverage_share": 0.2008,
               "travel_budget_s": 240
             },
             "SFAC-5": {
-              "coverage_share": 0.0673,
+              "coverage_share": 0.0736,
               "travel_budget_s": 180
             },
             "SFAC-7": {
-              "coverage_share": 0.3462,
+              "coverage_share": 0.3489,
               "travel_budget_s": 300
             },
             "deck-8min": {
-              "coverage_share": 0.4708,
+              "coverage_share": 0.4823,
               "travel_budget_s": 360
             }
           },
           "travel_budget_s": 300.0,
-          "unreachable_cells": 639,
-          "unreachable_population": 1111740,
-          "unreachable_share": 0.1458,
+          "unreachable_cells": 655,
+          "unreachable_population": 1113003,
+          "unreachable_share": 0.146,
           "weight": 0.05
         },
         "flood25": {
-          "coverage_share": 0.3857,
+          "coverage_share": 0.414,
           "flood": {
             "arcs": {
               "arcs": 250803,
@@ -211,34 +211,34 @@
             }
           },
           "label": "25-year return period flood",
-          "max_travel_s": 2366.6,
-          "mean_travel_s": 381.3,
+          "max_travel_s": 2242.1,
+          "mean_travel_s": 373.5,
           "network": {
             "arcs_usable": 244037,
             "junction_delay_share": 0.0,
             "mean_speed_kmh": 30.4
           },
-          "p50_travel_s": 330.0,
-          "p90_travel_s": 630.0,
-          "population_covered": 2940819,
-          "population_outside": 4684451,
+          "p50_travel_s": 319.8,
+          "p90_travel_s": 609.8,
+          "population_covered": 3156864,
+          "population_outside": 4468406,
           "report_only": false,
           "scenario": "flood25",
           "threshold_ladder": {
             "NFPA-travel-4min": {
-              "coverage_share": 0.2144,
+              "coverage_share": 0.2467,
               "travel_budget_s": 240
             },
             "SFAC-5": {
-              "coverage_share": 0.074,
+              "coverage_share": 0.0983,
               "travel_budget_s": 180
             },
             "SFAC-7": {
-              "coverage_share": 0.3857,
+              "coverage_share": 0.414,
               "travel_budget_s": 300
             },
             "deck-8min": {
-              "coverage_share": 0.5274,
+              "coverage_share": 0.5514,
               "travel_budget_s": 360
             }
           },
@@ -249,7 +249,7 @@
           "weight": 0.1
         },
         "flood5": {
-          "coverage_share": 0.4633,
+          "coverage_share": 0.4672,
           "flood": {
             "arcs": {
               "arcs": 250803,
@@ -275,34 +275,34 @@
             }
           },
           "label": "5-year return period flood",
-          "max_travel_s": 2366.6,
-          "mean_travel_s": 347.1,
+          "max_travel_s": 2242.1,
+          "mean_travel_s": 352.3,
           "network": {
             "arcs_usable": 248869,
             "junction_delay_share": 0.0,
             "mean_speed_kmh": 31.22
           },
-          "p50_travel_s": 305.7,
-          "p90_travel_s": 564.6,
-          "population_covered": 3532671,
-          "population_outside": 4092599,
+          "p50_travel_s": 306.4,
+          "p90_travel_s": 570.4,
+          "population_covered": 3562423,
+          "population_outside": 4062847,
           "report_only": true,
           "scenario": "flood5",
           "threshold_ladder": {
             "NFPA-travel-4min": {
-              "coverage_share": 0.2516,
+              "coverage_share": 0.2869,
               "travel_budget_s": 240
             },
             "SFAC-5": {
-              "coverage_share": 0.0953,
+              "coverage_share": 0.1177,
               "travel_budget_s": 180
             },
             "SFAC-7": {
-              "coverage_share": 0.4633,
+              "coverage_share": 0.4672,
               "travel_budget_s": 300
             },
             "deck-8min": {
-              "coverage_share": 0.6297,
+              "coverage_share": 0.6292,
               "travel_budget_s": 360
             }
           },
@@ -313,36 +313,36 @@
           "weight": 0.0
         },
         "peak": {
-          "coverage_share": 0.2162,
+          "coverage_share": 0.2469,
           "label": "Peak hour congestion",
-          "max_travel_s": 2432.9,
-          "mean_travel_s": 488.4,
+          "max_travel_s": 2861.3,
+          "mean_travel_s": 504.4,
           "network": {
             "arcs_usable": 250803,
             "junction_delay_share": 0.0,
             "mean_speed_kmh": 21.3
           },
-          "p50_travel_s": 426.8,
-          "p90_travel_s": 822.9,
-          "population_covered": 1648495,
-          "population_outside": 5976775,
+          "p50_travel_s": 429.6,
+          "p90_travel_s": 861.7,
+          "population_covered": 1883050,
+          "population_outside": 5742219,
           "report_only": false,
           "scenario": "peak",
           "threshold_ladder": {
             "NFPA-travel-4min": {
-              "coverage_share": 0.1131,
+              "coverage_share": 0.1321,
               "travel_budget_s": 240
             },
             "SFAC-5": {
-              "coverage_share": 0.035,
+              "coverage_share": 0.0384,
               "travel_budget_s": 180
             },
             "SFAC-7": {
-              "coverage_share": 0.2162,
+              "coverage_share": 0.2469,
               "travel_budget_s": 300
             },
             "deck-8min": {
-              "coverage_share": 0.3385,
+              "coverage_share": 0.3731,
               "travel_budget_s": 360
             }
           },
@@ -359,39 +359,39 @@
     },
     "fire": {
       "design_basis_weight_sum": 1.0,
-      "expected_coverage_share": 0.2891,
+      "expected_coverage_share": 0.321,
       "scenarios": {
         "dry": {
-          "coverage_share": 0.3334,
+          "coverage_share": 0.3697,
           "label": "Dry day, free flow",
-          "max_travel_s": 1973.5,
-          "mean_travel_s": 372.6,
+          "max_travel_s": 1957.1,
+          "mean_travel_s": 374.6,
           "network": {
             "arcs_usable": 250781,
             "junction_delay_share": 0.0,
             "mean_speed_kmh": 26.7
           },
-          "p50_travel_s": 327.8,
-          "p90_travel_s": 613.7,
-          "population_covered": 2542256,
-          "population_outside": 5083014,
+          "p50_travel_s": 324.1,
+          "p90_travel_s": 623.2,
+          "population_covered": 2819086,
+          "population_outside": 4806183,
           "report_only": false,
           "scenario": "dry",
           "threshold_ladder": {
             "NFPA-travel-4min": {
-              "coverage_share": 0.2159,
+              "coverage_share": 0.2559,
               "travel_budget_s": 240
             },
             "SFAC-5": {
-              "coverage_share": 0.0403,
+              "coverage_share": 0.0481,
               "travel_budget_s": 160
             },
             "SFAC-7": {
-              "coverage_share": 0.3334,
+              "coverage_share": 0.3697,
               "travel_budget_s": 280
             },
             "deck-8min": {
-              "coverage_share": 0.5389,
+              "coverage_share": 0.5401,
               "travel_budget_s": 340
             }
           },
@@ -402,7 +402,7 @@
           "weight": 0.7
         },
         "f2015": {
-          "coverage_share": 0.2753,
+          "coverage_share": 0.3209,
           "flood": {
             "arcs": {
               "arcs": 250803,
@@ -432,34 +432,34 @@
             }
           },
           "label": "November-December 2015 flood replay",
-          "max_travel_s": 1973.5,
-          "mean_travel_s": 409.7,
+          "max_travel_s": 1957.1,
+          "mean_travel_s": 411.3,
           "network": {
             "arcs_usable": 247975,
             "junction_delay_share": 0.0,
             "mean_speed_kmh": 26.25
           },
-          "p50_travel_s": 351.7,
-          "p90_travel_s": 716.2,
-          "population_covered": 2099468,
-          "population_outside": 5525802,
+          "p50_travel_s": 350.0,
+          "p90_travel_s": 721.9,
+          "population_covered": 2447237,
+          "population_outside": 5178033,
           "report_only": true,
           "scenario": "f2015",
           "threshold_ladder": {
             "NFPA-travel-4min": {
-              "coverage_share": 0.1828,
+              "coverage_share": 0.2229,
               "travel_budget_s": 240
             },
             "SFAC-5": {
-              "coverage_share": 0.0321,
+              "coverage_share": 0.0454,
               "travel_budget_s": 160
             },
             "SFAC-7": {
-              "coverage_share": 0.2753,
+              "coverage_share": 0.3209,
               "travel_budget_s": 280
             },
             "deck-8min": {
-              "coverage_share": 0.4545,
+              "coverage_share": 0.4681,
               "travel_budget_s": 340
             }
           },
@@ -470,7 +470,7 @@
           "weight": 0.0
         },
         "flood100": {
-          "coverage_share": 0.2232,
+          "coverage_share": 0.2292,
           "flood": {
             "arcs": {
               "arcs": 250803,
@@ -496,45 +496,45 @@
             }
           },
           "label": "100-year return period flood",
-          "max_travel_s": 2606.2,
-          "mean_travel_s": 443.0,
+          "max_travel_s": 2463.3,
+          "mean_travel_s": 430.0,
           "network": {
             "arcs_usable": 236900,
             "junction_delay_share": 0.0,
             "mean_speed_kmh": 25.53
           },
-          "p50_travel_s": 379.9,
-          "p90_travel_s": 744.0,
-          "population_covered": 1702136,
-          "population_outside": 5923133,
+          "p50_travel_s": 373.3,
+          "p90_travel_s": 699.2,
+          "population_covered": 1748087,
+          "population_outside": 5877182,
           "report_only": false,
           "scenario": "flood100",
           "threshold_ladder": {
             "NFPA-travel-4min": {
-              "coverage_share": 0.1465,
+              "coverage_share": 0.1501,
               "travel_budget_s": 240
             },
             "SFAC-5": {
-              "coverage_share": 0.0311,
+              "coverage_share": 0.0285,
               "travel_budget_s": 160
             },
             "SFAC-7": {
-              "coverage_share": 0.2232,
+              "coverage_share": 0.2292,
               "travel_budget_s": 280
             },
             "deck-8min": {
-              "coverage_share": 0.3564,
+              "coverage_share": 0.3606,
               "travel_budget_s": 340
             }
           },
           "travel_budget_s": 280.0,
-          "unreachable_cells": 639,
-          "unreachable_population": 1111740,
-          "unreachable_share": 0.1458,
+          "unreachable_cells": 655,
+          "unreachable_population": 1113003,
+          "unreachable_share": 0.146,
           "weight": 0.05
         },
         "flood25": {
-          "coverage_share": 0.2479,
+          "coverage_share": 0.2784,
           "flood": {
             "arcs": {
               "arcs": 250803,
@@ -560,34 +560,34 @@
             }
           },
           "label": "25-year return period flood",
-          "max_travel_s": 2606.2,
-          "mean_travel_s": 430.1,
+          "max_travel_s": 2488.0,
+          "mean_travel_s": 419.7,
           "network": {
             "arcs_usable": 244016,
             "junction_delay_share": 0.0,
             "mean_speed_kmh": 25.68
           },
-          "p50_travel_s": 371.2,
-          "p90_travel_s": 720.0,
-          "population_covered": 1890496,
-          "population_outside": 5734773,
+          "p50_travel_s": 358.2,
+          "p90_travel_s": 693.6,
+          "population_covered": 2122601,
+          "population_outside": 5502668,
           "report_only": false,
           "scenario": "flood25",
           "threshold_ladder": {
             "NFPA-travel-4min": {
-              "coverage_share": 0.1609,
+              "coverage_share": 0.1893,
               "travel_budget_s": 240
             },
             "SFAC-5": {
-              "coverage_share": 0.0346,
+              "coverage_share": 0.0364,
               "travel_budget_s": 160
             },
             "SFAC-7": {
-              "coverage_share": 0.2479,
+              "coverage_share": 0.2784,
               "travel_budget_s": 280
             },
             "deck-8min": {
-              "coverage_share": 0.4003,
+              "coverage_share": 0.4292,
               "travel_budget_s": 340
             }
           },
@@ -598,7 +598,7 @@
           "weight": 0.1
         },
         "flood5": {
-          "coverage_share": 0.2935,
+          "coverage_share": 0.322,
           "flood": {
             "arcs": {
               "arcs": 250803,
@@ -624,34 +624,34 @@
             }
           },
           "label": "5-year return period flood",
-          "max_travel_s": 2606.2,
-          "mean_travel_s": 389.1,
+          "max_travel_s": 2463.3,
+          "mean_travel_s": 393.9,
           "network": {
             "arcs_usable": 248847,
             "junction_delay_share": 0.0,
             "mean_speed_kmh": 26.37
           },
-          "p50_travel_s": 341.8,
+          "p50_travel_s": 342.0,
           "p90_travel_s": 639.8,
-          "population_covered": 2237767,
-          "population_outside": 5387503,
+          "population_covered": 2455356,
+          "population_outside": 5169914,
           "report_only": true,
           "scenario": "flood5",
           "threshold_ladder": {
             "NFPA-travel-4min": {
-              "coverage_share": 0.193,
+              "coverage_share": 0.2233,
               "travel_budget_s": 240
             },
             "SFAC-5": {
-              "coverage_share": 0.038,
+              "coverage_share": 0.043,
               "travel_budget_s": 160
             },
             "SFAC-7": {
-              "coverage_share": 0.2935,
+              "coverage_share": 0.322,
               "travel_budget_s": 280
             },
             "deck-8min": {
-              "coverage_share": 0.4812,
+              "coverage_share": 0.4823,
               "travel_budget_s": 340
             }
           },
@@ -662,36 +662,36 @@
           "weight": 0.0
         },
         "peak": {
-          "coverage_share": 0.1321,
+          "coverage_share": 0.1525,
           "label": "Peak hour congestion",
-          "max_travel_s": 2700.7,
-          "mean_travel_s": 556.2,
+          "max_travel_s": 3254.1,
+          "mean_travel_s": 573.1,
           "network": {
             "arcs_usable": 250781,
             "junction_delay_share": 0.0,
             "mean_speed_kmh": 18.0
           },
-          "p50_travel_s": 490.1,
-          "p90_travel_s": 950.1,
-          "population_covered": 1007505,
-          "population_outside": 6617765,
+          "p50_travel_s": 488.4,
+          "p90_travel_s": 985.3,
+          "population_covered": 1162731,
+          "population_outside": 6462539,
           "report_only": false,
           "scenario": "peak",
           "threshold_ladder": {
             "NFPA-travel-4min": {
-              "coverage_share": 0.0735,
+              "coverage_share": 0.0888,
               "travel_budget_s": 240
             },
             "SFAC-5": {
-              "coverage_share": 0.0154,
+              "coverage_share": 0.0166,
               "travel_budget_s": 160
             },
             "SFAC-7": {
-              "coverage_share": 0.1321,
+              "coverage_share": 0.1525,
               "travel_budget_s": 280
             },
             "deck-8min": {
-              "coverage_share": 0.222,
+              "coverage_share": 0.2537,
               "travel_budget_s": 340
             }
           },
@@ -708,7 +708,7 @@
     }
   },
   "shipped_calibration": false,
-  "station_snap_max_m": 249.3,
+  "station_snap_max_m": 922.0,
   "stations": 33,
   "trip_overhead_s": 60.0
 }

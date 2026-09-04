@@ -29,12 +29,23 @@ _NOISE = {
 
 # Ordered best -> worst. Anything below `osm` is PROVISIONAL and blocks the
 # baseline gate until a human has verified it against imagery.
-CONFIDENCE = ("surveyed", "osm", "geocoded", "locality", "inferred")
-SURVEY_REQUIRED = ("locality", "inferred")
+#
+# `google_maps_poi` (E-11c) ranks between `osm` and `geocoded`: it is a precise
+# third-party POI, far better than the `locality` centroid it replaces, and it
+# cut the measured noise floor from +/-9.8 to +/-1.2 points. It is NEVERTHELESS
+# IN SURVEY_REQUIRED. A Maps POI is somebody else's data entry, not a
+# verification: five of the 29 are ambiguous between two candidate POIs, two sit
+# hundreds of metres off the routable network, and exactly one was corroborated
+# against an independent source (a phone-number match). Promoting a better
+# geocode to "verified" would open the publish gate on desk research, which is
+# the precise failure this gate exists to prevent.
+CONFIDENCE = ("surveyed", "osm", "google_maps_poi", "geocoded", "locality", "inferred")
+SURVEY_REQUIRED = ("google_maps_poi", "geocoded", "locality", "inferred")
 
 # ASSM: positional uncertainty credited to each confidence class, metres.
 # Used to decide whether a station's snapped network node is trustworthy.
-UNCERTAINTY_M = {"surveyed": 25, "osm": 60, "geocoded": 150, "locality": 900, "inferred": None}
+UNCERTAINTY_M = {"surveyed": 25, "osm": 60, "google_maps_poi": 50, "geocoded": 150,
+                 "locality": 900, "inferred": None}
 
 
 def _norm(name: str) -> frozenset[str]:

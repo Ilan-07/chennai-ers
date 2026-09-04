@@ -22,6 +22,7 @@ parsimony. A term that changes decisions cannot be deleted on fit alone.
   python scripts/ablate_e10.py [--skip-decision]
 """
 import argparse, json, subprocess, sys, time
+from pathlib import Path
 sys.path.insert(0, "src")
 sys.path.insert(0, "scripts")
 import geopandas as gpd, numpy as np, pandas as pd, yaml
@@ -29,6 +30,7 @@ from ers.geo.attrs import attribute_edges
 from ers.geo.graph import read_graph_tables
 from ers.routing.csr import build_graph, snap, travel_times, to_seconds
 from ers.routing.oracle import agreement_stats, stratified_stats
+from ers.pipeline import station_signature
 from ers.scenario import head_delay_seconds
 
 ap = argparse.ArgumentParser()
@@ -53,6 +55,24 @@ assert abs(float(speeds["trip_overhead_s"]) - INCUMBENT_OH) < 1e-9
 # ARM 1 — FIT. Against the SAME cached OSRM oracle pairs the calibration used,
 # so this is a like-for-like re-fit and not a new sample with new noise.
 # ---------------------------------------------------------------------------
+# GUARD: the cached oracle durations were fetched for OD pairs built from the
+# station positions in force at the time. If those positions have since changed
+# (E-11c adopted Google Maps POIs), the pairs describe routes that no longer
+# start where they claim, and any fit against them is meaningless.
+_rv = Path("data/interim/routing_validation.json")
+if _rv.exists():
+    _sig = json.loads(_rv.read_text()).get("stations_signature_at_computation")
+    _now = station_signature(pd.read_csv("data/interim/stations_resolved.csv"))
+    if not _sig:
+        raise SystemExit("REFUSING TO RUN: routing_validation.json carries no station "
+                         "signature, so the cached OSRM pairs cannot be shown to match "
+                         "the current positions. Re-run scripts/validate_routing.py.")
+    if _sig != _now:
+        raise SystemExit(
+            f"REFUSING TO RUN: cached OSRM pairs were built from station positions "
+            f"{_sig}, current positions are {_now}. Re-run "
+            f"scripts/validate_routing.py to re-query the oracle first.")
+
 samp = pd.read_csv("data/interim/routing_validation_pairs.csv")
 samp = samp[np.isfinite(samp["oracle_s"])].reset_index(drop=True)
 oracle = samp["oracle_s"].to_numpy()

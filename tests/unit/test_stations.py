@@ -181,3 +181,28 @@ def test_gate_opens_only_when_every_station_is_verified():
     _, rep2 = ingest_survey(rows, [_row("Mylapore", "13.034", "80.269"),
                                    _row("Guindy", "13.010", "80.213")], BBOX)
     assert rep2["gate"]["passes_publish_gate"] is True
+
+
+def test_google_maps_poi_does_not_open_the_publish_gate():
+    """E-11c adopted Google Maps POIs for the 29 unsurveyed stations. They are a
+    much better geocode -- and still not a verification. If this class ever falls
+    out of SURVEY_REQUIRED the gate opens on desk research, which is the exact
+    failure the gate exists to prevent."""
+    from ers.io.stations import CONFIDENCE, SURVEY_REQUIRED, UNCERTAINTY_M
+    assert "google_maps_poi" in CONFIDENCE
+    assert "google_maps_poi" in SURVEY_REQUIRED
+    assert UNCERTAINTY_M["google_maps_poi"] < UNCERTAINTY_M["locality"]
+
+
+def test_publish_gate_stays_closed_for_a_maps_positioned_network():
+    from ers.io.stations import ResolvedStation, qa_report
+    rows = [ResolvedStation("A", "d", "fire", 13.0, 80.0, "google_maps_poi",
+                            "google_maps_poi_lookup", "A Fire Station", 50.0, True)]
+    rep = qa_report(rows)
+    assert rep["passes_publish_gate"] is False
+    assert rep["survey_required"] == ["A"]
+
+
+def test_only_surveyed_and_osm_clear_the_gate():
+    from ers.io.stations import CONFIDENCE, SURVEY_REQUIRED
+    assert set(CONFIDENCE) - set(SURVEY_REQUIRED) == {"surveyed", "osm"}
