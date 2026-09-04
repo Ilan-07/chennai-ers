@@ -6,7 +6,8 @@ from ers.geo.attrs import attribute_edges
 from ers.scenario import head_delay_seconds
 from ers.geo.graph import read_graph_tables
 from ers.routing.csr import build_graph, snap, travel_times, to_seconds
-from ers.routing.oracle import agreement_stats, batch_durations, stratified_stats
+from ers.routing.oracle import (agreement_stats, band_median_ratio,
+                                batch_durations, stratified_stats)
 
 N_PAIRS = int(sys.argv[1]) if len(sys.argv) > 1 else 200
 REUSE = "--reuse-oracle" in sys.argv     # re-score the model without re-querying OSRM
@@ -98,18 +99,30 @@ for b, s in by_band.items():
         print(f"    {b:9s} n={s['n']:3d}  MedAPE {s['median_abs_pct_error']:6.1%}  "
               f"ratio {s['median_ratio_model_over_oracle']:.3f}  bias {s['bias_pct']:+7.1%}")
 
+# The band gate is scored on the MEDIAN RATIO, not on `bias_pct`: the latter is
+# a ratio of sums whose 95% CI at this sample size runs 5.5-25.2 points wide, so
+# a 5% threshold on it is untestable. See oracle.band_median_ratio.
+bmr = band_median_ratio(samp["model_s"], samp["oracle_s"], samp["band"])
+worst = max(abs(v["median_ratio_minus_1"]) for v in bmr.values() if v.get("n"))
 gate = {"medape_le_15pct": overall["median_abs_pct_error"] <= 0.15,
-        "no_band_bias_over_5pct": all(abs(s.get("bias_pct", 0)) <= 0.05
-                                      for s in by_band.values() if s.get("n"))}
+        "band_median_ratio_le_5pct": bool(worst <= 0.05),
+        "worst_band_median_ratio": round(float(worst), 4),
+        "statistic": "median(model/oracle)-1 per band; sum-ratio bias_pct retired"}
+print("\n  per band, median ratio - 1 (bootstrap 95% CI):")
+for b, v in sorted(bmr.items()):
+    if v.get("n"):
+        print(f"    {b:9s} n={v['n']:3d}  {v['median_ratio_minus_1']:+7.2%} "
+              f"[{v['ci_lower']:+.1%},{v['ci_upper']:+.1%}]  CI width {v['ci_width_points']:5.1f}p")
 print(f"\n  GATE  MedAPE<=15%: {gate['medape_le_15pct']}  "
-      f"no band bias>5%: {gate['no_band_bias_over_5pct']}")
+      f"worst band<=5%: {gate['band_median_ratio_le_5pct']} ({worst:.2%})")
 
 samp.to_csv("data/interim/routing_validation_pairs.csv", index=False)
 # The OD pairs are built FROM the station positions, so the oracle durations are
 # only valid while those positions hold. Stamp them, so a later run against
 # moved stations is detectable rather than silently wrong (E-11c moved all 29).
 from ers.pipeline import station_signature
-json.dump({"seed": SEED, "overall": overall, "by_band": by_band, "gate": gate,
+json.dump({"seed": SEED, "overall": overall, "by_band": by_band,
+           "band_median_ratio": bmr, "gate": gate,
            "oracle": "OSRM public demo, car profile",
            "stations_signature_at_computation": station_signature(st),
            "oracle_failures": int(samp["oracle_s"].isna().sum()),

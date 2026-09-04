@@ -1,0 +1,155 @@
+[
+ {
+  "name": "(unnamed)",
+  "lat": 13.0637765,
+  "lon": 80.2356816,
+  "type": "node",
+  "id": 264480826,
+  "amenity": "fire_station",
+  "operator": ""
+ },
+ {
+  "name": "Teynampet FS",
+  "lat": 13.0474469,
+  "lon": 80.249119,
+  "type": "node",
+  "id": 302899362,
+  "amenity": "fire_station",
+  "operator": ""
+ },
+ {
+  "name": "(unnamed)",
+  "lat": 13.0351313,
+  "lon": 80.2306922,
+  "type": "node",
+  "id": 2427727851,
+  "amenity": "fire_station",
+  "operator": ""
+ },
+ {
+  "name": "Tamil Nadu Fire and Rescue Services",
+  "lat": 12.9436361,
+  "lon": 80.1335964,
+  "type": "node",
+  "id": 3029313653,
+  "amenity": "fire_station",
+  "operator": ""
+ },
+ {
+  "name": "(unnamed)",
+  "lat": 12.8310173,
+  "lon": 80.2224311,
+  "type": "node",
+  "id": 5304198425,
+  "amenity": "fire_station",
+  "operator": ""
+ },
+ {
+  "name": "Fire service station;Fire Force Service center",
+  "lat": 12.9768528,
+  "lon": 80.2276341,
+  "type": "node",
+  "id": 5354315736,
+  "amenity": "fire_station",
+  "operator": "Government"
+ },
+ {
+  "name": "(unnamed)",
+  "lat": 13.0429393,
+  "lon": 80.2777191,
+  "type": "way",
+  "id": 211274291,
+  "amenity": "fire_station",
+  "operator": ""
+ },
+ {
+  "name": "Fire and Rescue station",
+  "lat": 13.0352121,
+  "lon": 80.2306257,
+  "type": "way",
+  "id": 217731034,
+  "amenity": "fire_station",
+  "operator": ""
+ },
+ {
+  "name": "Chennai International Airport Fire Station 2",
+  "lat": 12.9925029,
+  "lon": 80.1660222,
+  "type": "way",
+  "id": 620705901,
+  "amenity": "fire_station",
+  "operator": ""
+ },
+ {
+  "name": "NCTPS Fire Station",
+  "lat": 13.2512323,
+  "lon": 80.3272453,
+  "type": "way",
+  "id": 1074457140,
+  "amenity": "fire_station",
+  "operator": ""
+ },
+ {
+  "name": "(unnamed)",
+  "lat": 13.1133322,
+  "lon": 80.2963723,
+  "type": "way",
+  "id": 1075921840,
+  "amenity": "fire_station",
+  "operator": ""
+ },
+ {
+  "name": "(unnamed)",
+  "lat": 12.9884768,
+  "lon": 80.1716794,
+  "type": "way",
+  "id": 1096512891,
+  "amenity": "fire_station",
+  "operator": ""
+ },
+ {
+  "name": "Moolakothalam Fire Station",
+  "lat": 13.1055078,
+  "lon": 80.2782141,
+  "type": "way",
+  "id": 1105414357,
+  "amenity": "fire_station",
+  "operator": ""
+ },
+ {
+  "name": "Egmore fire and Rescue station",
+  "lat": 13.0686327,
+  "lon": 80.2613334,
+  "type": "way",
+  "id": 1107911283,
+  "amenity": "fire_station",
+  "operator": "Tamilnadu government"
+ },
+ {
+  "name": "Esplanade Fire Station",
+  "lat": 13.0864782,
+  "lon": 80.2860635,
+  "type": "way",
+  "id": 1122111815,
+  "amenity": "fire_station",
+  "operator": ""
+ },
+ {
+  "name": "(unnamed)",
+  "lat": 13.1023685,
+  "lon": 80.2744713,
+  "type": "way",
+  "id": 1172399105,
+  "amenity": "",
+  "operator": ""
+ },
+ {
+  "name": "Washermanpet Fire & Rescue Station",
+  "lat": 13.1024404,
+  "lon": 80.2744007,
+  "type": "way",
+  "id": 1172399106,
+  "amenity": "fire_station",
+  "operator": ""
+ }
+]

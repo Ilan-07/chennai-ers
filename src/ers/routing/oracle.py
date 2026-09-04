@@ -82,8 +82,54 @@ def agreement_stats(model_s: np.ndarray, oracle_s: np.ndarray) -> dict:
     }
 
 
+def band_median_ratio(model_s, oracle_s, band_labels, *, boot: int = 4000,
+                      seed: int = 20260904) -> dict:
+    """Per-band median(model/oracle) - 1, with a bootstrap CI.
+
+    This replaces `bias_pct` as the per-band statistic, for two reasons found in
+    stage-4 calibration.
+
+    `bias_pct` is a ratio of SUMS, so inside a band it is dominated by the
+    longest trips there. At n~50 its bootstrap 95% CI runs 5.5 to 25.2 points
+    wide, which makes a <=5% gate on it untestable -- it cannot distinguish a
+    passing model from a failing one, and it flipped the same configuration
+    between pass and fail across two runs.
+
+    It also HID a real effect. Because long trips dominate the sums, it washed
+    out a systematic short-trip bias that the median ratio shows plainly.
+
+    The CI is returned alongside the point estimate so a caller can see whether
+    a band is genuinely off target or merely under-sampled.
+    """
+    rng = np.random.default_rng(seed)
+    m = np.asarray(model_s, dtype="float64")
+    o = np.asarray(oracle_s, dtype="float64")
+    labels = np.asarray(band_labels)
+    out = {}
+    for b in sorted(set(labels.tolist())):
+        sel = np.flatnonzero((labels == b) & np.isfinite(m) & np.isfinite(o) & (o > 0))
+        if len(sel) == 0:
+            out[str(b)] = {"n": 0}
+            continue
+        r = m[sel] / o[sel]
+        bs = np.array([np.median(r[rng.integers(0, len(r), len(r))]) for _ in range(boot)])
+        out[str(b)] = {
+            "n": int(len(r)),
+            "median_ratio_minus_1": round(float(np.median(r) - 1.0), 4),
+            "ci_lower": round(float(np.percentile(bs, 2.5) - 1.0), 4),
+            "ci_upper": round(float(np.percentile(bs, 97.5) - 1.0), 4),
+            "ci_width_points": round(float(np.percentile(bs, 97.5) - np.percentile(bs, 2.5)) * 100, 2),
+        }
+    return out
+
+
 def stratified_stats(model_s, oracle_s, band_labels) -> dict:
-    """Agreement per distance band -- a global median can hide a band-specific bias."""
+    """Agreement per distance band -- a global median can hide a band-specific bias.
+
+    NOTE: the `bias_pct` reported here is a ratio of sums and is too unstable at
+    this sample size to gate on; use `band_median_ratio` for that. It is retained
+    because it is the statistic the earlier calibration stages recorded.
+    """
     out = {}
     band_labels = np.asarray(band_labels)
     for b in sorted(set(band_labels.tolist())):

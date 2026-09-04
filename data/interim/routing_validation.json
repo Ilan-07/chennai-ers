@@ -1,4 +1,34 @@
 {
+  "band_median_ratio": {
+    "0-2km": {
+      "ci_lower": 0.0739,
+      "ci_upper": 0.2693,
+      "ci_width_points": 19.53,
+      "median_ratio_minus_1": 0.1505,
+      "n": 46
+    },
+    "10-20km": {
+      "ci_lower": 0.0133,
+      "ci_upper": 0.0557,
+      "ci_width_points": 4.24,
+      "median_ratio_minus_1": 0.0318,
+      "n": 50
+    },
+    "2-5km": {
+      "ci_lower": -0.0611,
+      "ci_upper": 0.0713,
+      "ci_width_points": 13.24,
+      "median_ratio_minus_1": 0.0398,
+      "n": 49
+    },
+    "5-10km": {
+      "ci_lower": 0.0397,
+      "ci_upper": 0.072,
+      "ci_width_points": 3.23,
+      "median_ratio_minus_1": 0.0527,
+      "n": 50
+    }
+  },
   "by_band": {
     "0-2km": {
       "_mean_of_means": 206.3,
@@ -58,8 +88,10 @@
     }
   },
   "gate": {
+    "band_median_ratio_le_5pct": false,
     "medape_le_15pct": true,
-    "no_band_bias_over_5pct": false
+    "statistic": "median(model/oracle)-1 per band; sum-ratio bias_pct retired",
+    "worst_band_median_ratio": 0.1505
   },
   "oracle": "OSRM public demo, car profile",
   "oracle_failures": 0,
@@ -77,7 +109,7 @@
     "oracle_mean_s": 736.0,
     "p90_abs_pct_error": 0.3687
   },
-  "seconds": 3.1,
+  "seconds": 3.2,
   "seed": 20260903,
   "stations_signature_at_computation": "e43edc52673e58ab"
 }

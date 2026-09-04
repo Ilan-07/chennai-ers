@@ -145,5 +145,22 @@
     "source": "chennai_inundation_points_depth",
     "uri": "https://www.chennaiflows.com/ \u2014 Chennai Flows return-period inundation layers, derived from CMDA / Anna University hydrological modelling",
     "version_label": "2026-09-03"
+  },
+  {
+    "bytes": 3233,
+    "fetched_at": "2026-09-04T06:44:38+00:00",
+    "id": 11,
+    "licence": "ODbL (OpenStreetMap contributors)",
+    "local_path": "data/raw/osm_fire_wide_overpass.json",
+    "notes": {
+      "features": 17,
+      "query": "nwr amenity|emergency|building=fire_station over the GCC bbox",
+      "used_by": "station position cross-check (E-11e)",
+      "why": "the original query filtered by name and dropped unnamed features; 3 of the 4 independent corroborations came from those"
+    },
+    "sha256": "114da6a9428b19a138c32d7e136ccc848bf3e6196f55760018237fae425f3338",
+    "source": "osm_fire_stations_wide",
+    "uri": "https://overpass-api.de/api/interpreter",
+    "version_label": "2026-09-04"
   }
 ]

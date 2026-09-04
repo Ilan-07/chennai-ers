@@ -257,6 +257,85 @@ exist and are unfilled. That is the work.
 This does not invalidate the METHOD; the pipeline, the gates and the corrections
 (F-13 to F-17) stand. It bounds what the current OUTPUTS can be used to claim.
 
+### F-19 — the band-bias gate was untestable, and it hid a real defect
+
+The gate `no band bias > 5%` was scored on `bias_pct`, a ratio of SUMS. Inside a
+band that is dominated by the longest trips there, and at n~50 its bootstrap 95%
+CI runs **5.5 to 25.2 points wide**:
+
+| band | n | sum-ratio bias | bootstrap 95% CI | CI width |
+|---|---|---|---|---|
+| 0–2 km | 46 | +4.42% | [−7.74%, +17.43%] | **25.2 pts** |
+| 2–5 km | 49 | −6.99% | [−14.43%, +0.46%] | 14.9 pts |
+| 5–10 km | 50 | +3.12% | [−1.11%, +7.15%] | 8.3 pts |
+| 10–20 km | 50 | +2.75% | [+0.09%, +5.60%] | 5.5 pts |
+
+Every band is statistically indistinguishable from zero bar the last. A 5%
+threshold on a quantity with a ±12 point CI is not a test — which is why the
+same configuration flipped between "pass" at 4.38% and "fail" at 5.04% across
+runs, and why nothing on the grid could clear it. **Both E-10 verdicts used this
+gate as a criterion.**
+
+It also HID a real defect. Because long trips dominate the sums, it washed out a
+systematic short-trip bias that the median ratio shows plainly — and three of
+four of those CIs exclude zero:
+
+| band | median ratio − 1 | 95% CI | flat 45 s overhead as share of trip |
+|---|---|---|---|
+| 0–2 km | **+15.05%** | [+7.4%, +26.9%] | **21.1%** |
+| 2–5 km | +3.98% | [−6.1%, +7.1%] | 9.5% |
+| 5–10 km | **+5.27%** | [+4.0%, +7.2%] | 5.5% |
+| 10–20 km | **+3.18%** | [+1.3%, +5.6%] | 3.2% |
+
+The bias falls monotonically with distance: the signature of a flat per-trip
+overhead that is simply too large. `band_median_ratio` replaces `bias_pct` as
+the gated statistic and returns a bootstrap CI alongside, so an under-sampled
+band can be told from a failing one.
+
+### Stage 4 — refit on the sound statistic. THE OVERHEAD IS TOO BIG.
+
+`scripts/calibrate4.py` → `data/interim/calibration_stage4.json`
+
+| | junction | overhead | worst band (median ratio) | MedAPE |
+|---|---|---|---|---|
+| shipped | ×0.10 | 45 s | 15.05% | 9.37% |
+| **refit** | **×0.10** | **17.5 s** | **2.57%** | **7.23%** |
+
+Cross-validated 40× on held-out halves: the refit wins on worst-band in **95%**
+of splits and on MedAPE in **100%**. All four band CIs now straddle or nearly
+straddle zero, and the gate passes for the first time.
+
+**The junction scale is unchanged at ×0.10**, which independently confirms the
+E-10 "retain" verdict on a statistic that can actually support it.
+
+A two-part overhead `a + b·km` was fitted and **rejected**: it does not beat a
+single smaller constant out of sample (winning only 40% / 18% of splits), so the
+simpler model stands. What looked like a distance-dependent effect was just 45 s
+being too large.
+
+**NOT ADOPTED — the two oracles now conflict head-on.** Cutting the overhead to
+17.5 s drops the modelled EMS response below the published 108/EMRI range:
+
+| overhead | dry-only response | A-10 weighted response |
+|---|---|---|
+| 45 s (shipped) | 448.7 s — inside 426–450 | 480.1 s — outside |
+| 17.5 s (refit) | 421.2 s — outside | 452.6 s — outside (by 2.6 s) |
+
+No combination satisfies both. Note that the current "pass" is dry-only: it
+compares an OPERATIONAL mean response, measured across real dispatches in real
+traffic, against a scenario defined as free-flow. That is not a like-for-like
+test, and it flatters two errors into agreement — an inflated overhead against
+the wrong comparison scenario.
+
+The decision this needs is which oracle governs the trip overhead. OSRM
+constrains travel time directly and the refit is cross-validated; EMRI is a
+single published range whose estimand (which dispatches, which geography, which
+year) is not documented in our sources. The defensible reading is that the
+overhead is a travel-time parameter and belongs to the travel-time oracle, with
+EMRI demoted to a reported cross-check against the WEIGHTED response. But
+demoting a gate to make one's own result pass is exactly the move that needs a
+human decision, so it has not been made.
+
 ### F-18 — the validation script scored a model the pipeline does not ship
 
 Found while restoring the calibration chain after E-11c. `validate_routing.py`
@@ -305,6 +384,50 @@ problem, not a settled one.
 run, concluded, written up and nearly adopted while the inputs it depended on
 were wrong by kilometres. E-11 said the modelling was below the noise floor;
 this is what that looks like in practice.
+
+### E-11e — independent cross-check. Only OSM exists, and it settles two.
+
+Google Maps is one source. A position confirmed by one source is a lookup; a
+position two independent sources agree on is evidence. So: what else is there?
+
+| source | result |
+|---|---|
+| **OpenStreetMap** (Overpass, widened query) | **17 fire features** — the original query filtered by name and dropped the unnamed ones, which is where 3 of the 4 matches came from |
+| Wikidata (SPARQL, 30 km radius) | **0** fire stations |
+| Nominatim (structured `amenity=fire_station`) | **0** — and not independent anyway: it indexes the same OSM |
+| data portals | no TNFRS station geometry found |
+
+**4 of 29 corroborated within 150 m**, and two of them are the contested ones:
+
+| station | nearest OSM feature | distance | effect |
+|---|---|---|---|
+| Royapuram | (unnamed) | 4 m | confirms |
+| Mylapore | (unnamed) | 23 m | confirms |
+| **Tambaram** | Tamil Nadu Fire and Rescue Services | **41 m from candidate B** | **RESOLVED — B is now primary** |
+| **Athipattu** | **NCTPS Fire Station** | **8 m from candidate A** | **REJECTED — see below** |
+
+**Athipattu is not merely ambiguous, it is unlocated.** OSM names candidate A
+exactly: *NCTPS Fire Station* — the North Chennai Thermal Power Station's own
+internal fire post. Candidate B is named "stage 2", also plant-internal. Neither
+shows a building on satellite. So the municipal TNFRS Athipattu station has no
+position from any source we have, and its earlier record — the largest
+displacement in the set at 25.5 km, and 922 m off the routable network — was
+never a municipal station at all. Phone 044-27950080 is the only route left.
+
+The other 25 have no OSM feature within 150 m, median nearest 3.2 km. That is
+**not** evidence against them: OSM holds 17 fire features against 33
+authoritative stations, so absence is expected. Note also that OSM contains
+stations absent from the authoritative list (Moolakothalam, NCTPS, the airport),
+so the two inventories are each incomplete with respect to the other.
+
+**Imagery failed its own control.** Before the dataset search, the satellite
+method was tried on Thiruvanmiyur — the one station confirmed independently, by
+an exact phone match to the published TNFRS number. Neither satellite (dense tree
+canopy) nor Street View (the station sits back up a lane off East Coast Road)
+shows the appliance bays `docs/station-survey.md` looks for. A method that cannot
+recognise a station known to be there cannot judge the other 28, so no imagery
+verdicts were recorded. The protocol's own fallback — the published phone number
+— is the reliable route, and 18 of 29 have one.
 
 ### E-11c — Google Maps lookup. A-15's 900 m ERROR MODEL IS WRONG.
 
