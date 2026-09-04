@@ -1,0 +1,15 @@
+{
+ "zoom": 13,
+ "north": 13.325484885597936,
+ "west": 80.0244140625,
+ "south": 12.768946439455949,
+ "east": 80.4638671875,
+ "width": 1600,
+ "height": 2080,
+ "projection": "web_mercator",
+ "attribution": "\u00a9 OpenStreetMap contributors",
+ "files": {
+  "light": "data/interim/basemap_light.jpg",
+  "dark": "data/interim/basemap_dark.jpg"
+ }
+}

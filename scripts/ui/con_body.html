@@ -1,0 +1,116 @@
+<div id="boot"><div><b>Chennai Emergency Response Coverage</b>
+  Loading 3,838 demand cells, 14,845 road segments and six network states…<br>
+  <span style="font-size:11.5px">about 2 MB of model output, embedded so the map needs no server</span></div></div>
+<header>
+  <div>
+    <h1>Chennai Emergency Response Coverage</h1>
+    <div class="sub">Travel time on the real road network · 33 stations · 3,838 demand cells</div>
+  </div>
+  <div style="display:flex;gap:9px;align-items:center">
+    <span class="stamp" id="stamp">Provisional</span>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="rail">
+    <div class="grp">
+      <span class="lbl">Service</span>
+      <div class="seg" id="svcSeg">
+        <button data-svc="ems" aria-pressed="true">Ambulance</button>
+        <button data-svc="fire" aria-pressed="false">Fire</button>
+      </div>
+    </div>
+
+    <div class="grp">
+      <span class="lbl">Map mode</span>
+      <div class="seg" id="modeSeg">
+        <button data-mode="pan" aria-pressed="true">Pan &amp; inspect</button>
+        <button data-mode="sel" aria-pressed="false">Select area</button>
+      </div>
+      <p class="hint" id="modeHint">Click any cell for the stations that reach it, ranked.
+        Switch to <b>Select area</b> to drag a box over a neighbourhood.</p>
+
+    <div class="grp">
+      <span class="lbl">Response threshold</span>
+      <div class="thr"><b id="thrVal">7</b><span>min total response</span></div>
+      <input type="range" id="thr" min="4" max="15" step="0.5" value="7">
+      <div class="budget" id="budgetNote"></div>
+    </div>
+
+    <div class="grp">
+      <span class="lbl">Network state</span>
+      <div class="opts" id="scenOpts"></div>
+    </div>
+
+    <div class="grp">
+      <span class="lbl">Coverage band</span>
+      <div class="legend" id="legend"></div>
+    </div>
+
+    <div class="grp">
+      <span class="lbl">Layers</span>
+      <div class="opts">
+        <button class="opt" id="tgStations" aria-pressed="true">Existing stations <small>33</small></button>
+        <div class="idlist" id="idLegend"></div>
+        <button class="opt" id="tgSites" aria-pressed="true">Proposed sites <small id="nSites">0</small></button>
+        <button class="opt" id="tgBase" aria-pressed="true">Street map <small>OpenStreetMap</small></button>
+        <button class="opt" id="tgZones" aria-pressed="true">Zone boundaries <small>15</small></button>
+        <button class="opt" id="tgFlood" aria-pressed="true">Flood extent <small>when wet</small></button>
+        <button class="opt" id="tgCov" aria-pressed="true">Coverage <small>3,838 cells</small></button>
+      </div>
+    </div>
+
+      <button class="btn sec" id="reset" style="margin-top:9px">Reset view</button>
+    </div>
+  </aside>
+
+  <div class="stage" id="stage">
+    <canvas id="cv"></canvas>
+    <div class="tip" id="tip"></div>
+    <div class="selbox" id="selbox"></div>
+    <div class="attrib" id="attrib"></div>
+    <div class="scalebar"><i id="sbBar"></i><span id="sbTxt">5 km</span></div>
+  </div>
+
+  <aside class="side">
+    <div class="selpanel" id="selPanel" style="display:none">
+      <div class="selhead"><h2 id="selTitle">Selection</h2>
+        <button id="selClear">clear</button></div>
+      <div id="selSum" class="cap" style="font-size:12px;color:var(--muted)"></div>
+      <table class="resp"><thead><tr><th>Fastest responder</th><th style="text-align:right">Reaches</th><th style="text-align:right">Time</th></tr></thead>
+        <tbody id="respBody"></tbody></table>
+      <div class="hint" id="selHint"></div>
+    </div>
+
+    <div class="readout">
+      <span class="lbl">Population reached in time</span>
+      <div class="big g" id="covPct">—</div>
+      <div class="cap" id="covCap"></div>
+      <div class="errbar" id="errbar"></div>
+      <div class="band" id="band"></div>
+      <div class="kv" id="stats"></div>
+    </div>
+
+    <div class="grp">
+      <span class="lbl">Worst-served wards</span>
+      <table class="wardtbl"><thead><tr><th>Ward</th><th>Zone</th><th style="text-align:right">Reached</th></tr></thead>
+        <tbody id="wardBody"></tbody></table>
+    </div>
+
+    <div class="grp">
+      <span class="lbl">Site the next stations</span>
+      <div style="display:flex;gap:7px;align-items:center;margin-bottom:8px">
+        <input type="range" id="k" min="1" max="10" step="1" value="3" style="flex:1">
+        <span class="mono" style="font-size:13px"><b id="kVal">3</b></span>
+      </div>
+      <button class="btn" id="opt">Optimise siting</button>
+      <div class="cmp" id="cmp"></div>
+      <div class="sites" id="siteList"></div>
+      <button class="btn sec" id="clear" style="margin-top:8px;display:none">Clear</button>
+    </div>
+
+    <div class="caveat" id="caveat"></div>
+    <button class="btn sec" id="copy" style="margin-top:12px">Copy result as JSON</button>
+    <div class="mono" id="copyMsg" style="font-size:11px;color:var(--green);margin-top:6px"></div>
+  </aside>
+</div>

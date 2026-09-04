@@ -19,3 +19,6 @@ data/interim/arc_times.parquet
 data/processed/
 data/tiles/
 *.npz
+
+# Console build artefacts — regenerate with scripts/ui/build_console.sh
+data/interim/console.html

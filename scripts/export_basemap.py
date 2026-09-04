@@ -52,27 +52,25 @@ bm = {"outline": [], "wards": [], "zones": [], "zone_labels": [],
 
 # GCC outline — the coastline comes free with it
 bm["outline"] = rings(wards.union_all(), 0.0004)
-for g in wards.geometry:
-    bm["wards"] += rings(g, 0.0004)
+# ward outlines are legible on the raster; the zone boundaries are what the
+# equity analysis actually groups by, so only those are drawn.
+pass
 for r in zones.itertuples():
     bm["zones"] += rings(r.geometry, 0.0003)
     c = r.geometry.representative_point()
     bm["zone_labels"].append({"n": str(r.zone_name), "lat": round(c.y, R), "lon": round(c.x, R)})
 
-# roads: the network the model actually routes on
-nodes, edges = read_graph_tables("data/interim/graph")
-edges = edges.to_crs("EPSG:4326")
-hw = edges["highway"].astype(str)
-art = hw.str.contains("motorway|trunk|primary", case=False, na=False)
-sec = hw.str.contains("secondary", case=False, na=False)
-for g in edges.loc[art, "geometry"]:
-    bm["arterial"] += lines(g, 0.00025)
-for g in edges.loc[sec, "geometry"]:
-    bm["secondary"] += lines(g, 0.0007)
+# Roads, water and ward fills now come from the imported raster basemap
+# (scripts/export_basemap_raster.py), which is real cartography rather than a
+# hand-drawn approximation of it. Only ANALYSIS geometry stays vector: the GCC
+# outline, the zone boundaries the equity work groups by, and the flood extents
+# that actually removed arcs. Those must be ours, drawn on top, and exact.
+_SKIP_ROADS = True
 
 # water: rivers and canals as lines, lakes and tanks as polygons
 try:
-    raw = json.load(open("data/raw/osm_water_overpass.json"))
+    raw = {"elements": []}      # water is in the raster now
+    _unused = json.load(open("data/raw/osm_water_overpass.json"))
     for e in raw["elements"]:
         t = e.get("tags", {})
         geom = e.get("geometry") or []
