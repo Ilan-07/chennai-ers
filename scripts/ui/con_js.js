@@ -69,6 +69,7 @@ function recalc(){
   const S_=sc(), OX=BX*Z+PANX, OY=BY*Z+PANY;
   PX=new Float32Array(N); PY=new Float32Array(N);
   for(let i=0;i<N;i++){PX[i]=wx(C.lon[i])*S_+OX; PY[i]=wy(C.lat[i])*S_+OY;}
+  GRID=null;   // the grid is in screen space, so it dies with the view
 }
 const px=lon=>wx(lon)*sc()+BX*Z+PANX, py=lat=>wy(lat)*sc()+BY*Z+PANY;
 
@@ -353,9 +354,25 @@ function buildPicker(){
 // The map knows the best response time everywhere; a min() cannot say WHO
 // provides it. top_who / top_s carry the three fastest stations per cell, so a
 // selection can be answered the way a dispatcher would ask it.
+// A linear scan over 3,838 cells ran on EVERY mousemove, rebuilding the tooltip
+// each time -- enough to make the whole page feel stuck. Coarse spatial grid
+// instead, rebuilt only when the view actually changes.
+let GRID=null, GRIDCELL=48;
+function buildGrid(){
+  GRID=new Map();
+  for(let i=0;i<N;i++){
+    const k=((PX[i]/GRIDCELL)|0)+","+((PY[i]/GRIDCELL)|0);
+    (GRID.get(k)||GRID.set(k,[]).get(k)).push(i);
+  }
+}
 function nearestCell(mx,my){
+  if(!GRID)buildGrid();
+  const gx=(mx/GRIDCELL)|0, gy=(my/GRIDCELL)|0;
   let best=-1,bd=1e18;
-  for(let i=0;i<N;i++){const d=(PX[i]-mx)**2+(PY[i]-my)**2; if(d<bd){bd=d;best=i;}}
+  for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++){
+    const b=GRID.get((gx+dx)+","+(gy+dy)); if(!b)continue;
+    for(const i of b){const d=(PX[i]-mx)**2+(PY[i]-my)**2; if(d<bd){bd=d;best=i;}}
+  }
   return bd<=Math.max(400,900/(Z*Z))?best:-1;
 }
 
@@ -529,7 +546,16 @@ $("svcSeg").onclick=e=>{const b=e.target.closest("[data-svc]"); if(!b)return;
 $("thr").oninput=e=>{thrMin=+e.target.value; $("thrVal").textContent=thrMin;
   draw(); paint();};
 $("k").oninput=e=>{kWant=+e.target.value; $("kVal").textContent=kWant; compare();};
-$("opt").onclick=()=>{picked=greedy(kWant); paintSites(); draw(); paint();};
+$("opt").onclick=()=>{
+  try{
+    const t0=performance.now();
+    picked=greedy(kWant);
+    paintSites(); draw(); paint();
+    const d=$("diag"); if(d)d.textContent=
+      `optimise: ${picked.length} sites in ${(performance.now()-t0).toFixed(0)} ms`+
+      ` (k=${kWant}, candidates ${S().candidates.length})`;
+  }catch(err){const d=$("diag"); if(d)d.textContent="optimise failed: "+(err&&err.message||err);}
+};
 $("clear").onclick=()=>{picked=[]; paintSites(); draw(); paint();};
 [["tgStations","st"],["tgSites","sites"],["tgBase","base"],
  ["tgZones","zones"],["tgFlood","flood"],["tgCov","cov"]].forEach(([id,key])=>{
@@ -575,11 +601,17 @@ $("copy").onclick=async()=>{
 
 // hover readout
 const cv=$("cv"), tip=$("tip");
+let hoverPend=false, lastHover=-2;
 cv.onmousemove=e=>{
+  if(hoverPend)return; hoverPend=true;
+  requestAnimationFrame(()=>{hoverPend=false;});
   const r=cv.getBoundingClientRect(), mx=e.clientX-r.left, my=e.clientY-r.top;
   let best=-1,bd=1e9;
   for(let i=0;i<N;i++){const d=(PX[i]-mx)**2+(PY[i]-my)**2; if(d<bd){bd=d;best=i;}}
   if(bd>Math.max(400,900/(Z*Z))){tip.classList.remove("on");return;}
+  if(best===lastHover){tip.style.left=Math.min(mx+14,r.width-232)+"px";
+    tip.style.top=(my+14)+"px"; return;}
+  lastHover=best;
   const rs=SS().resp[best];
   tip.innerHTML=`<b>Ward ${C.ward[best]}</b> · ${POP[best].toLocaleString()} residents<br>`+
     (rs<0?"<b>No route from any station</b>":
@@ -592,6 +624,16 @@ window.addEventListener("resize",fit);
 $("stamp").textContent="Provisional · "+D.meta.stations_signature.slice(0,8);
 $("attrib").textContent=D.raster.attribution;
 
+// Does a click even reach this document? Capture phase on window, so nothing
+// downstream can swallow it. If this counter never moves, the problem is not in
+// any handler -- it is that the frame is not delivering pointer events at all.
+let CLICKS=0;
+const diag=()=>{const d=$("diag"); if(!d)return;
+  d.textContent=`clicks ${CLICKS} · wards ${Object.keys(BY_WARD).length}`+
+    ` · cov ${(SS().cov_indptr||[]).length} · k ${kWant} · picked ${picked.length}`+
+    ` · sel ${SEL.length}`;};
+window.addEventListener("click",()=>{CLICKS++;diag();},true);
+
 // Paint the whole interface FIRST, then let the basemap arrive. Blocking first
 // paint on two JPEG decodes leaves the page looking broken for as long as they
 // take, and everything except the street map is ready before them.
@@ -602,6 +644,7 @@ try{
   idLegend(); buildPicker(); buildScen(); fit(); paint(); paintSites();
   const _b=$("boot"); if(_b)_b.remove();
   loadRaster(()=>draw());
+  diag();
 }catch(err){
   const b=$("boot");
   if(b)b.innerHTML='<div style="max-width:620px;text-align:left">'+
