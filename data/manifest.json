@@ -283,10 +283,6 @@
     "bytes": 294122,
     "sha256": "debdd38490f6c0eb8296cf33864610a9748bc3948b75039b4760f30c603d8f13"
   },
-  "data/manifest_pre_repair_2026-09.json": {
-    "bytes": 11631,
-    "sha256": "023f8f25d7f68ec3f35b05c66aca23f76cf0094a6431bea602b0a401274e3441"
-  },
   "data/raw/Chennai_GCC_Ward_Map_2022.kml": {
     "bytes": 2815875,
     "sha256": "be48ef7eb4320279e790f59da1691ece9efc92b34459ca73c492957943c347e0"

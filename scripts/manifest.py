@@ -23,7 +23,10 @@ from ers.hashing import sha256_file  # noqa: E402
 ROOT = Path(".")
 # Bulk upstream caches are reproducible and enormous; the registry already
 # pins the ones that matter.
-SKIP = ("data/raw/osm_cache", "data/raw/ghsl", "data/tiles")
+SKIP = ("data/raw/osm_cache", "data/raw/ghsl", "data/tiles",
+        # The manifest cannot contain its own hash -- the scan runs before the
+        # write -- so including it would report a spurious change on every run.
+        "data/manifest.json", "data/manifest_pre_repair_2026-09.json")
 
 
 def scan() -> dict[str, dict]:
