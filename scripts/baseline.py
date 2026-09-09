@@ -1,6 +1,7 @@
 """Baseline coverage on the current station network. Build step 09.
 
-OUTPUT IS PROVISIONAL. 29 of 33 stations still carry geocoder positions rather
+Publication status is decided at run time by ers.publish, not asserted here:
+29 of 33 stations still carry geocoder positions rather
 than surveyed ones, so the publish gate is closed and every figure here is
 stamped accordingly. The pipeline runs anyway so the whole chain is exercised.
 """
@@ -17,6 +18,7 @@ from ers.geo.graph import read_graph_tables
 from ers.routing.csr import build_graph, snap
 from ers.io.stations import qa_report, ResolvedStation
 from ers.pipeline import demand_column
+from ers.publish import publication_basis
 
 t0 = time.time()
 SPEEDS = yaml.safe_load(open("config/speeds/base.yml"))
@@ -196,9 +198,7 @@ report = {
         "within_published_range": bool(in_range),
         "source": tgt["source"],
     },
-    "PROVISIONAL": not gate["passes_publish_gate"],
-    "provisional_reason": f"{len(gate['survey_required'])} of {gate['total']} stations "
-                          f"are geocoder positions, not surveyed",
+    **publication_basis(),
     "station_gate": {k: v for k, v in gate.items() if k != "survey_required"},
     "results": results,
     "demand_total": round(float(cells["population"].sum())),
@@ -206,5 +206,19 @@ report = {
     "seconds": round(time.time() - t0, 1),
 }
 json.dump(report, open("data/interim/baseline_report.json", "w"), indent=2, sort_keys=True)
-print(f"\n{'='*66}\nPROVISIONAL — {report['provisional_reason']}\n{'='*66}")
+basis = report["publication_basis"]
+if basis == "waived":
+    w = report["waiver"]
+    print(f"\n{'='*66}")
+    print(f"PUBLISHED UNDER WAIVER of {w['date']} — NOT on surveyed positions")
+    print(f"  {w['rests_on'][:300]}")
+    print(f"  quote with the interval: ±{w['uncertainty']['if_unconfirmed_listings_correct_points']} pts "
+          f"if the unconfirmed listings are right, "
+          f"±{w['uncertainty']['if_unconfirmed_listings_wrong_points']} pts if not")
+    print(f"  review by {w['review_by']}")
+    print(f"{'='*66}")
+elif basis == "surveyed":
+    print(f"\n{'='*66}\nPUBLISHABLE — every station surveyed\n{'='*66}")
+else:
+    print(f"\n{'='*66}\nPROVISIONAL — {report['provisional_reason']}\n{'='*66}")
 print(f"done in {report['seconds']}s")

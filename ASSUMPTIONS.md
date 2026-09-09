@@ -55,7 +55,7 @@ unlabelled, and nothing reaches a slide, an export or a report without its label
 | A-11 | Demand tessellation | H3 resolution 9 | Sensitivity at r10 |
 | A-12 | Candidate minimum separation | 800 m | E-09 (candidate resample) |
 | A-13 | Parcel snap radius | 400 m | Reported per site |
-| A-15 | Station position uncertainty | 50 m residual on the adopted Maps positions — **but only 14 of 29 have a confirmed identity** | E-11 to E-11g. The noise floor is **±0.8 pts if the 15 unconfirmed POIs are right, ±7.6 if they are not** (E-11g). Verification outstanding. |
+| A-15 | Station position uncertainty | 50 m residual on the adopted Maps positions — **but only 14 of 29 have a confirmed identity**. Results are published under the ADR-006 waiver, NOT on surveyed positions | E-11 to E-11g. The noise floor is **±0.8 pts if the 15 unconfirmed POIs are right, ±7.6 if they are not** (E-11g). Verification outstanding. |
 | A-14 | Demand snap flag threshold | 300 m | Reported per cell |
 
 ## Experiment results

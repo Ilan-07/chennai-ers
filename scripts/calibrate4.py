@@ -26,6 +26,7 @@ import argparse, json, sys, time
 sys.path.insert(0, "src")
 import geopandas as gpd, numpy as np, pandas as pd, yaml
 from ers.geo.attrs import attribute_edges
+from ers.publish import publication_basis
 from ers.geo.graph import read_graph_tables
 from ers.pipeline import station_signature
 from ers.routing.csr import build_graph, snap, travel_times, to_seconds
@@ -152,6 +153,6 @@ json.dump({"stage": 4, "statistic": "median ratio per band (sum-ratio bias retir
            "cv_refit_wins_worst_band_share": round(float((cv[:, 2] < cv[:, 4]).mean()), 3),
            "two_part_overhead_tested_and_rejected": True,
            "stations_signature": station_signature(st),
-           "PROVISIONAL": True, "seconds": round(time.time()-t0, 1)},
+           **publication_basis(), "seconds": round(time.time()-t0, 1)},
           open(args.out, "w"), indent=2, sort_keys=True)
 print(f"\nwrote {args.out}  ({time.time()-t0:.0f}s)")

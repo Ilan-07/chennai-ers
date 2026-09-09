@@ -486,7 +486,7 @@ function paint(){
   const sd=SS();
   $("caveat").innerHTML=`<b>${sd.report_only?"Reported, not optimised against":
     "Design basis, weight "+sd.weight.toFixed(2)}.</b> ${
-    D.meta.provisional_reason}. The optimiser runs at the ${S().standard} standard, not at the
+    D.meta.basis_line}. The optimiser runs at the ${S().standard} standard, not at the
     slider — the slider re-reads coverage from exact per-cell response times.`;
 }
 
@@ -616,8 +616,11 @@ $("areaPick").onchange=e=>{
   selectArea(kind, kind==="ward"?+key:key);};
 $("copy").onclick=async()=>{
   const s=stats();
-  const payload={generated:new Date().toISOString(),PROVISIONAL:true,
-    provisional_reason:D.meta.provisional_reason,service:svc,scenario:scen,
+  const payload={generated:new Date().toISOString(),
+    PROVISIONAL:!!D.meta.PROVISIONAL,
+    publication_basis:D.meta.publication_basis,
+    basis:D.meta.basis_line, waiver:D.meta.waiver||null,
+    service:svc,scenario:scen,
     threshold_min:thrMin,travel_budget_s:budget(),coverage_share:+s.share.toFixed(4),
     population_covered:Math.round(s.cov),unreachable_population:Math.round(s.unreach),
     mean_travel_s:Math.round(s.mean),p90_travel_s:Math.round(s.p90),
@@ -626,7 +629,7 @@ $("copy").onclick=async()=>{
       junction_delay_scale:D.meta.junction_delay_scale},
     stations_signature:D.meta.stations_signature};
   try{await navigator.clipboard.writeText(JSON.stringify(payload,null,2));
-    $("copyMsg").textContent="Copied — includes the provisional stamp";}
+    $("copyMsg").textContent="Copied — includes the publication basis";}
   catch(e){$("copyMsg").textContent="Clipboard blocked";}
   setTimeout(()=>$("copyMsg").textContent="",2600);};
 
@@ -649,7 +652,7 @@ $("export").onclick=()=>{
   const s=stats(), cand=S().candidates, u=S().uncertainty||{};
   const rows=[
     "# Chennai emergency response — coverage brief",
-    "# PROVISIONAL: "+D.meta.provisional_reason,
+    "# BASIS: "+D.meta.basis_line,
     "# generated "+new Date().toISOString(),
     "# stations_signature "+D.meta.stations_signature,
     "",
@@ -712,7 +715,9 @@ cv.onmousemove=e=>{
   tip.classList.add("on");};
 cv.onmouseleave=()=>tip.classList.remove("on");
 window.addEventListener("resize",fit);
-$("stamp").textContent="Provisional · "+D.meta.stations_signature.slice(0,8);
+$("stamp").textContent=(D.meta.publication_basis==="waived" ? "Under waiver · "
+  : D.meta.publication_basis==="surveyed" ? "Surveyed · " : "Provisional · ")
+  +D.meta.stations_signature.slice(0,8);
 $("attrib").textContent=D.raster.attribution;
 
 // Does a click even reach this document? Capture phase on window, so nothing

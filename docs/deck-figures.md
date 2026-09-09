@@ -10,7 +10,7 @@ The deck was written before the pipeline produced its own numbers, and was never
 
 - **status:** DIFFERENT QUANTITY
 - **pipeline:** 73.32%
-- **run:** `ba705328e64ec5ad`
+- **run:** `5c205e0b523ff3ae`
 
 The deck's 61% is this project's SFAC-7 figure (7 min total response, 300 s travel budget) relabelled as an 8-minute one. The 8-minute figure is materially higher. Same number, different question.
 
@@ -18,7 +18,7 @@ The deck's 61% is this project's SFAC-7 figure (7 min total response, 300 s trav
 
 - **status:** DIFFERENT QUANTITY
 - **pipeline:** 2,916,923 beyond the 7-min budget
-- **run:** `ba705328e64ec5ad`
+- **run:** `5c205e0b523ff3ae`
 
 Same relabelling as above, and it inherits A-05: the growth factor moves absolute counts proportionally while leaving every share unchanged (E-10 growth arm).
 
@@ -26,7 +26,7 @@ Same relabelling as above, and it inherits A-05: the growth factor moves absolut
 
 - **status:** SUPERSEDED
 - **pipeline:** 70.76%
-- **run:** `18edeb26197b625b`
+- **run:** `a6fcf2aab9514716`
 
 Proven optimal at k=3 on the land-feasible candidate set. The deck's 89% is roughly the modelled value at k=45. And per ADR-005 the SITES are not identified at current positional accuracy, so no k=3 recommendation should be read off this.
 
@@ -42,7 +42,7 @@ Finding F-01. The GCC publishes 33 (9 North, 9 South, 7 Central, 8 Suburban). Th
 
 - **status:** SUPERSEDED
 - **pipeline:** 5.0 min travel at baseline
-- **run:** `ba705328e64ec5ad`
+- **run:** `5c205e0b523ff3ae`
 
 The modelled baseline mean is already well below the deck's 'before' figure, so the claimed improvement is measured from a number the pipeline does not produce.
 
@@ -50,7 +50,7 @@ The modelled baseline mean is already well below the deck's 'before' figure, so 
 
 - **status:** SUPERSEDED
 - **pipeline:** 43.32%
-- **run:** `18edeb26197b625b`
+- **run:** `a6fcf2aab9514716`
 
 100-year flood, EMS. The deck does not say which return period it means; the project models 5, 25 and 100-year plus the observed 2015 extent.
 
@@ -89,8 +89,8 @@ Was a clipboard copy only. The CSV carries the settings, the coverage, BOTH E-11
 ### every run carries a reproducible run identifier
 
 - **status:** SUPPORTED
-- **pipeline:** run_id on every report (e.g. ba705328e64ec5ad)
-- **run:** `ba705328e64ec5ad`
+- **pipeline:** run_id on every report (e.g. 5c205e0b523ff3ae)
+- **run:** `5c205e0b523ff3ae`
 
 TRUE ONLY SINCE 2026-09. When the deck was written no report carried a run id; eight of ~24 carried a stations_signature and the rest recorded nothing about their inputs.
 
@@ -106,7 +106,7 @@ The deck publishes this as a completed validation. The sweep had never been run.
 
 - **status:** SUPPORTED
 - **pipeline:** worst greedy gap 4.72% of optimal
-- **run:** `18edeb26197b625b`
+- **run:** `a6fcf2aab9514716`
 
 Holds, and is the deck's soundest quantitative claim. Every reported run states whether it was PROVEN optimal (F-15).
 

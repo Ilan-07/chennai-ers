@@ -35,6 +35,7 @@ import geopandas as gpd, numpy as np, pandas as pd, yaml
 from scipy import sparse
 from ers import coverage as cov
 from ers.model.problem import SitingProblem
+from ers.publish import publication_basis
 from ers.optimise import exact
 from ers.pipeline import load_service, station_signature
 from ers.routing.csr import snap
@@ -257,7 +258,7 @@ report = {
         "p5_p95_spread_points": round(spread_pts, 2),
         "bias_vs_point_estimate_points": round(100 * (a.mean() - ctx.baseline_share), 2),
     },
-    "PROVISIONAL": True,
+    **publication_basis(),
 }
 
 print(f"\n=== COVERAGE under station position uncertainty ===")

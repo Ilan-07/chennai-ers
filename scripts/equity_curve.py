@@ -10,6 +10,7 @@ sys.path.insert(0, "src")
 import geopandas as gpd, numpy as np, pandas as pd, yaml
 from scipy import sparse
 from ers.model.problem import SitingProblem
+from ers.publish import publication_basis
 from ers.optimise import exact
 from ers.pipeline import load_service
 from ers.provenance import config_bundle, stamp
@@ -155,7 +156,7 @@ if bad:
                      f"{[(r['k'], r['efficiency_city_coverage']) for r in bad]}")
 
 json.dump({**stamp(config=config_bundle(SVC), stations=ctx.stations, service=SVC),
-           "PROVISIONAL": True, "service": SVC,
+           **publication_basis(), "service": SVC,
            "baseline_share": round(ctx.baseline_share, 4),
            "trip_overhead_s": ctx.overhead_s,
            "precovered_cells": int(precov.sum()),

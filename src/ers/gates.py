@@ -18,7 +18,11 @@ Severity is the part that makes this usable rather than merely loud:
               as settled numbers. This must NOT fail the build -- it would be
               red for as long as the fieldwork takes, and a permanently red
               build is one nobody reads. What IS enforced is the consequence:
-              while it fails, every affected artefact must carry PROVISIONAL.
+              every affected artefact must state what it rests on -- PROVISIONAL
+              while nothing else is decided, or the recorded waiver once one is.
+              A PUBLICATION gate stays FAILED under a waiver, because it states
+              a fact about the data and a decision to publish does not change
+              that fact.
 
   REPORTED    a cross-check against an outside source that does not govern.
               Recorded, never enforced. See ADR-004.
@@ -69,28 +73,62 @@ def evaluate(root: str | Path = ".") -> list[GateResult]:
     rv = _load(root, "routing_validation.json")
 
     # ---- PUBLICATION -----------------------------------------------------
+    from ers.publish import load_waiver
+
+    waiver = load_waiver(root)
     if qa is not None:
         n_open = len(qa.get("survey_required", []))
+        surveyed = bool(qa.get("passes_publish_gate"))
         out.append(GateResult(
-            "stations_surveyed", PUBLICATION, bool(qa.get("passes_publish_gate")),
-            f"{n_open} provisional", "0 provisional",
+            "stations_surveyed", PUBLICATION, surveyed,
+            f"{n_open} unsurveyed" + (" (WAIVED)" if waiver and not surveyed else ""),
+            "0 unsurveyed",
             "29 of 33 positions are Google Maps POIs, not surveyed. A better "
-            "geocode is not a verification (E-11c)."))
+            "geocode is not a verification (E-11c). "
+            + ("Publication proceeds under the waiver of "
+               f"{waiver.get('date')}; this gate stays FAILED because it states "
+               "a fact about the data, and a decision to publish does not make "
+               "the stations surveyed." if waiver else "")))
 
-    # While the survey gate is open, every affected artefact must SAY so. This
-    # is the enforceable half of a gate that must not fail the build.
+    # Every affected artefact must say what it rests on. Before the waiver that
+    # meant carrying PROVISIONAL; under one it means carrying the waiver itself.
+    # Either way the requirement is the same: a coverage figure may not travel
+    # without its basis attached.
     if qa is not None and not qa.get("passes_publish_gate"):
+        AFFECTED = ("baseline_report.json", "degradation_report.json",
+                    "optimise_ems.json", "optimise_fire.json")
         unstamped = []
-        for name in ("baseline_report.json", "degradation_report.json",
-                     "optimise_ems.json", "optimise_fire.json"):
+        for name in AFFECTED:
             rep = _load(root, name)
-            if rep is not None and not rep.get("PROVISIONAL"):
+            if rep is None:
+                continue
+            basis = rep.get("publication_basis")
+            if waiver:
+                ok = basis == "waived" and bool(rep.get("waiver"))
+            else:
+                ok = bool(rep.get("PROVISIONAL"))
+            if not ok:
                 unstamped.append(name)
         out.append(GateResult(
-            "provisional_stamped", BUILD, not unstamped,
-            unstamped or "all stamped", "no unstamped artefact",
-            "The survey gate is open, so these outputs may not present "
-            "themselves as settled."))
+            "publication_basis_stamped", BUILD, not unstamped,
+            unstamped or "all stamped",
+            "waiver recorded in every artefact" if waiver else "no unstamped artefact",
+            "The survey is outstanding, so these outputs may not present "
+            "themselves as settled without saying what they rest on."))
+
+        # A waiver that omits its own interval would let the narrow figure be
+        # quoted alone, which E-11g says is exactly what is not supported.
+        if waiver:
+            u = (waiver.get("uncertainty") or {})
+            has_both = all(k in u for k in (
+                "if_unconfirmed_listings_correct_points",
+                "if_unconfirmed_listings_wrong_points"))
+            out.append(GateResult(
+                "waiver_states_its_interval", BUILD, has_both,
+                sorted(u) or "none", "both measured intervals present",
+                "A figure published on unsurveyed positions must carry both "
+                "ends of the E-11g interval; the narrow one alone is not "
+                "supported while 15 listings are unconfirmed."))
 
     # ---- BUILD -----------------------------------------------------------
     if baseline is not None and degr is not None:

@@ -14,6 +14,7 @@ sys.path.insert(0, "src")
 import geopandas as gpd, numpy as np, pandas as pd, yaml
 from scipy import sparse
 from ers.model.problem import SitingProblem
+from ers.publish import publication_basis
 from ers.optimise import exact
 from ers.pipeline import load_service, ward_shares as _ward_shares
 from ers.provenance import config_bundle, stamp
@@ -134,7 +135,7 @@ if len(feasible) > 1:
     print(f"site displacement: {len(set(a['sites'])^set(b['sites']))} of {2*K} site-slots differ")
 
 json.dump({**stamp(config=config_bundle(SVC), stations=ctx.stations, service=SVC),
-           "PROVISIONAL": True, "service": SVC, "k": K,
+           **publication_basis(), "service": SVC, "k": K,
            "degenerate": bool(degenerate),
            "degenerate_reason": (f"maximin floor is 0% at k={K}: the equity constraint "
                                  f"binds nothing and the ladder collapses to the "

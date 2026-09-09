@@ -27,6 +27,7 @@ sys.path.insert(0, "src")
 sys.path.insert(0, "scripts")
 import geopandas as gpd, numpy as np, pandas as pd, yaml
 from ers.geo.attrs import attribute_edges
+from ers.publish import publication_basis
 from ers.geo.graph import read_graph_tables
 from ers.routing.csr import build_graph, snap, travel_times, to_seconds
 from ers.routing.oracle import agreement_stats, stratified_stats
@@ -286,6 +287,6 @@ print(verdict["recommendation"])
 
 json.dump({"experiment": "E-10", "assumptions_tested": ["A-02"],
            "band_bias_gate": BAND_BIAS_GATE, "grid": grid, **verdict,
-           "PROVISIONAL": True, "seconds": round(time.time() - t0, 1)},
+           **publication_basis(), "seconds": round(time.time() - t0, 1)},
           open(args.out, "w"), indent=2, sort_keys=True)
 print(f"wrote {args.out}  ({time.time()-t0:.0f}s)")

@@ -1,7 +1,8 @@
 {
-  "PROVISIONAL": true,
+  "PROVISIONAL": false,
+  "basis_note": "Published under a recorded waiver, NOT on surveyed positions. See config/publish_waiver.yml.",
   "cells": 3838,
-  "code_commit": "04a7cdca8770f97963fadee3526628509663c6dd-dirty",
+  "code_commit": "80f03cfde70562ec7561b33d042f660535c87623-dirty",
   "config_hash": "5f977eb68fac2ef082aab92476e53185bac79d0979c8598bf5cda868c6c72b0f",
   "connectivity": {
     "largest_strong_nodes": 88096,
@@ -27,7 +28,7 @@
   "headline_caveat": "Coverage shares carry a P5-P95 interval from E-11 station position uncertainty; see results.<svc>.position_uncertainty. The point estimate also sits above the mean draw.",
   "input_digests": [],
   "position_uncertainty_measured": true,
-  "provisional_reason": "29 of 33 stations are geocoder positions, not surveyed",
+  "publication_basis": "waived",
   "results": {
     "ems": {
       "bases": {
@@ -194,8 +195,8 @@
       "unreachable_share": 0.0
     }
   },
-  "run_id": "ba705328e64ec5ad",
-  "seconds": 2.0,
+  "run_id": "5c205e0b523ff3ae",
+  "seconds": 3.3,
   "seed": null,
   "stale_intervals_ignored": {},
   "station_gate": {
@@ -209,5 +210,20 @@
     "unresolved": [],
     "with_coordinates": 33
   },
-  "stations_signature": "087abc04e0179c24"
+  "stations_signature": "087abc04e0179c24",
+  "waiver": {
+    "accepted_by": "Ilangkumaran Yogamani / Kalyan Ram",
+    "closes_when": "The 15 identity-confirmation emails are answered, or the stations are visited. Addresses are in data/interim/station_survey_worklist.csv; the procedure is in docs/station-survey.md. Either route replaces this waiver with evidence.",
+    "date": "2026-09-10",
+    "reason": "Coursework submission timeline. The station survey is outstanding and is not expected to complete before the report is due, so results are published on the positions currently held rather than withheld entirely.",
+    "rests_on": "29 of 33 station positions are Google Maps business listings adopted in E-11c, not surveyed coordinates. 14 of those 29 have a confirmed identity (an official TNFRS landline or CUG mobile matching the listing, or an OSM fire feature within 150 m). The remaining 15 are named and categorised as fire stations but are corroborated by nothing independent. 3 are ambiguous between two candidate listings and 1 (Athipattu) is contested.",
+    "review_by": "2026-12-01",
+    "stations_total": 33,
+    "stations_unsurveyed": 29,
+    "uncertainty": {
+      "if_unconfirmed_listings_correct_points": 0.83,
+      "if_unconfirmed_listings_wrong_points": 7.63,
+      "note": "At the wider figure every effect this project has measured -- the junction term at 3.4 points, maximin siting at 4.7, the equity cost at k=20 at 5.0 -- sits inside the noise. A coverage figure published under this waiver may not be quoted at the narrow interval alone.\n"
+    }
+  }
 }

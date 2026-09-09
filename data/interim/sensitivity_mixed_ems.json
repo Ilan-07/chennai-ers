@@ -1,5 +1,6 @@
 {
-  "PROVISIONAL": true,
+  "PROVISIONAL": false,
+  "basis_note": "Published under a recorded waiver, NOT on surveyed positions. See config/publish_waiver.yml.",
   "coverage": {
     "bias_vs_point_estimate_points": -2.1,
     "max": 0.6626,
@@ -117,14 +118,30 @@
   "max_snap_m": 1000.0,
   "noise_floor_points": 7.63,
   "point_estimate_coverage": 0.6175,
+  "publication_basis": "waived",
   "rejected_station_draws": 780,
   "rejection_rate_per_station_draw": 0.073,
-  "seconds": 111.2,
+  "seconds": 111.5,
   "seed": 20260904,
   "service": "ems",
   "stations_signature": "087abc04e0179c24",
   "uncertainty_m": {
     "-1.0": 19,
     "50.0": 14
+  },
+  "waiver": {
+    "accepted_by": "Ilangkumaran Yogamani / Kalyan Ram",
+    "closes_when": "The 15 identity-confirmation emails are answered, or the stations are visited. Addresses are in data/interim/station_survey_worklist.csv; the procedure is in docs/station-survey.md. Either route replaces this waiver with evidence.",
+    "date": "2026-09-10",
+    "reason": "Coursework submission timeline. The station survey is outstanding and is not expected to complete before the report is due, so results are published on the positions currently held rather than withheld entirely.",
+    "rests_on": "29 of 33 station positions are Google Maps business listings adopted in E-11c, not surveyed coordinates. 14 of those 29 have a confirmed identity (an official TNFRS landline or CUG mobile matching the listing, or an OSM fire feature within 150 m). The remaining 15 are named and categorised as fire stations but are corroborated by nothing independent. 3 are ambiguous between two candidate listings and 1 (Athipattu) is contested.",
+    "review_by": "2026-12-01",
+    "stations_total": 33,
+    "stations_unsurveyed": 29,
+    "uncertainty": {
+      "if_unconfirmed_listings_correct_points": 0.83,
+      "if_unconfirmed_listings_wrong_points": 7.63,
+      "note": "At the wider figure every effect this project has measured -- the junction term at 3.4 points, maximin siting at 4.7, the equity cost at k=20 at 5.0 -- sits inside the noise. A coverage figure published under this waiver may not be quoted at the narrow interval alone.\n"
+    }
   }
 }

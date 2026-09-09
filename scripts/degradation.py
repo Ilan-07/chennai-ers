@@ -20,6 +20,7 @@ sys.path.insert(0, "src")
 import geopandas as gpd, numpy as np, pandas as pd, yaml
 from ers import coverage
 from ers.geo.graph import read_graph_tables
+from ers.publish import publication_basis
 from ers.pipeline import demand_column
 from ers.provenance import config_bundle, service_bases, stamp
 from ers.routing.csr import build_graph, snap
@@ -166,7 +167,7 @@ def run(junction_scale=None, overhead_s=None, closure_depth_m=None,
         "station_snap_max_m": round(float(s_dist.max()), 1),
         "cell_snap_max_m": round(float(c_dist.max()), 1),
         "cutoff": "none (exhaustive sweep)",
-        "PROVISIONAL": True,
+        **publication_basis(),
         "provisional_reason": "29 of 33 stations are geocoder positions, not surveyed",
         "services": out,
         "seconds": round(time.time() - t0, 1),

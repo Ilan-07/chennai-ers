@@ -1,5 +1,5 @@
 {
-  "PROVISIONAL": true,
+  "PROVISIONAL": false,
   "all_proven_optimal": true,
   "bases": {
     "bases": 33,
@@ -11,7 +11,8 @@
     "resolves_when": "EMRI supplies the 108 standby-point list",
     "source": "none"
   },
-  "code_commit": "2c987b8cbf9ff64bb862d7854a1dfc232e703939-dirty",
+  "basis_note": "Published under a recorded waiver, NOT on surveyed positions. See config/publish_waiver.yml.",
+  "code_commit": "80f03cfde70562ec7561b33d042f660535c87623-dirty",
   "config_hash": "d856dcff2f3d684bb3970b49b24b234ad690d08cad0b2ee202bc7068f237cc28",
   "design_basis_weights": {
     "dry": 0.7,
@@ -30,11 +31,12 @@
     "trip_overhead_s": 17.5
   },
   "provisional_reason": "29 of 33 stations are geocoder positions, not surveyed",
+  "publication_basis": "waived",
   "report_only": [
     "flood5",
     "f2015"
   ],
-  "run_id": "66c3b8e8ca3115b4",
+  "run_id": "a6fcf2aab9514716",
   "scenario_stats": {
     "dry": {
       "arcs_usable": 250803,
@@ -119,7 +121,7 @@
       "matrix_nnz": 10959
     }
   },
-  "seconds": 38.6,
+  "seconds": 37.6,
   "seed": null,
   "service": "ems",
   "stations_signature": "087abc04e0179c24",
@@ -148,7 +150,7 @@
         480,
         528
       ],
-      "solve_s": 0.161,
+      "solve_s": 0.159,
       "strategy": "dry-only",
       "worst_coverage": 0.4457,
       "worst_design_basis": "peak"
@@ -177,7 +179,7 @@
         480,
         528
       ],
-      "solve_s": 0.845,
+      "solve_s": 0.796,
       "strategy": "expected",
       "worst_coverage": 0.4457,
       "worst_design_basis": "peak"
@@ -206,10 +208,25 @@
         408,
         480
       ],
-      "solve_s": 0.781,
+      "solve_s": 0.776,
       "strategy": "maximin",
       "worst_coverage": 0.4963,
       "worst_design_basis": "peak"
     }
-  ]
+  ],
+  "waiver": {
+    "accepted_by": "Ilangkumaran Yogamani / Kalyan Ram",
+    "closes_when": "The 15 identity-confirmation emails are answered, or the stations are visited. Addresses are in data/interim/station_survey_worklist.csv; the procedure is in docs/station-survey.md. Either route replaces this waiver with evidence.",
+    "date": "2026-09-10",
+    "reason": "Coursework submission timeline. The station survey is outstanding and is not expected to complete before the report is due, so results are published on the positions currently held rather than withheld entirely.",
+    "rests_on": "29 of 33 station positions are Google Maps business listings adopted in E-11c, not surveyed coordinates. 14 of those 29 have a confirmed identity (an official TNFRS landline or CUG mobile matching the listing, or an OSM fire feature within 150 m). The remaining 15 are named and categorised as fire stations but are corroborated by nothing independent. 3 are ambiguous between two candidate listings and 1 (Athipattu) is contested.",
+    "review_by": "2026-12-01",
+    "stations_total": 33,
+    "stations_unsurveyed": 29,
+    "uncertainty": {
+      "if_unconfirmed_listings_correct_points": 0.83,
+      "if_unconfirmed_listings_wrong_points": 7.63,
+      "note": "At the wider figure every effect this project has measured -- the junction term at 3.4 points, maximin siting at 4.7, the equity cost at k=20 at 5.0 -- sits inside the noise. A coverage figure published under this waiver may not be quoted at the narrow interval alone.\n"
+    }
+  }
 }

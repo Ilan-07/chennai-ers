@@ -15,10 +15,25 @@ import geopandas as gpd, numpy as np, pandas as pd, yaml
 from scipy import sparse
 from ers import coverage as cov
 from ers.pipeline import build_scenario_coverage, load_service, station_signature
+from ers.publish import publication_basis
 from ers.routing.csr import snap
 
 SCEN = ["dry", "peak", "flood5", "flood25", "flood100", "f2015"]
 t0 = time.time()
+def _basis_line() -> str:
+    """How the console should describe what these numbers rest on."""
+    b = publication_basis()
+    if b["publication_basis"] == "surveyed":
+        return "All 33 station positions are surveyed"
+    if b["publication_basis"] == "waived":
+        w = b["waiver"]
+        return (f"Published under the waiver of {w['date']} — NOT on surveyed "
+                f"positions. {w['stations_unsurveyed']} of {w['stations_total']} "
+                f"stations carry map-listing positions; 14 have a confirmed "
+                f"identity. Review by {w['review_by']}")
+    return b.get("provisional_reason", "provisional")
+
+
 cfg = yaml.safe_load(open("config/city/chennai.yml"))
 speeds = yaml.safe_load(open("config/speeds/base.yml"))
 cells = gpd.read_parquet("data/interim/demand_cells.parquet")
@@ -59,9 +74,13 @@ out = {
              "trip_overhead_s": float(speeds["trip_overhead_s"]),
              "junction_delay_scale": float(speeds["junction_delay_scale"]),
              "stations_signature": station_signature(st),
-             "PROVISIONAL": True,
-             "provisional_reason": "29 of 33 stations carry Google Maps POI positions, "
-                                   "not surveyed ones; 14 have a confirmed identity",
+             **publication_basis(),
+             # One sentence the console can print verbatim, whichever basis is
+             # in force. Derived rather than hardcoded: the previous fixed
+             # string would have kept saying PROVISIONAL after the project had
+             # decided to publish, which is the same class of error in the
+             # opposite direction.
+             "basis_line": _basis_line(),
              "generated_by": "scripts/export_ui_data.py"},
     "hex": [[round(float(a), 6), round(float(b), 6)] for a, b in hexoff],
     "cells": {"lat": [round(float(v), 5) for v in cc.y],

@@ -26,6 +26,7 @@ import argparse, json, sys, time
 sys.path.insert(0, "src")
 import geopandas as gpd, numpy as np, pandas as pd, yaml
 from ers.model.problem import RobustSitingProblem
+from ers.publish import publication_basis
 from ers.optimise import exact
 from ers.pipeline import demand_column, build_scenario_coverage
 from ers.provenance import config_bundle, stamp
@@ -116,7 +117,7 @@ print(f"  worst-case coverage {100*(best_worst['worst_coverage']-base['worst_cov
 
 report = {**stamp(config=config_bundle(SVC), service=SVC,
                   stations=pd.read_csv("data/interim/stations_resolved.csv")),
-          "PROVISIONAL": True,
+          **publication_basis(),
           "provisional_reason": "29 of 33 stations are geocoder positions, not surveyed",
           "service": SVC, "k": K, "meta": meta,
           "design_basis_weights": weights,

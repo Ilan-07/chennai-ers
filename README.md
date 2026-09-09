@@ -6,8 +6,12 @@ go? Travel time on the real directed road network, population-weighted coverage,
 an MCLP optimiser with a proven optimality gap, and flood and peak-hour network
 states.
 
-> **Every coverage figure this project produces is PROVISIONAL.** 29 of the 33
-> station positions are third-party map listings, not surveyed coordinates. See
+> **Results are published under a recorded waiver, not on surveyed positions.**
+> 29 of the 33 station positions are third-party map listings. Any coverage
+> figure taken from this project must be quoted with its interval: **±0.8 points
+> if the 15 unconfirmed listings name the right stations, ±7.6 if they do not.**
+> The terms are in [`config/publish_waiver.yml`](config/publish_waiver.yml);
+> setting `active: false` reverts every output to PROVISIONAL. See
 > [What you can and cannot claim](#what-you-can-and-cannot-claim).
 
 ---
@@ -65,6 +69,15 @@ addresses are already in `data/interim/station_survey_worklist.csv`, and
 [`docs/station-survey.md`](docs/station-survey.md) has the procedure. At ±7.6
 points every effect this project has measured is below the noise floor.
 
+**The waiver does not change any of that.** It records a decision to publish on
+the positions currently held, with the basis stated in every artefact
+(`publication_basis: "waived"` plus the full terms). It does not make the
+stations surveyed: `stations_qa.passes_publish_gate` stays `false`, and the
+`stations_surveyed` gate stays FAILED, because that gate states a fact about the
+data and a decision to publish does not change a fact. Two BUILD gates enforce
+the terms — every affected artefact must carry the waiver, and the waiver must
+carry both ends of the interval.
+
 **EMS coverage is modelled from fire stations.** Every row of the authoritative
 inventory is a fire station; the 108 ambulance standby points are unpublished
 and absent from OSM. EMS results apply ambulance turnout offsets, speed
@@ -113,6 +126,7 @@ published.
 | [ADR-003](docs/adr/003-station-position-adoption.md) | Map listings are the positions; the survey gate stays shut |
 | [ADR-004](docs/adr/004-trip-overhead-oracle.md) | OSRM governs the trip overhead; EMRI is a cross-check |
 | [ADR-005](docs/adr/005-siting-objective.md) | Report all three siting objectives; recommend none yet |
+| [ADR-006](docs/adr/006-publication-waiver.md) | Publish on unsurveyed positions under a recorded waiver |
 
 [`ASSUMPTIONS.md`](ASSUMPTIONS.md) classifies every value as FACT, RSCH, ASSM or
 RECO, and records the experiment that tests each assumption.

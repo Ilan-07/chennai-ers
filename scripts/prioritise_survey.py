@@ -27,6 +27,7 @@ sys.path.insert(0, "src")
 import geopandas as gpd, numpy as np, pandas as pd
 from ers import coverage as cov
 from ers.pipeline import load_service
+from ers.publish import publication_basis
 from ers.provenance import config_bundle, stamp
 from ers.routing.csr import snap, travel_times
 
@@ -248,6 +249,6 @@ json.dump({**stamp(config=config_bundle("ems"), seed=args.seed,
            "residual_draws": args.residual_draws,
            "ems_fire_rank_spearman": round(float(rho), 3),
            "leverage": lev, "residual_noise": residual,
-           "PROVISIONAL": True, "seconds": round(time.time() - t0, 1)},
+           **publication_basis(), "seconds": round(time.time() - t0, 1)},
           open(args.out, "w"), indent=2, sort_keys=True)
 print(f"wrote {args.out}  ({time.time()-t0:.0f}s)")

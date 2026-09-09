@@ -1,0 +1,50 @@
+# Publication waiver for the outstanding station survey.
+#
+# The publish gate (`stations_qa.passes_publish_gate`) is a statement of FACT:
+# it is true only when every station carries a surveyed position. It is not
+# edited, and this file cannot make it true.
+#
+# What this file does is record a DECISION to publish anyway, with the basis
+# stated, so that every downstream report says what it rests on instead of
+# reading as though the survey had been done. Setting `active: false` reverts
+# every output to PROVISIONAL immediately; real survey data arriving through
+# `ers ingest-survey` makes the waiver redundant rather than overriding it.
+
+active: true
+
+date: 2026-09-10
+accepted_by: "Ilangkumaran Yogamani / Kalyan Ram"
+reason: >
+  Coursework submission timeline. The station survey is outstanding and is not
+  expected to complete before the report is due, so results are published on the
+  positions currently held rather than withheld entirely.
+
+# What the published figures actually rest on. This is the text that travels
+# with every number.
+rests_on: >
+  29 of 33 station positions are Google Maps business listings adopted in E-11c,
+  not surveyed coordinates. 14 of those 29 have a confirmed identity (an official
+  TNFRS landline or CUG mobile matching the listing, or an OSM fire feature
+  within 150 m). The remaining 15 are named and categorised as fire stations but
+  are corroborated by nothing independent. 3 are ambiguous between two candidate
+  listings and 1 (Athipattu) is contested.
+
+# The interval that must be quoted alongside any coverage figure published under
+# this waiver. Both numbers are measured (E-11, E-11g), not assumed.
+uncertainty:
+  if_unconfirmed_listings_correct_points: 0.83
+  if_unconfirmed_listings_wrong_points: 7.63
+  note: >
+    At the wider figure every effect this project has measured -- the junction
+    term at 3.4 points, maximin siting at 4.7, the equity cost at k=20 at 5.0 --
+    sits inside the noise. A coverage figure published under this waiver may not
+    be quoted at the narrow interval alone.
+
+# Not an expiry that stops anything working -- a date at which someone is
+# expected to look again and either survey the stations or restate the decision.
+review_by: 2026-12-01
+
+closes_when: >
+  The 15 identity-confirmation emails are answered, or the stations are visited.
+  Addresses are in data/interim/station_survey_worklist.csv; the procedure is in
+  docs/station-survey.md. Either route replaces this waiver with evidence.
