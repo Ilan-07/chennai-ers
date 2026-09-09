@@ -1,34 +1,34 @@
-station_name,division,service,lat,lon,geocode_confidence,match_source,match_detail,uncertainty_m,survey_required,osm_class,osm_type,plausibility
-Esplanade,Chennai City North,fire,13.0864782,80.2860635,osm,osm_name_match,Esplanade Fire Station,60,False,amenity,fire_station,ok
-Korukkupet,Chennai City North,fire,13.1262108,80.2723274,google_maps_poi,google_maps_poi_lookup,Korukkupet Fire Station [Fire station],50,True,railway,station,transit_feature
-Royapuram,Chennai City North,fire,13.1133601,80.2963471,google_maps_poi,google_maps_poi_lookup,Royapuram fire and rescue station [Fire station],50,True,railway,station,transit_feature
-Secretariat,Chennai City North,fire,13.0812151,80.2836996,google_maps_poi,google_maps_poi_lookup,"Fire station , Secretariat [Fire station] AMBIGUOUS: second candidate 330 m away at 13.0788/80.2862",50,True,highway,bus_stop,transit_feature
-Sembium,Chennai City North,fire,13.1207466,80.2383534,google_maps_poi,google_maps_poi_lookup,Sembium Fire Station [Fire station],50,True,healthcare,centre,unrelated_feature
-Tondiarpet,Chennai City North,fire,13.1223727,80.2873906,google_maps_poi,google_maps_poi_lookup,Tondairpet Fire Station [Fire station] AMBIGUOUS: second candidate 'TONDIARPET FIRE AND RESCUE STATION' 1.9 km away at 13.1400/80.2949,50,True,railway,station,transit_feature
-V.O.C Nagar,Chennai City North,fire,13.1228833,80.2657498,google_maps_poi,google_maps_poi_lookup,Voc Fire Station [Fire station],50,True,railway,halt,transit_feature
-Vyasarpadi,Chennai City North,fire,13.1137787,80.2553979,google_maps_poi,google_maps_poi_lookup,Vyasarpadi Fire Station [Fire protection service],50,True,place,suburb,settlement_centroid
-Washermanpet,Chennai City North,fire,13.1024404,80.2744007,osm,osm_name_match,Washermanpet Fire & Rescue Station,60,False,amenity,fire_station,ok
-Ashok Nagar,Chennai City South,fire,13.0351043,80.2113866,google_maps_poi,google_maps_poi_lookup,Ashok Nagar Fire and Rescue Station [Fire station],50,True,place,suburb,settlement_centroid
-Guindy,Chennai City South,fire,13.0125852,80.2128616,google_maps_poi,google_maps_poi_lookup,Guindy Fire Station [Fire station],50,True,railway,station,transit_feature
-Mylapore,Chennai City South,fire,13.043142,80.2777689,google_maps_poi,google_maps_poi_lookup,Mylapore Fire Station [Fire station],50,True,place,suburb,settlement_centroid
-Raj Bhavan,Chennai City South,fire,13.0066515,80.2244659,google_maps_poi,google_maps_poi_lookup,"Fire and Rescue Station, Lok Bhavan [Fire station]",50,True,landuse,residential,road_feature
-Saidapet,Chennai City South,fire,13.0294279,80.2375618,google_maps_poi,google_maps_poi_lookup,Saidapet Fire & Rescue Station [Fire station],50,True,place,suburb,settlement_centroid
-Teynampet,Chennai City South,fire,13.0474469,80.249119,osm,osm_name_match,Teynampet FS,60,False,amenity,fire_station,ok
-Thiruvanmiyur,Chennai City South,fire,12.9853432,80.2598047,google_maps_poi,google_maps_poi_lookup,Thiruvanmiyur Fire Station [Fire station],50,True,place,suburb,settlement_centroid
-Tambaram,Chennai City South,fire,12.9420745,80.1319428,google_maps_poi,google_maps_poi_lookup,Tambaram Fire & Rescue Station [Fire station] AMBIGUOUS: second candidate 280 m away at 12.9440/80.1337,50,True,building,industrial,unrelated_feature
-T Nagar,Chennai City South,fire,13.0415662,80.2342758,google_maps_poi,google_maps_poi_lookup,T.NAGAR FIRE AND RESCUE SERVICE STATION [Fire station],50,True,place,suburb,settlement_centroid
-Kilpauk,Chennai City Central,fire,13.0780247,80.2436456,google_maps_poi,google_maps_poi_lookup,Kilpauk Fire Station [Fire station],50,True,place,suburb,settlement_centroid
-Vepery,Chennai City Central,fire,13.0858246,80.2627689,google_maps_poi,google_maps_poi_lookup,Tamil Nadu Fire and Rescue Service [Fire station],50,True,place,suburb,settlement_centroid
-Egmore,Chennai City Central,fire,13.0686327,80.2613334,osm,osm_name_match,Egmore fire and Rescue station,60,False,amenity,fire_station,ok
-Triplicane,Chennai City Central,fire,13.067446,80.2731076,google_maps_poi,google_maps_poi_lookup,Triplicane Fire and Rescue Service Station [Fire station],50,True,place,suburb,settlement_centroid
-Koyambedu,Chennai City Central,fire,13.0695008,80.1951434,google_maps_poi,google_maps_poi_lookup,koyambedu Fire and Rescue service station [Fire station],50,True,place,suburb,settlement_centroid
-J.J. Nagar,Chennai City Central,fire,13.0854873,80.187297,google_maps_poi,google_maps_poi_lookup,JJ Nagar Fire Rescue Service [Fire station],50,True,highway,residential,road_feature
-Villivakkam,Chennai City Central,fire,13.1061214,80.201176,google_maps_poi,google_maps_poi_lookup,Villivakkam Fire Station [Fire station],50,True,place,suburb,settlement_centroid
-Ambattur,Chennai Suburban,fire,13.0953765,80.1643334,google_maps_poi,google_maps_poi_lookup,Ambattur Estate Fire Station [Fire station],50,True,boundary,administrative,boundary_centroid
-Avadi,Chennai Suburban,fire,13.1113085,80.1064146,google_maps_poi,google_maps_poi_lookup,Fire station [Fire station] AMBIGUOUS: POI carries only the generic name 'Fire station'; Avadi has military installations with their own stations,300,True,highway,primary,road_feature
-Athipattu,Chennai Suburban,fire,13.251301,80.3272164,google_maps_poi,google_maps_poi_lookup,அத்திப்பட்டு தீயணைப்பு மற்றும் மீட்புபணிகள் நிலையம் [Fire station] AMBIGUOUS: second candidate 'Athipattu stage 2 fire station' 700 m away at 13.2575/80.3316,50,True,leisure,park,unrelated_feature
-Ennore,Chennai Suburban,fire,13.1968231,80.3116094,google_maps_poi,google_maps_poi_lookup,Ennore Fire Station [Fire station],50,True,place,suburb,settlement_centroid
-Manali,Chennai Suburban,fire,13.1624801,80.2635565,google_maps_poi,google_maps_poi_lookup,Manali Fire Station [Fire station],50,True,boundary,administrative,boundary_centroid
-Thiruvottiyur,Chennai Suburban,fire,13.1564662,80.304847,google_maps_poi,google_maps_poi_lookup,Thiruvottiyur Fire station [Fire station],50,True,landuse,industrial,unrelated_feature
-Poonamallee,Chennai Suburban,fire,13.0470935,80.11948,google_maps_poi,google_maps_poi_lookup,Poonamallee Fire And Rescue Station [Fire station],50,True,highway,primary,road_feature
-Redhills,Chennai Suburban,fire,13.2033002,80.1943883,google_maps_poi,google_maps_poi_lookup,Fire & Rescue Station - Redhills [Fire station],50,True,highway,tertiary,road_feature
+station_name,division,service,lat,lon,geocode_confidence,match_source,match_detail,uncertainty_m,survey_required,osm_class,osm_type,plausibility,identity_confirmed_by
+Esplanade,Chennai City North,fire,13.0864782,80.2860635,osm,osm_name_match,Esplanade Fire Station,60,False,amenity,fire_station,ok,
+Korukkupet,Chennai City North,fire,13.1262108,80.2723274,google_maps_poi,google_maps_poi_lookup,Korukkupet Fire Station [Fire station] single unambiguous POI,50,True,,,identity_confirmed,tnfrs_landline
+Royapuram,Chennai City North,fire,13.1133601,80.2963471,google_maps_poi,google_maps_poi_lookup,Royapuram fire and rescue station [Fire station] single unambiguous POI,50,True,,,identity_confirmed,osm_proximity
+Secretariat,Chennai City North,fire,13.0812151,80.2836996,google_maps_poi,google_maps_poi_lookup,"Fire station , Secretariat [Fire station] second candidate 330 m away at 13.0788/80.2862",50,True,,,ambiguous_candidates,
+Sembium,Chennai City North,fire,13.1207466,80.2383534,google_maps_poi,google_maps_poi_lookup,Sembium Fire Station [Fire station] single unambiguous POI,50,True,,,named_fire_station,
+Tondiarpet,Chennai City North,fire,13.1223727,80.2873906,google_maps_poi,google_maps_poi_lookup,Tondairpet Fire Station [Fire station] second candidate 'TONDIARPET FIRE AND RESCUE STATION' 1.9 km away at 13.1400/80.2949,50,True,,,ambiguous_candidates,
+V.O.C Nagar,Chennai City North,fire,13.1228833,80.2657498,google_maps_poi,google_maps_poi_lookup,Voc Fire Station [Fire station] single unambiguous POI,50,True,,,named_fire_station,
+Vyasarpadi,Chennai City North,fire,13.1137787,80.2553979,google_maps_poi,google_maps_poi_lookup,Vyasarpadi Fire Station [Fire protection service] second same-named POI at 13.1123/80.2666 is categorised Apartment building - mis-tagged,50,True,,,named_fire_station,
+Washermanpet,Chennai City North,fire,13.1024404,80.2744007,osm,osm_name_match,Washermanpet Fire & Rescue Station,60,False,amenity,fire_station,ok,
+Ashok Nagar,Chennai City South,fire,13.0351043,80.2113866,google_maps_poi,google_maps_poi_lookup,Ashok Nagar Fire and Rescue Station [Fire station] co-located with District Fire Office (South),50,True,,,named_fire_station,
+Guindy,Chennai City South,fire,13.0125852,80.2128616,google_maps_poi,google_maps_poi_lookup,Guindy Fire Station [Fire station] single unambiguous POI,50,True,,,identity_confirmed,tnfrs_cug_mobile
+Mylapore,Chennai City South,fire,13.043142,80.2777689,google_maps_poi,google_maps_poi_lookup,Mylapore Fire Station [Fire station] single unambiguous POI,50,True,,,identity_confirmed,tnfrs_cug_mobile
+Raj Bhavan,Chennai City South,fire,13.0066515,80.2244659,google_maps_poi,google_maps_poi_lookup,"Fire and Rescue Station, Lok Bhavan [Fire station] Raj Bhavan/Lok Bhavan complex Guindy",50,True,,,named_fire_station,
+Saidapet,Chennai City South,fire,13.0294279,80.2375618,google_maps_poi,google_maps_poi_lookup,Saidapet Fire & Rescue Station [Fire station] two POIs 10 m apart - same compound,50,True,,,named_fire_station,
+Teynampet,Chennai City South,fire,13.0474469,80.249119,osm,osm_name_match,Teynampet FS,60,False,amenity,fire_station,ok,
+Thiruvanmiyur,Chennai City South,fire,12.9853432,80.2598047,google_maps_poi,google_maps_poi_lookup,Thiruvanmiyur Fire Station [Fire station] phone 044 2440 1213 matches authoritative 044-24401213,50,True,,,identity_confirmed,tnfrs_landline
+Tambaram,Chennai City South,fire,12.9439935,80.1336773,google_maps_poi,google_maps_poi_lookup,"Tambaram fire and rescue station [Fire station] RESOLVED by OSM: 'Tamil Nadu Fire and Rescue Services' lies 41 m from this candidate and 260 m from the other, so the alternate is now primary.",50,True,,,identity_confirmed,osm_proximity
+T Nagar,Chennai City South,fire,13.0415662,80.2342758,google_maps_poi,google_maps_poi_lookup,T.NAGAR FIRE AND RESCUE SERVICE STATION [Fire station] top hit of three; others are Teynampet and District Office,50,True,,,named_fire_station,
+Kilpauk,Chennai City Central,fire,13.0780247,80.2436456,google_maps_poi,google_maps_poi_lookup,Kilpauk Fire Station [Fire station] single unambiguous POI,50,True,,,named_fire_station,
+Vepery,Chennai City Central,fire,13.0858246,80.2627689,google_maps_poi,google_maps_poi_lookup,Tamil Nadu Fire and Rescue Service [Fire station] TNFRS state HQ is in Vepery; adjacent POI 20 m away,50,True,,,named_fire_station,
+Egmore,Chennai City Central,fire,13.0686327,80.2613334,osm,osm_name_match,Egmore fire and Rescue station,60,False,amenity,fire_station,ok,
+Triplicane,Chennai City Central,fire,13.067446,80.2731076,google_maps_poi,google_maps_poi_lookup,Triplicane Fire and Rescue Service Station [Fire station] single unambiguous POI,50,True,,,named_fire_station,
+Koyambedu,Chennai City Central,fire,13.0695008,80.1951434,google_maps_poi,google_maps_poi_lookup,koyambedu Fire and Rescue service station [Fire station] single unambiguous POI,50,True,,,identity_confirmed,tnfrs_cug_mobile
+J.J. Nagar,Chennai City Central,fire,13.0854873,80.187297,google_maps_poi,google_maps_poi_lookup,JJ Nagar Fire Rescue Service [Fire station] single unambiguous POI,50,True,,,identity_confirmed,tnfrs_landline
+Villivakkam,Chennai City Central,fire,13.1061214,80.201176,google_maps_poi,google_maps_poi_lookup,Villivakkam Fire Station [Fire station] single unambiguous POI,50,True,,,identity_confirmed,tnfrs_landline
+Ambattur,Chennai Suburban,fire,13.0953765,80.1643334,google_maps_poi,google_maps_poi_lookup,Ambattur Estate Fire Station [Fire station] single unambiguous POI,50,True,,,identity_confirmed,tnfrs_landline
+Avadi,Chennai Suburban,fire,13.1113085,80.1064146,google_maps_poi,google_maps_poi_lookup,Fire station [Fire station] POI carries only the generic name 'Fire station'; Avadi has military installations with their own stations,300,True,,,ambiguous_candidates,tnfrs_landline
+Athipattu,Chennai Suburban,fire,13.251301,80.3272164,google_maps_poi,google_maps_poi_lookup,"அத்திப்பட்டு தீயணைப்பு மற்றும் மீட்புபணிகள் நிலையம் [Fire station] UNRESOLVED. The TNFRS directory lists TWO stations here — 'Athipattu - I FS' (044-27950080, matching our authoritative number) and 'Athipattu - II FS' (044-27950100) — which explains Google's two candidates, one named 'stage 2'. OSM labels candidate A 'NCTPS Fire Station', and Athipattu adjoins the North Chennai Thermal Power Stati",50,True,,,contested,contested_unresolved
+Ennore,Chennai Suburban,fire,13.1968231,80.3116094,google_maps_poi,google_maps_poi_lookup,Ennore Fire Station [Fire station] single unambiguous POI,50,True,,,identity_confirmed,tnfrs_landline
+Manali,Chennai Suburban,fire,13.1624801,80.2635565,google_maps_poi,google_maps_poi_lookup,Manali Fire Station [Fire station] single unambiguous POI,50,True,,,identity_confirmed,tnfrs_cug_mobile
+Thiruvottiyur,Chennai Suburban,fire,13.1564662,80.304847,google_maps_poi,google_maps_poi_lookup,Thiruvottiyur Fire station [Fire station] two POIs 35 m apart - same compound,50,True,,,named_fire_station,
+Poonamallee,Chennai Suburban,fire,13.0470935,80.11948,google_maps_poi,google_maps_poi_lookup,Poonamallee Fire And Rescue Station [Fire station] single unambiguous POI,50,True,,,identity_confirmed,tnfrs_landline
+Redhills,Chennai Suburban,fire,13.2033002,80.1943883,google_maps_poi,google_maps_poi_lookup,Fire & Rescue Station - Redhills [Fire station] single unambiguous POI,50,True,,,named_fire_station,

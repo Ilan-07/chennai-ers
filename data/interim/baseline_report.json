@@ -1,6 +1,8 @@
 {
   "PROVISIONAL": true,
   "cells": 3838,
+  "code_commit": "04a7cdca8770f97963fadee3526628509663c6dd-dirty",
+  "config_hash": "5f977eb68fac2ef082aab92476e53185bac79d0979c8598bf5cda868c6c72b0f",
   "connectivity": {
     "largest_strong_nodes": 88096,
     "largest_strong_share": 0.99947,
@@ -23,13 +25,49 @@
     "within_published_range": false
   },
   "headline_caveat": "Coverage shares carry a P5-P95 interval from E-11 station position uncertainty; see results.<svc>.position_uncertainty. The point estimate also sits above the mean draw.",
+  "input_digests": [],
   "position_uncertainty_measured": true,
   "provisional_reason": "29 of 33 stations are geocoder positions, not surveyed",
   "results": {
     "ems": {
+      "bases": {
+        "bases": 33,
+        "by_service": {
+          "fire": 33
+        },
+        "note": "No EMS base inventory exists. Coverage is modelled from the 33 authoritative fire stations, using EMS turnout offsets, speed multipliers and response standard. The 108 ambulance standby points are not published and are absent from OSM.",
+        "proxy": "fire_stations",
+        "resolves_when": "EMRI supplies the 108 standby-point list",
+        "source": "none"
+      },
       "cell_snap_max_m": 1208.2,
       "cells_snap_over_300m": 488,
       "coverage_share": 0.6175,
+      "graded": {
+        "bands": [
+          {
+            "population": 4708346,
+            "population_share": 0.6175,
+            "t_s": 300.0,
+            "u": 1.0
+          },
+          {
+            "population": 1512944,
+            "population_share": 0.1984,
+            "t_s": 420.0,
+            "u": 0.7
+          },
+          {
+            "population": 856297,
+            "population_share": 0.1123,
+            "t_s": 600.0,
+            "u": 0.3
+          }
+        ],
+        "definition": "sum(pop * u(band)) / sum(pop); a cell is credited at the utility of the first band it falls inside",
+        "graded_share": 0.79,
+        "population_beyond_last_band": 547682
+      },
       "max_travel_s": 1744.6,
       "mean_travel_s": 301.2,
       "p50_travel_s": 255.5,
@@ -75,22 +113,55 @@
       "unreachable_share": 0.0
     },
     "fire": {
+      "bases": {
+        "bases": 33,
+        "by_service": {
+          "fire": 33
+        },
+        "proxy": null,
+        "source": "authoritative"
+      },
       "cell_snap_max_m": 1208.2,
       "cells_snap_over_300m": 488,
-      "coverage_share": 0.4744,
+      "coverage_share": 0.4702,
+      "graded": {
+        "bands": [
+          {
+            "population": 3250130,
+            "population_share": 0.3593,
+            "t_s": 240.0,
+            "u": 1.0
+          },
+          {
+            "population": 3444426,
+            "population_share": 0.3807,
+            "t_s": 420.0,
+            "u": 0.7
+          },
+          {
+            "population": 1437583,
+            "population_share": 0.1589,
+            "t_s": 600.0,
+            "u": 0.3
+          }
+        ],
+        "definition": "sum(pop * u(band)) / sum(pop); a cell is credited at the utility of the first band it falls inside",
+        "graded_share": 0.6734,
+        "population_beyond_last_band": 914842
+      },
       "max_travel_s": 1954.5,
-      "mean_travel_s": 339.7,
-      "p50_travel_s": 288.0,
-      "p90_travel_s": 594.7,
-      "population_covered": 3617270,
-      "population_outside": 4007999,
+      "mean_travel_s": 342.7,
+      "p50_travel_s": 289.5,
+      "p90_travel_s": 604.2,
+      "population_covered": 4254071,
+      "population_outside": 4792911,
       "position_uncertainty": {
-        "coverage_p5": 0.4653,
-        "coverage_p95": 0.4772,
-        "coverage_sd_points": 0.36,
+        "coverage_p5": 0.461,
+        "coverage_p95": 0.4733,
+        "coverage_sd_points": 0.37,
         "draws": 300,
-        "mean_bias_points": -0.31,
-        "p5_p95_spread_points": 1.19,
+        "mean_bias_points": -0.29,
+        "p5_p95_spread_points": 1.23,
         "seed": 20260904,
         "source": "data/interim/sensitivity_stations_fire.json"
       },
@@ -101,19 +172,19 @@
       "t_turnout_s": 80,
       "threshold_ladder": {
         "NFPA-travel-4min": {
-          "coverage_share": 0.3632,
+          "coverage_share": 0.3593,
           "travel_budget_s": 240
         },
         "SFAC-5": {
-          "coverage_share": 0.1424,
+          "coverage_share": 0.1444,
           "travel_budget_s": 160
         },
         "SFAC-7": {
-          "coverage_share": 0.4744,
+          "coverage_share": 0.4702,
           "travel_budget_s": 280
         },
         "deck-8min": {
-          "coverage_share": 0.6135,
+          "coverage_share": 0.6076,
           "travel_budget_s": 340
         }
       },
@@ -123,7 +194,9 @@
       "unreachable_share": 0.0
     }
   },
-  "seconds": 7.4,
+  "run_id": "ba705328e64ec5ad",
+  "seconds": 2.0,
+  "seed": null,
   "stale_intervals_ignored": {},
   "station_gate": {
     "by_confidence": {
@@ -136,5 +209,5 @@
     "unresolved": [],
     "with_coordinates": 33
   },
-  "stations_signature": "e43edc52673e58ab"
+  "stations_signature": "087abc04e0179c24"
 }

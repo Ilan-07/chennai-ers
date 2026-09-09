@@ -1,0 +1,85 @@
+{
+  "adoption": {
+    "adopted": 29,
+    "by_plausibility": {
+      "ambiguous_candidates": 3,
+      "contested": 1,
+      "identity_confirmed": 13,
+      "named_fire_station": 12,
+      "ok": 4
+    },
+    "identity_confirmed": [
+      "Ambattur",
+      "Avadi",
+      "Ennore",
+      "Guindy",
+      "J.J. Nagar",
+      "Korukkupet",
+      "Koyambedu",
+      "Manali",
+      "Mylapore",
+      "Poonamallee",
+      "Royapuram",
+      "Tambaram",
+      "Thiruvanmiyur",
+      "Villivakkam"
+    ],
+    "kept_osm_positions": [
+      "Egmore",
+      "Esplanade",
+      "Teynampet",
+      "Washermanpet"
+    ],
+    "moved_from_previous": [],
+    "unknown_station_names": []
+  },
+  "gate": {
+    "by_confidence": {
+      "google_maps_poi": 29,
+      "osm": 4
+    },
+    "passes_publish_gate": false,
+    "runnable": true,
+    "survey_required": [
+      "Korukkupet",
+      "Royapuram",
+      "Secretariat",
+      "Sembium",
+      "Tondiarpet",
+      "V.O.C Nagar",
+      "Vyasarpadi",
+      "Ashok Nagar",
+      "Guindy",
+      "Mylapore",
+      "Raj Bhavan",
+      "Saidapet",
+      "Thiruvanmiyur",
+      "Tambaram",
+      "T Nagar",
+      "Kilpauk",
+      "Vepery",
+      "Triplicane",
+      "Koyambedu",
+      "J.J. Nagar",
+      "Villivakkam",
+      "Ambattur",
+      "Avadi",
+      "Athipattu",
+      "Ennore",
+      "Manali",
+      "Thiruvottiyur",
+      "Poonamallee",
+      "Redhills"
+    ],
+    "total": 33,
+    "unresolved": [],
+    "with_coordinates": 33
+  },
+  "inputs": {
+    "gcc_fire_stations": 1,
+    "osm_stations_overpass": 2
+  },
+  "output_registry_id": 16,
+  "run_id": "5e5588e3067c80f7",
+  "seconds": 0.7
+}

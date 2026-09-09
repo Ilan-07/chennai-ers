@@ -119,10 +119,10 @@
   "point_estimate_coverage": 0.6175,
   "rejected_station_draws": 780,
   "rejection_rate_per_station_draw": 0.073,
-  "seconds": 158.0,
+  "seconds": 111.2,
   "seed": 20260904,
   "service": "ems",
-  "stations_signature": "e43edc52673e58ab",
+  "stations_signature": "087abc04e0179c24",
   "uncertainty_m": {
     "-1.0": 19,
     "50.0": 14

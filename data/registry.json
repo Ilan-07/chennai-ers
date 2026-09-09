@@ -196,5 +196,86 @@
     "source": "osm_water_chennai",
     "uri": "https://overpass-api.de/api/interpreter",
     "version_label": "2026-09-04"
+  },
+  {
+    "bytes": 2815875,
+    "fetched_at": "2026-09-09T11:44:11+00:00",
+    "id": 14,
+    "licence": "Greater Chennai Corporation / OpenCity mirror",
+    "local_path": "data/raw/Chennai_GCC_Ward_Map_2022.kml",
+    "notes": {
+      "note": "ward boundaries, 2022 delimitation"
+    },
+    "sha256": "be48ef7eb4320279e790f59da1691ece9efc92b34459ca73c492957943c347e0",
+    "source": "gcc_ward_map_2022",
+    "uri": "https://data.opencity.in/dataset/chennai-ward-map",
+    "version_label": "2026-09-09"
+  },
+  {
+    "bytes": 758272,
+    "fetched_at": "2026-09-09T11:44:11+00:00",
+    "id": 15,
+    "licence": "Greater Chennai Corporation / OpenCity mirror",
+    "local_path": "data/raw/Chennai_GCC_Zones_Map_2022.kml",
+    "notes": {
+      "note": "15 zone boundaries, 2022 delimitation"
+    },
+    "sha256": "5939657bf539b4c708758232cf8c77129a67928df3f74699d5b8c3660aef951d",
+    "source": "gcc_zone_map_2022",
+    "uri": "https://data.opencity.in/dataset/chennai-ward-map",
+    "version_label": "2026-09-09"
+  },
+  {
+    "bytes": 7456,
+    "fetched_at": "2026-09-09T11:47:57+00:00",
+    "id": 16,
+    "licence": "derived",
+    "local_path": "data/interim/stations_resolved.csv",
+    "notes": {
+      "adopted_google_maps_poi": 29,
+      "identity_confirmed": 14,
+      "stations": 33
+    },
+    "sha256": "2398de84e0cc3276839e29b2a2d1873a264a87c320d4efa37157ab49d099e471",
+    "source": "stations_resolved",
+    "uri": "derived://scripts/resolve_stations.py",
+    "version_label": "2026-09-09"
+  },
+  {
+    "bytes": 4081104,
+    "fetched_at": "2026-09-09T11:58:14+00:00",
+    "id": 17,
+    "licence": "ODbL (OpenStreetMap contributors)",
+    "local_path": "data/raw/osm_landuse_overpass.json",
+    "notes": {
+      "class_counts": {
+        "amenity=fuel": 44,
+        "landuse=commercial": 709,
+        "landuse=depot": 1,
+        "landuse=industrial": 491,
+        "landuse=residential": 1148,
+        "landuse=retail": 162,
+        "man_made=storage_tank": 545
+      },
+      "features": 3100,
+      "purpose": "A-07 fire land-use risk multipliers",
+      "query": "landuse residential|commercial|retail|industrial + storage_tank + fuel + depot + chemical"
+    },
+    "sha256": "840348186d90d2dd802d292dce411acea6db639d6a9224b8a1523d0b70e3fe55",
+    "source": "osm_landuse",
+    "uri": "https://overpass-api.de/api/interpreter",
+    "version_label": "2026-09-09"
+  },
+  {
+    "bytes": 421754,
+    "fetched_at": "2026-09-09T11:59:36+00:00",
+    "id": 18,
+    "licence": "derived",
+    "local_path": "data/interim/demand_cells.parquet",
+    "notes": {},
+    "sha256": "863f012278121a7f6d6d3e099dd772fa59ae1ad24b42f0f7bbd4e766ed61d467",
+    "source": "demand_cells",
+    "uri": "derived://ers.geo.demand",
+    "version_label": "2026-09-09"
   }
 ]

@@ -1,12 +1,23 @@
 {
   "PROVISIONAL": true,
   "all_proven_optimal": true,
+  "bases": {
+    "bases": 33,
+    "by_service": {
+      "fire": 33
+    },
+    "proxy": null,
+    "source": "authoritative"
+  },
+  "code_commit": "2c987b8cbf9ff64bb862d7854a1dfc232e703939-dirty",
+  "config_hash": "e7b5ca71761cfd45a69400683e0d30e73c042072874e1a5beb7df8dd9b5c0d3c",
   "design_basis_weights": {
     "dry": 0.7,
     "flood100": 0.05,
     "flood25": 0.1,
     "peak": 0.15
   },
+  "input_digests": [],
   "k": 10,
   "meta": {
     "budget_s": 280,
@@ -21,17 +32,18 @@
     "flood5",
     "f2015"
   ],
+  "run_id": "c503032cf36d7b72",
   "scenario_stats": {
     "dry": {
       "arcs_usable": 250781,
-      "baseline_share": 0.4744,
+      "baseline_share": 0.4702,
       "cells_no_candidate_reaches": 762,
       "flood": {},
       "matrix_nnz": 20580
     },
     "f2015": {
       "arcs_usable": 247975,
-      "baseline_share": 0.4124,
+      "baseline_share": 0.4126,
       "cells_no_candidate_reaches": 891,
       "flood": {
         "arcs": 250803,
@@ -48,7 +60,7 @@
     },
     "flood100": {
       "arcs_usable": 236900,
-      "baseline_share": 0.31,
+      "baseline_share": 0.3055,
       "cells_no_candidate_reaches": 1316,
       "flood": {
         "arcs": 250803,
@@ -65,7 +77,7 @@
     },
     "flood25": {
       "arcs_usable": 244016,
-      "baseline_share": 0.3688,
+      "baseline_share": 0.3602,
       "cells_no_candidate_reaches": 1102,
       "flood": {
         "arcs": 250803,
@@ -82,7 +94,7 @@
     },
     "flood5": {
       "arcs_usable": 248847,
-      "baseline_share": 0.4198,
+      "baseline_share": 0.4147,
       "cells_no_candidate_reaches": 874,
       "flood": {
         "arcs": 250803,
@@ -99,100 +111,102 @@
     },
     "peak": {
       "arcs_usable": 250781,
-      "baseline_share": 0.2198,
+      "baseline_share": 0.2196,
       "cells_no_candidate_reaches": 1071,
       "flood": {},
       "matrix_nnz": 6317
     }
   },
-  "seconds": 43.4,
+  "seconds": 34.0,
+  "seed": null,
   "service": "fire",
+  "stations_signature": "087abc04e0179c24",
   "strategies": [
     {
       "coverage_by_scenario": {
-        "dry": 0.6774,
-        "f2015": 0.595,
-        "flood100": 0.4524,
-        "flood25": 0.5185,
-        "flood5": 0.6086,
-        "peak": 0.3118
+        "dry": 0.6547,
+        "f2015": 0.5668,
+        "flood100": 0.4397,
+        "flood25": 0.507,
+        "flood5": 0.5791,
+        "peak": 0.298
       },
-      "expected_coverage": 0.5954,
+      "expected_coverage": 0.5757,
       "optimality": "proven optimal",
       "proven_optimal": true,
       "sites": [
-        4,
         54,
         63,
-        65,
         94,
         116,
         175,
         404,
         408,
-        482
+        421,
+        480,
+        575
       ],
-      "solve_s": 0.255,
+      "solve_s": 0.216,
       "strategy": "dry-only",
-      "worst_coverage": 0.3118,
+      "worst_coverage": 0.298,
       "worst_design_basis": "peak"
     },
     {
       "coverage_by_scenario": {
-        "dry": 0.6767,
-        "f2015": 0.5947,
-        "flood100": 0.4709,
-        "flood25": 0.5357,
-        "flood5": 0.6103,
-        "peak": 0.3177
+        "dry": 0.6531,
+        "f2015": 0.5695,
+        "flood100": 0.4512,
+        "flood25": 0.5122,
+        "flood5": 0.5866,
+        "peak": 0.3168
       },
-      "expected_coverage": 0.5985,
+      "expected_coverage": 0.5785,
       "optimality": "proven optimal",
       "proven_optimal": true,
       "sites": [
         4,
+        25,
         32,
         54,
         63,
         94,
-        116,
+        118,
         175,
         404,
-        408,
         482
       ],
-      "solve_s": 1.238,
+      "solve_s": 0.672,
       "strategy": "expected",
-      "worst_coverage": 0.3177,
+      "worst_coverage": 0.3168,
       "worst_design_basis": "peak"
     },
     {
       "coverage_by_scenario": {
-        "dry": 0.6305,
-        "f2015": 0.5625,
-        "flood100": 0.4123,
-        "flood25": 0.4821,
-        "flood5": 0.5799,
-        "peak": 0.3417
+        "dry": 0.607,
+        "f2015": 0.5424,
+        "flood100": 0.3971,
+        "flood25": 0.4701,
+        "flood5": 0.5573,
+        "peak": 0.3329
       },
-      "expected_coverage": 0.5614,
+      "expected_coverage": 0.5417,
       "optimality": "proven optimal",
       "proven_optimal": true,
       "sites": [
-        4,
         15,
         25,
         32,
+        51,
         63,
-        65,
         94,
-        129,
         138,
-        163
+        163,
+        195,
+        480
       ],
-      "solve_s": 1.719,
+      "solve_s": 1.166,
       "strategy": "maximin",
-      "worst_coverage": 0.3417,
+      "worst_coverage": 0.3329,
       "worst_design_basis": "peak"
     }
   ]

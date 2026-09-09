@@ -22,3 +22,7 @@ data/tiles/
 
 # Console build artefacts — regenerate with scripts/ui/build_console.sh
 data/interim/console.html
+
+# Experiment scratch: intermediate degradation reports written per sweep arm.
+# The ARM RESULTS (depth.json, wading.json, ...) are kept; these are not.
+data/interim/experiments/_degr_*.json

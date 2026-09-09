@@ -27,5 +27,45 @@
   },
   "reconciliation_status": "PLACEHOLDER city-total scaling; needs Census 2011 ward totals",
   "resolution": 9,
-  "seconds": 0.9
+  "seconds": 1.1,
+  "service_surfaces": {
+    "ems": {
+      "assumption": "A-06",
+      "blocker": "no registered dataset carries ward-level 60+ population share",
+      "requested": "age_weighted",
+      "resolves_when": "Census 2011 ward age tables (C-13/C-14) are ingested",
+      "status": "DATA-GATED - falling back to raw headcount",
+      "surface": "population"
+    },
+    "fire": {
+      "assumption": "A-07",
+      "parcels": {
+        "by_class": {
+          "commercial": 865,
+          "hazardous": 589,
+          "industrial": 486,
+          "residential": 1141
+        },
+        "features": 3081,
+        "skipped": 19
+      },
+      "surface": "landuse_weighted",
+      "tested_by": "E-06",
+      "weighting": {
+        "cell_multiplier_max": 3.6668,
+        "cell_multiplier_median": 1.0,
+        "cell_multiplier_min": 1.0,
+        "cells_above_residential": 1455,
+        "multipliers": {
+          "commercial": 1.8,
+          "hazardous": 5.0,
+          "industrial": 3.0,
+          "residential": 1.0
+        },
+        "raw_total": 7625269.4,
+        "unmapped_area_charged_at": 1.0,
+        "weighted_total": 9046981.3
+      }
+    }
+  }
 }

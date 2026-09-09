@@ -9,7 +9,7 @@ resolution-9 cells over an area this size are near-identical in shape, so the
 mean vertex offset reproduces them to well under a pixel and costs ~40x less
 than storing every polygon.
 """
-import json, sys, time
+import json, sys, time, warnings
 sys.path.insert(0, "src")
 import geopandas as gpd, numpy as np, pandas as pd, yaml
 from scipy import sparse
@@ -26,7 +26,23 @@ cand = gpd.read_parquet("data/interim/candidates.parquet")
 st = pd.read_csv("data/interim/stations_resolved.csv")
 
 # --- shared hexagon: mean vertex offset from centroid, in degrees
-cc = cells.geometry.centroid
+#
+# These centroids are taken in EPSG:4326, which `ers.pipeline` explicitly warns
+# against -- "a centroid computed in degrees is not the centroid of the real-world
+# polygon" -- so the deviation is justified here rather than left to be
+# rediscovered as a warning in the build log.
+#
+# The rule matters when a centroid is SNAPPED to a road node, because an error
+# there picks the wrong node. These centroids are never snapped: they are the
+# lon/lat a hexagon is PAINTED at in the console, and the console does no
+# routing. Measured over all 3,838 cells, the degree-space and projected
+# centroids differ by 0.000 m (max) -- H3 r9 cells are small and regular enough
+# that the two coincide -- against an export rounded to 5 dp, about 1.11 m.
+#
+# Projecting and unprojecting would therefore change no exported digit.
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore", UserWarning)
+    cc = cells.geometry.centroid
 offs = []
 for geom, cx, cy in zip(cells.geometry.head(400), cc.x.head(400), cc.y.head(400)):
     xy = np.array(geom.exterior.coords)[:-1]

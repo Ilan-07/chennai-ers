@@ -1,12 +1,25 @@
 {
   "PROVISIONAL": true,
   "all_proven_optimal": true,
+  "bases": {
+    "bases": 33,
+    "by_service": {
+      "fire": 33
+    },
+    "note": "No EMS base inventory exists. Coverage is modelled from the 33 authoritative fire stations, using EMS turnout offsets, speed multipliers and response standard. The 108 ambulance standby points are not published and are absent from OSM.",
+    "proxy": "fire_stations",
+    "resolves_when": "EMRI supplies the 108 standby-point list",
+    "source": "none"
+  },
+  "code_commit": "2c987b8cbf9ff64bb862d7854a1dfc232e703939-dirty",
+  "config_hash": "d856dcff2f3d684bb3970b49b24b234ad690d08cad0b2ee202bc7068f237cc28",
   "design_basis_weights": {
     "dry": 0.7,
     "flood100": 0.05,
     "flood25": 0.1,
     "peak": 0.15
   },
+  "input_digests": [],
   "k": 10,
   "meta": {
     "budget_s": 300,
@@ -21,6 +34,7 @@
     "flood5",
     "f2015"
   ],
+  "run_id": "66c3b8e8ca3115b4",
   "scenario_stats": {
     "dry": {
       "arcs_usable": 250803,
@@ -105,8 +119,10 @@
       "matrix_nnz": 10959
     }
   },
-  "seconds": 51.7,
+  "seconds": 38.6,
+  "seed": null,
   "service": "ems",
+  "stations_signature": "087abc04e0179c24",
   "strategies": [
     {
       "coverage_by_scenario": {
@@ -132,7 +148,7 @@
         480,
         528
       ],
-      "solve_s": 0.201,
+      "solve_s": 0.161,
       "strategy": "dry-only",
       "worst_coverage": 0.4457,
       "worst_design_basis": "peak"
@@ -161,7 +177,7 @@
         480,
         528
       ],
-      "solve_s": 1.153,
+      "solve_s": 0.845,
       "strategy": "expected",
       "worst_coverage": 0.4457,
       "worst_design_basis": "peak"
@@ -190,7 +206,7 @@
         408,
         480
       ],
-      "solve_s": 1.068,
+      "solve_s": 0.781,
       "strategy": "maximin",
       "worst_coverage": 0.4963,
       "worst_design_basis": "peak"

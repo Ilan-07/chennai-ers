@@ -1,0 +1,44 @@
+{
+  "applies_to": "f2015 only - the return-period layers carry no depth",
+  "arms": [
+    {
+      "closure_depth_m": 0.2,
+      "ems_f100_control": 0.4332,
+      "ems_f2015": 0.5299,
+      "ems_unreachable_f2015": 386629,
+      "fire_f100_control": 0.3055,
+      "fire_f2015": 0.4057,
+      "fire_unreachable_f2015": 436201
+    },
+    {
+      "closure_depth_m": 0.3,
+      "ems_f100_control": 0.4332,
+      "ems_f2015": 0.5408,
+      "ems_unreachable_f2015": 174246,
+      "fire_f100_control": 0.3055,
+      "fire_f2015": 0.4126,
+      "fire_unreachable_f2015": 186311
+    },
+    {
+      "closure_depth_m": 0.45,
+      "ems_f100_control": 0.4332,
+      "ems_f2015": 0.5468,
+      "ems_unreachable_f2015": 43598,
+      "fire_f100_control": 0.3055,
+      "fire_f2015": 0.4179,
+      "fire_unreachable_f2015": 45629
+    }
+  ],
+  "assumption": "A-08",
+  "code_commit": "04a7cdca8770f97963fadee3526628509663c6dd-dirty",
+  "config_hash": "5f977eb68fac2ef082aab92476e53185bac79d0979c8598bf5cda868c6c72b0f",
+  "control_flood100_inert": true,
+  "ems_f2015_span_points": 1.69,
+  "experiment": "E-09 / A-08 flood closure depth",
+  "input_digests": [],
+  "run_id": "ba705328e64ec5ad",
+  "seconds": 54.0,
+  "seed": null,
+  "stations_signature": "087abc04e0179c24",
+  "verdict_vs_noise_floor": "BELOW the pessimistic noise floor (7.6 pts) -- above the optimistic one (0.8 pts)"
+}

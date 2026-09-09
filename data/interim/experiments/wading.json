@@ -1,0 +1,30 @@
+{
+  "arms": [
+    {
+      "ems_f100": 0.4007,
+      "ems_f25": 0.4747,
+      "wading_speed_factor": 0.2
+    },
+    {
+      "ems_f100": 0.4332,
+      "ems_f25": 0.4976,
+      "wading_speed_factor": 0.35
+    },
+    {
+      "ems_f100": 0.4542,
+      "ems_f25": 0.5194,
+      "wading_speed_factor": 0.5
+    }
+  ],
+  "assumption": "A-09",
+  "code_commit": "04a7cdca8770f97963fadee3526628509663c6dd-dirty",
+  "config_hash": "5f977eb68fac2ef082aab92476e53185bac79d0979c8598bf5cda868c6c72b0f",
+  "ems_f100_span_points": 5.35,
+  "experiment": "E-10 / A-09 wading speed factor",
+  "input_digests": [],
+  "run_id": "ba705328e64ec5ad",
+  "seconds": 165.2,
+  "seed": null,
+  "stations_signature": "087abc04e0179c24",
+  "verdict_vs_noise_floor": "BELOW the pessimistic noise floor (7.6 pts) -- above the optimistic one (0.8 pts)"
+}

@@ -1,0 +1,34 @@
+{
+  "gate": {
+    "area_delta_pct": 1.4,
+    "area_km2": 432.0,
+    "area_within_tolerance": true,
+    "duplicate_ward_numbers": 0,
+    "expected_area_km2": 426.0,
+    "invalid_geometries": 0,
+    "passes": true,
+    "ward_count": 200,
+    "ward_count_ok": true,
+    "ward_numbers_contiguous_1_to_n": true
+  },
+  "inputs": {
+    "gcc_ward_map_2022": 14,
+    "gcc_zone_map_2022": 15
+  },
+  "run_id": "f6a5e6bb1a18aa1c",
+  "seconds": 0.6,
+  "wards": {
+    "dropped_without_ward_number": 0,
+    "features_read": 200,
+    "invalid_geometries_remaining": 0,
+    "invalid_geometries_repaired": 9,
+    "ward_count": 200
+  },
+  "zone_assignment": {
+    "wards_without_zone": 0
+  },
+  "zones": {
+    "dropped_empty_features": 1,
+    "zones": 15
+  }
+}

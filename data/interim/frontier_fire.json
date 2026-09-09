@@ -1,0 +1,55 @@
+{
+  "PROVISIONAL": true,
+  "all_rungs_proven_optimal": true,
+  "baseline_share": 0.4702,
+  "baseline_worst_ward": 0.0,
+  "bases": {
+    "bases": 33,
+    "by_service": {
+      "fire": 33
+    },
+    "proxy": null,
+    "source": "authoritative"
+  },
+  "beta_max": 0.0,
+  "beta_max_optimality": "NOT PROVEN - feasible incumbent only, stopped at 300s of a 300s limit",
+  "beta_max_proven": false,
+  "code_commit": "04a7cdca8770f97963fadee3526628509663c6dd-dirty",
+  "config_hash": "e7b5ca71761cfd45a69400683e0d30e73c042072874e1a5beb7df8dd9b5c0d3c",
+  "degenerate": true,
+  "degenerate_reason": "maximin floor is 0% at k=10: the equity constraint binds nothing and the ladder collapses to the unconstrained solve",
+  "frontier": [
+    {
+      "beta": 0.0,
+      "coverage_share": 0.6547,
+      "feasible": true,
+      "jaccard_vs_prev": 1.0,
+      "median_ward": 0.7521,
+      "optimality": "proven optimal",
+      "proven_optimal": true,
+      "sites": [
+        54,
+        63,
+        94,
+        116,
+        175,
+        404,
+        408,
+        421,
+        480,
+        575
+      ],
+      "solve_s": 0.225,
+      "ward_share_std": 0.3608,
+      "worst_ward": 0.0
+    }
+  ],
+  "input_digests": [],
+  "k": 10,
+  "run_id": "e1a82f3530c1d2e6",
+  "seconds": 302.0,
+  "seed": null,
+  "service": "fire",
+  "stations_signature": "087abc04e0179c24",
+  "trip_overhead_s": 17.5
+}

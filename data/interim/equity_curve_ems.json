@@ -2,6 +2,18 @@
   "PROVISIONAL": true,
   "all_points_proven_optimal": true,
   "baseline_share": 0.6175,
+  "bases": {
+    "bases": 33,
+    "by_service": {
+      "fire": 33
+    },
+    "note": "No EMS base inventory exists. Coverage is modelled from the 33 authoritative fire stations, using EMS turnout offsets, speed multipliers and response standard. The 108 ambulance standby points are not published and are absent from OSM.",
+    "proxy": "fire_stations",
+    "resolves_when": "EMRI supplies the 108 standby-point list",
+    "source": "none"
+  },
+  "code_commit": "04a7cdca8770f97963fadee3526628509663c6dd-dirty",
+  "config_hash": "d856dcff2f3d684bb3970b49b24b234ad690d08cad0b2ee202bc7068f237cc28",
   "curve": [
     {
       "efficiency_city_coverage": 0.751,
@@ -51,7 +63,7 @@
         569,
         892
       ],
-      "solve_s": 23.5,
+      "solve_s": 17.3,
       "status": "Optimal"
     },
     {
@@ -152,7 +164,7 @@
         844,
         892
       ],
-      "solve_s": 3.1,
+      "solve_s": 2.4,
       "status": "Optimal"
     },
     {
@@ -200,7 +212,7 @@
         795,
         892
       ],
-      "solve_s": 0.8,
+      "solve_s": 0.6,
       "status": "Optimal"
     },
     {
@@ -263,7 +275,7 @@
         892,
         936
       ],
-      "solve_s": 0.8,
+      "solve_s": 0.6,
       "status": "Optimal"
     },
     {
@@ -341,10 +353,11 @@
         892,
         936
       ],
-      "solve_s": 0.6,
+      "solve_s": 0.4,
       "status": "Optimal"
     }
   ],
+  "input_digests": [],
   "lscp_detail": {
     "proven_optimal": true,
     "solution_status": "Optimal Solution Found",
@@ -355,7 +368,10 @@
   },
   "min_sites_for_positive_ward_floor": 10,
   "precovered_cells": 1522,
+  "run_id": "18edeb26197b625b",
+  "seed": null,
   "service": "ems",
+  "stations_signature": "087abc04e0179c24",
   "trip_overhead_s": 17.5,
   "unproven_k": []
 }

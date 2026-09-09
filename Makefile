@@ -21,7 +21,7 @@ comma := ,
 space := $(empty) $(empty)
 
 .DEFAULT_GOAL := help
-.PHONY: help all test gate verify clean-derived console experiments
+.PHONY: help all test gate verify accept-manifest clean-derived console experiments
 
 help:
 	@echo "targets:"
@@ -31,6 +31,7 @@ help:
 	@echo "  make verify       registry hashes + artefact freshness"
 	@echo "  make console      rebuild the coverage console"
 	@echo "  make experiments  E-09 / E-10 sweeps (~1.5 h)"
+	@echo "  make accept-manifest  record the current artefacts as the verify baseline"
 	@echo "  make -n all       show what is stale without running it"
 
 # ---------------------------------------------------------------- data spine
@@ -170,7 +171,14 @@ gate:
 
 verify:
 	$(PY) scripts/register.py --verify
-	$(PY) scripts/manifest.py diff data/interim_manifest_pre.json
+	$(PY) scripts/manifest.py diff data/manifest.json
+
+# `verify` answers "what has changed since the state we last accepted". Run this
+# once you have reviewed a run's output and want it to become that baseline.
+# data/manifest_pre_repair_2026-09.json is kept as the historical record of what
+# the tree looked like before the reproducibility repair, and is not updated.
+accept-manifest:
+	$(PY) scripts/manifest.py write data/manifest.json
 
 # Derived artefacts only. Never touches data/raw or data/reference: those are
 # ingested, hashed and registered, and some cost a 17-minute network fetch.

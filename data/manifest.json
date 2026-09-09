@@ -1,0 +1,362 @@
+{
+  "data/interim/ablation_e10.json": {
+    "bytes": 20764,
+    "sha256": "2968e9f200a0c6d9f93668e6f429413c838c4a0ca07d89ef8e645dbf0566c939"
+  },
+  "data/interim/arc_times.parquet": {
+    "bytes": 4063648,
+    "sha256": "7dd0a2a4f1eb9efe057e388d0510b2e402e363f71cc9f389e3b44f405ed2dc42"
+  },
+  "data/interim/attribution_report.json": {
+    "bytes": 1848,
+    "sha256": "cf63d47e2e7a32003dacd958e6b51eac934dfb933e744b8a6110f774a57e8e1b"
+  },
+  "data/interim/baseline_report.json": {
+    "bytes": 6435,
+    "sha256": "580654947de1a294c925c3f55dba5800529679036c12d30d1ae46d7a069620bc"
+  },
+  "data/interim/basemap_dark.jpg": {
+    "bytes": 232530,
+    "sha256": "e4f0ed88e5543f443879b8c4308421fc0ef6424665d78cb5471f15399ee6d94d"
+  },
+  "data/interim/basemap_light.jpg": {
+    "bytes": 336798,
+    "sha256": "69558d80eaf43ab8805e9fe1668d3ff116c2cf46bc402300cab4e70e268763bd"
+  },
+  "data/interim/basemap_raster_meta.json": {
+    "bytes": 343,
+    "sha256": "1164d57c64850ca818297a10bad03c8d5fa9ac2fb7786a3d78e1b9baecbaaa26"
+  },
+  "data/interim/calibrate.log": {
+    "bytes": 1526,
+    "sha256": "aeddb9e03f3121020e5bffb1d01577fb7a6259bcc63b095c26333cc1e66dd4e1"
+  },
+  "data/interim/calibration_grid.json": {
+    "bytes": 2978,
+    "sha256": "3492396f2039b4e1e189885d2f67e5c8630da6a1a8939316dc6caf35b097d822"
+  },
+  "data/interim/calibration_stage2.json": {
+    "bytes": 3466,
+    "sha256": "4251c283b712126d54590a025a7f0fcc5c12a6fc596376a3bffef1d2681bd787"
+  },
+  "data/interim/calibration_stage3.json": {
+    "bytes": 6976,
+    "sha256": "ba6f5dbcb175b50dc23572c1262a2ae6a3581f8090c6d2c307c20c8e7175ab61"
+  },
+  "data/interim/calibration_stage4.json": {
+    "bytes": 1050,
+    "sha256": "794cbb7927ddf5839c0652812239040e309bc34b5795ebe82973766fe3857b5f"
+  },
+  "data/interim/candidates.parquet": {
+    "bytes": 65317,
+    "sha256": "a8589693407019db5433ba6ba0bc49f2eb6d57c5e9ef8a76e9efe49b75d25d8f"
+  },
+  "data/interim/candidates_report.json": {
+    "bytes": 906,
+    "sha256": "373b57bda906684b5b987ff7f86d3ed1df7ffb6d97911a6b5b5a094b5af6bcd9"
+  },
+  "data/interim/console.html": {
+    "bytes": 3163582,
+    "sha256": "9915f27a1a6add588029f30f84da3ef74b86677e687fa81b72826deb28baa5ed"
+  },
+  "data/interim/coverage_ems.npz": {
+    "bytes": 22965,
+    "sha256": "a386421dfc001f2a9f8f000bab196b28e61e532646bbd8e99612da7ff9f70e12"
+  },
+  "data/interim/coverage_fire.npz": {
+    "bytes": 17381,
+    "sha256": "734740cc5d93863fc40b426391b3dc91cb77f4d14e45c5fcec7569d68c802622"
+  },
+  "data/interim/degradation_report.json": {
+    "bytes": 23681,
+    "sha256": "2215a22a22185b2a24d4b2f3c90c223ec3fce561150bf5e5a7780378b398c73e"
+  },
+  "data/interim/degradation_report_e10_ablated.json": {
+    "bytes": 22354,
+    "sha256": "14ed069b263543e974f1ded65c9dbc492203ebbcd63be9bc101ed3c4305396d0"
+  },
+  "data/interim/demand_cells.parquet": {
+    "bytes": 421754,
+    "sha256": "863f012278121a7f6d6d3e099dd772fa59ae1ad24b42f0f7bbd4e766ed61d467"
+  },
+  "data/interim/demand_report.json": {
+    "bytes": 2012,
+    "sha256": "9d56ffa0c0474943900ed43a58f2a540ebc83a062b0b6bc2fba9783823acbbd1"
+  },
+  "data/interim/equity_curve.log": {
+    "bytes": 850,
+    "sha256": "4f87098c8e4e7bd650a07cc39919dea0e5e50277fcbdcd6813f409fd6ca7c9ea"
+  },
+  "data/interim/equity_curve_ems.json": {
+    "bytes": 8132,
+    "sha256": "bf594bf5a61c2063eea14c51ec3f69c310420bdd5278c77d84bd17bc92b7b356"
+  },
+  "data/interim/equity_curve_fire.json": {
+    "bytes": 6441,
+    "sha256": "c9417b1446fea39bf9f831c2ccd049c1f9e38a94bd110b9fcf26d897c50fb652"
+  },
+  "data/interim/experiments/depth.json": {
+    "bytes": 1365,
+    "sha256": "45b12e297b5f70a9c316192193d4eefccd6cd383d7f348099e0756b3e5e10255"
+  },
+  "data/interim/experiments/growth.json": {
+    "bytes": 1169,
+    "sha256": "8b15b9e3942ef81f7d0cfc0fde4afe3bf69ed769ffead7d06bcc579618ce32eb"
+  },
+  "data/interim/experiments/speeds.json": {
+    "bytes": 865,
+    "sha256": "e2266949f951bb6c5e0b19b133a879f17d42f657cc7a255f461169e10bd0af41"
+  },
+  "data/interim/experiments/wading.json": {
+    "bytes": 817,
+    "sha256": "881e26b8bc3d8480b34165860c94b2873d4b2497a49b89b56bd9b6202c680e3b"
+  },
+  "data/interim/experiments/weights.json": {
+    "bytes": 6024,
+    "sha256": "9c9508025e327afdf2dcafbb9ffda56d5d82f6477d3ec87933ac0fe16ed0af1b"
+  },
+  "data/interim/frontier_ems.json": {
+    "bytes": 4252,
+    "sha256": "6613badbd32b8210385c883da2c36df7b0c51ef9b9408d8ace373d4918684b24"
+  },
+  "data/interim/frontier_fire.json": {
+    "bytes": 1370,
+    "sha256": "8588e85aba5588ecd3728e20a874907559547e8496b04a1e34f3393c14a57c85"
+  },
+  "data/interim/graph_build.log": {
+    "bytes": 970,
+    "sha256": "ecd1f8f8bfbfa4b92c4fec27640c91aa478ea8c58d225474ccde6595e2280064"
+  },
+  "data/interim/graph_edges.parquet": {
+    "bytes": 15852295,
+    "sha256": "f9aac4894fef8e9b4c0d7072f43d8b5b3516a0b086153408b62f97f14225c68e"
+  },
+  "data/interim/graph_nodes.parquet": {
+    "bytes": 4906788,
+    "sha256": "1736377eafe27d5dd57b0a4e2bd9d5eb8df71786d85322c9ceb34b444a2636ad"
+  },
+  "data/interim/graph_report.json": {
+    "bytes": 674,
+    "sha256": "dbaa8fa5c8549a4a293da5e93c16d1d2c2512988906856b872c00822b75d57cf"
+  },
+  "data/interim/graph_schema.json": {
+    "bytes": 205,
+    "sha256": "b3195ac66996590ca9261eb4355a214296a4e2cfc2878e792171add2817653ab"
+  },
+  "data/interim/graph_stage1.json": {
+    "bytes": 101,
+    "sha256": "53306296f027110be567daf11655da52afde7473c888653f17f98ff1799f02fd"
+  },
+  "data/interim/nominatim_fire_crosscheck.csv": {
+    "bytes": 441,
+    "sha256": "25b99c828f8d0293884f4b942759f07b250e3c617758303673d98e70cdaf2795"
+  },
+  "data/interim/optimise_ems.json": {
+    "bytes": 6637,
+    "sha256": "97e1a8515ca63a0ca81fceb662352f278f4f7e69a6b06f200c968b6b6a2a33e7"
+  },
+  "data/interim/optimise_fire.json": {
+    "bytes": 6319,
+    "sha256": "218f25016e1406cdbd0f8cace094f63421cce6d5c5af0a23470b42650d8fe210"
+  },
+  "data/interim/osm_fire_stations_wide.json": {
+    "bytes": 2855,
+    "sha256": "9ade1faf8d06cd03ddac8178a9db3e6f056ff6407db141a411aa3db58b754438"
+  },
+  "data/interim/parcels.parquet": {
+    "bytes": 410472,
+    "sha256": "9e94395d3ecc34fcc3af789a7f5e0613a68a1fff22cd20b79f118af25f61b584"
+  },
+  "data/interim/robust_ems_k10.json": {
+    "bytes": 5200,
+    "sha256": "076bb61611fbe453fe9232fc893dcbc705a35a118debb3137900dd295b76fc3e"
+  },
+  "data/interim/robust_fire_k10.json": {
+    "bytes": 4879,
+    "sha256": "bd4eb6bcd5fdc67cf7874c31051dae7a0577e47dfc98345ecaf92ae94fa25e3f"
+  },
+  "data/interim/routing_validation.json": {
+    "bytes": 3226,
+    "sha256": "e7db604d692bf469744ee5a295c435700eceba26538565c8aa0c5d13abd2854d"
+  },
+  "data/interim/routing_validation_pairs.csv": {
+    "bytes": 10272,
+    "sha256": "5f612223ea8a9e54f4fc65f0f7cb03782491391b8a1e6a7a6d41327bbc035b3c"
+  },
+  "data/interim/sensitivity_empirical_ems.json": {
+    "bytes": 3328,
+    "sha256": "9960a1ac29bdd08533f99dae16d85f42efb38237b711c7c3d2c040bee17ad9dd"
+  },
+  "data/interim/sensitivity_empirical_fire.json": {
+    "bytes": 2918,
+    "sha256": "4ae83cbb6a37319a8b3eb0ac3850daa5ee1dda81aaacb9af21c7e814283ea034"
+  },
+  "data/interim/sensitivity_gmaps_ems.json": {
+    "bytes": 1617,
+    "sha256": "442804f7a331121d9e2660714e1d861654f4d98eb842c01a3cbf0ba9dc784698"
+  },
+  "data/interim/sensitivity_gmaps_fire.json": {
+    "bytes": 1672,
+    "sha256": "a9d276fdcdf9287f5b0d8571e7952e6259885d28842f5dc64eb721d27b2bda73"
+  },
+  "data/interim/sensitivity_mixed_ems.json": {
+    "bytes": 2577,
+    "sha256": "30a9acb0c34703cd58423c5a235f00b6b56938f9ef9031a8e92a718be101f899"
+  },
+  "data/interim/sensitivity_mixed_fire.json": {
+    "bytes": 2696,
+    "sha256": "d2370b9790277a08d3a2a5444a482827c7f1e0ebb8e622dfe6f853f936263916"
+  },
+  "data/interim/sensitivity_stations_ems.json": {
+    "bytes": 1627,
+    "sha256": "536c10669ab6c745ce2ed980b84aca1505ad2ebaeccd96e9dff5c3de7b418ef9"
+  },
+  "data/interim/sensitivity_stations_fire.json": {
+    "bytes": 1711,
+    "sha256": "83c1579245fa520afc2a5b82bfb7dc5bb03c779044dc70145f034c8473729924"
+  },
+  "data/interim/station_survey_worklist.csv": {
+    "bytes": 6848,
+    "sha256": "be50a01b4e0b8313dd77672d38b23e333c89debd153b6df7935dcab1357f7115"
+  },
+  "data/interim/stations_gmaps_lookup.csv": {
+    "bytes": 10084,
+    "sha256": "1dcd5c131c20b8fe09c9431e70d7e3d752b0d14dbbe909221abb6ee1939757c0"
+  },
+  "data/interim/stations_qa.json": {
+    "bytes": 1111,
+    "sha256": "8e14d530a79d8af55696652ce689e688eff63bc8102d0de4222381c54222271b"
+  },
+  "data/interim/stations_report.json": {
+    "bytes": 1622,
+    "sha256": "296aaa2d419c4efb730beb6a6b15e3866d4a40a76729ec3ff9da660456fe0685"
+  },
+  "data/interim/stations_resolved.csv": {
+    "bytes": 7456,
+    "sha256": "2398de84e0cc3276839e29b2a2d1873a264a87c320d4efa37157ab49d099e471"
+  },
+  "data/interim/survey_priority.json": {
+    "bytes": 7361,
+    "sha256": "909b5a7e29c92c8580dc804b70dc81f88f05f36315fa94c632b69bfb5f30839a"
+  },
+  "data/interim/ui_basemap.json": {
+    "bytes": 241923,
+    "sha256": "c1c58ce0fd9f9f568182d63da10e7aa508affbe3cd7f153a9113d5609bb8975b"
+  },
+  "data/interim/ui_data.json": {
+    "bytes": 2111701,
+    "sha256": "512527af9bb4ba8c5164bbd5c3cacdda604a9a9850aaf5580901295331e793c3"
+  },
+  "data/interim/ui_rdata.json": {
+    "bytes": 759175,
+    "sha256": "aeba7caaad842b4207e017291396c85110df978244ceb07bc6af9f97c5e067be"
+  },
+  "data/interim/ui_rmeta.json": {
+    "bytes": 229,
+    "sha256": "702a4ab8f0cc190ff69d5af6a099b6f3baf9adddc995ff5664c78a760048c3cc"
+  },
+  "data/interim/validate.log": {
+    "bytes": 581,
+    "sha256": "4f7b4d3f29dab98e4a892927277647e3d797354c2f656df0ceec1e5823692729"
+  },
+  "data/interim/ward_achievable_ems.csv": {
+    "bytes": 8791,
+    "sha256": "5a0da44d5b2c29b63f87f69907280f7b0045cc9ee3ec7bb7cc3e76aa94ec5176"
+  },
+  "data/interim/wards.parquet": {
+    "bytes": 953397,
+    "sha256": "44530690978327b4cba00cd04352fe75be1b38f2e684cf538778d22e7d858bdd"
+  },
+  "data/interim/wards_report.json": {
+    "bytes": 741,
+    "sha256": "d8514a6777a3382f301e5abaee69d8a2d054d0da22ff36f7fada9efa8fcda577"
+  },
+  "data/interim/worldpop.log": {
+    "bytes": 175,
+    "sha256": "dd510037dab9aa5489c33ba0e014ed4d0d62c4e0556fa464fed24e61386bffbb"
+  },
+  "data/interim/worldpop_dl.log": {
+    "bytes": 267,
+    "sha256": "4b1106a14891b144d4f54435cac66c67b2a59ecc22b55b5e9b042b30a993ba11"
+  },
+  "data/interim/zones.parquet": {
+    "bytes": 294122,
+    "sha256": "debdd38490f6c0eb8296cf33864610a9748bc3948b75039b4760f30c603d8f13"
+  },
+  "data/manifest_pre_repair_2026-09.json": {
+    "bytes": 11631,
+    "sha256": "023f8f25d7f68ec3f35b05c66aca23f76cf0094a6431bea602b0a401274e3441"
+  },
+  "data/raw/Chennai_GCC_Ward_Map_2022.kml": {
+    "bytes": 2815875,
+    "sha256": "be48ef7eb4320279e790f59da1691ece9efc92b34459ca73c492957943c347e0"
+  },
+  "data/raw/Chennai_GCC_Zones_Map_2022.kml": {
+    "bytes": 758272,
+    "sha256": "5939657bf539b4c708758232cf8c77129a67928df3f74699d5b8c3660aef951d"
+  },
+  "data/raw/basemap_dark_z13.jpg": {
+    "bytes": 765024,
+    "sha256": "20c55b8f47855d42e4bb40099ce7e721fe29871ea91e0845a1d3ffdc37c2b3d2"
+  },
+  "data/raw/basemap_light_z13.jpg": {
+    "bytes": 1094563,
+    "sha256": "6b4e3e6e873df4c987056d79f8efd7ed60d4f19e6f55e280162c86c1eded1ae4"
+  },
+  "data/raw/chennai_flows_100yr.kml": {
+    "bytes": 6011034,
+    "sha256": "10bda9adfc8b093d5f1be34640d5114e81e34fe34795f8b757030cdc82fffe3e"
+  },
+  "data/raw/chennai_flows_25yr.kml": {
+    "bytes": 6343528,
+    "sha256": "c880ad9e050c8399d5a41db8f5f50714d6cd83a86bcfb1fefc15ba81b5dc2313"
+  },
+  "data/raw/chennai_flows_5yr.kml": {
+    "bytes": 4836627,
+    "sha256": "9c4dbe3185d579fa7b5ddc62c5a264dd12f7f83f54361d1df9d5541c6804a8bd"
+  },
+  "data/raw/chennai_inundation_points_depth.kml": {
+    "bytes": 110179,
+    "sha256": "b4bbbdaeb62c78151cee81d33d993dac51f2af9595bbcd275d75440ea1e6215b"
+  },
+  "data/raw/ghspop_chennai_2020_100m.tif": {
+    "bytes": 482832,
+    "sha256": "9537294c83ec22b98ad16c3105b1c2dfaac5db3b7d5e0ce44858bf0a514dd7fc"
+  },
+  "data/raw/osm_fire_wide_overpass.json": {
+    "bytes": 3233,
+    "sha256": "114da6a9428b19a138c32d7e136ccc848bf3e6196f55760018237fae425f3338"
+  },
+  "data/raw/osm_landuse_overpass.json": {
+    "bytes": 4081104,
+    "sha256": "840348186d90d2dd802d292dce411acea6db639d6a9224b8a1523d0b70e3fe55"
+  },
+  "data/raw/osm_parcels_overpass.json": {
+    "bytes": 1675889,
+    "sha256": "6922a9e36e81c3297a547e9d6643b8be308a28f48b8bfe8615125dfd661252f1"
+  },
+  "data/raw/osm_stations_overpass.json": {
+    "bytes": 3652,
+    "sha256": "f9edfd6ec360086aa91f068e2f0b0f835a038a535f1389025c08a8cab02c57ab"
+  },
+  "data/raw/osm_water_overpass.json": {
+    "bytes": 2285462,
+    "sha256": "0eec5c36fd160fd2f9151e42e4931c0952e827b360ac7135f3c492155ffc45b5"
+  },
+  "data/reference/tnfrs_chennai_contacts.json": {
+    "bytes": 6420,
+    "sha256": "6c4547d2680271167c97eea2d679eac662917fc73cc6bf5ec95b361d2e781ddc"
+  },
+  "data/reference/tnfrs_station_contacts_matched.csv": {
+    "bytes": 2225,
+    "sha256": "b99bee68a805ec1983c01efc479295e2b2f4413dac84e13f604983b267b9dc1a"
+  },
+  "data/reference/tnfrs_stations_gcc.csv": {
+    "bytes": 2533,
+    "sha256": "ca2820117c35878685e95b1f685cf84d03a12b40ce72fd3ac5baade61da216d7"
+  },
+  "data/registry.json": {
+    "bytes": 10524,
+    "sha256": "5e6cb172c956a322a75ad793dc5c269a132e260e4845b80f2215b7c6e3f7f35a"
+  }
+}

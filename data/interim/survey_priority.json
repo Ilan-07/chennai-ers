@@ -1,232 +1,179 @@
 {
   "PROVISIONAL": true,
+  "code_commit": "2c987b8cbf9ff64bb862d7854a1dfc232e703939-dirty",
+  "config_hash": "d856dcff2f3d684bb3970b49b24b234ad690d08cad0b2ee202bc7068f237cc28",
   "draws_per_station": 60,
-  "ems_fire_rank_spearman": 0.788,
+  "ems_fire_rank_spearman": 0.833,
   "experiment": "E-11b",
+  "input_digests": [],
   "leverage": [
     {
       "index": 15,
-      "leverage_ems_points": 0.857,
-      "leverage_fire_points": 0.615,
-      "leverage_points": 0.736,
+      "leverage_ems_points": 0.166,
+      "leverage_fire_points": 0.211,
+      "leverage_points": 0.188,
       "station": "Thiruvanmiyur",
       "survey_priority": 1
     },
     {
       "index": 9,
-      "leverage_ems_points": 0.702,
-      "leverage_fire_points": 0.585,
-      "leverage_points": 0.643,
+      "leverage_ems_points": 0.083,
+      "leverage_fire_points": 0.149,
+      "leverage_points": 0.116,
       "station": "Ashok Nagar",
       "survey_priority": 2
     },
     {
-      "index": 18,
-      "leverage_ems_points": 0.679,
-      "leverage_fire_points": 0.579,
-      "leverage_points": 0.629,
-      "station": "Kilpauk",
+      "index": 24,
+      "leverage_ems_points": 0.089,
+      "leverage_fire_points": 0.137,
+      "leverage_points": 0.113,
+      "station": "Villivakkam",
       "survey_priority": 3
     },
     {
-      "index": 22,
-      "leverage_ems_points": 0.626,
-      "leverage_fire_points": 0.463,
-      "leverage_points": 0.545,
-      "station": "Koyambedu",
+      "index": 10,
+      "leverage_ems_points": 0.105,
+      "leverage_fire_points": 0.097,
+      "leverage_points": 0.101,
+      "station": "Guindy",
       "survey_priority": 4
     },
     {
-      "index": 31,
-      "leverage_ems_points": 0.471,
-      "leverage_fire_points": 0.548,
-      "leverage_points": 0.51,
-      "station": "Poonamallee",
+      "index": 4,
+      "leverage_ems_points": 0.085,
+      "leverage_fire_points": 0.08,
+      "leverage_points": 0.082,
+      "station": "Sembium",
       "survey_priority": 5
     },
     {
-      "index": 7,
-      "leverage_ems_points": 0.373,
-      "leverage_fire_points": 0.323,
-      "leverage_points": 0.348,
-      "station": "Vyasarpadi",
+      "index": 19,
+      "leverage_ems_points": 0.068,
+      "leverage_fire_points": 0.033,
+      "leverage_points": 0.051,
+      "station": "Vepery",
       "survey_priority": 6
     },
     {
-      "index": 32,
-      "leverage_ems_points": 0.339,
-      "leverage_fire_points": 0.354,
-      "leverage_points": 0.347,
-      "station": "Redhills",
+      "index": 1,
+      "leverage_ems_points": 0.014,
+      "leverage_fire_points": 0.053,
+      "leverage_points": 0.034,
+      "station": "Korukkupet",
       "survey_priority": 7
     },
     {
       "index": 11,
-      "leverage_ems_points": 0.443,
-      "leverage_fire_points": 0.23,
-      "leverage_points": 0.337,
+      "leverage_ems_points": 0.024,
+      "leverage_fire_points": 0.044,
+      "leverage_points": 0.034,
       "station": "Mylapore",
       "survey_priority": 8
     },
     {
-      "index": 26,
-      "leverage_ems_points": 0.375,
-      "leverage_fire_points": 0.298,
-      "leverage_points": 0.336,
-      "station": "Avadi",
+      "index": 13,
+      "leverage_ems_points": 0.051,
+      "leverage_fire_points": 0.015,
+      "leverage_points": 0.033,
+      "station": "Saidapet",
       "survey_priority": 9
     },
     {
-      "index": 17,
-      "leverage_ems_points": 0.297,
-      "leverage_fire_points": 0.363,
-      "leverage_points": 0.33,
-      "station": "T Nagar",
+      "index": 2,
+      "leverage_ems_points": 0.034,
+      "leverage_fire_points": 0.019,
+      "leverage_points": 0.027,
+      "station": "Royapuram",
       "survey_priority": 10
     },
     {
-      "index": 25,
-      "leverage_ems_points": 0.329,
-      "leverage_fire_points": 0.271,
-      "leverage_points": 0.3,
-      "station": "Ambattur",
+      "index": 29,
+      "leverage_ems_points": 0.014,
+      "leverage_fire_points": 0.024,
+      "leverage_points": 0.019,
+      "station": "Manali",
       "survey_priority": 11
     },
     {
-      "index": 10,
-      "leverage_ems_points": 0.308,
-      "leverage_fire_points": 0.288,
-      "leverage_points": 0.298,
-      "station": "Guindy",
+      "index": 5,
+      "leverage_ems_points": 0.013,
+      "leverage_fire_points": 0.02,
+      "leverage_points": 0.016,
+      "station": "Tondiarpet",
       "survey_priority": 12
     },
     {
-      "index": 30,
-      "leverage_ems_points": 0.289,
-      "leverage_fire_points": 0.252,
-      "leverage_points": 0.27,
-      "station": "Thiruvottiyur",
+      "index": 7,
+      "leverage_ems_points": 0.016,
+      "leverage_fire_points": 0.011,
+      "leverage_points": 0.013,
+      "station": "Vyasarpadi",
       "survey_priority": 13
     },
     {
-      "index": 4,
-      "leverage_ems_points": 0.218,
-      "leverage_fire_points": 0.303,
-      "leverage_points": 0.26,
-      "station": "Sembium",
+      "index": 18,
+      "leverage_ems_points": 0.018,
+      "leverage_fire_points": 0.0,
+      "leverage_points": 0.009,
+      "station": "Kilpauk",
       "survey_priority": 14
     },
     {
-      "index": 24,
-      "leverage_ems_points": 0.174,
-      "leverage_fire_points": 0.287,
-      "leverage_points": 0.231,
-      "station": "Villivakkam",
+      "index": 23,
+      "leverage_ems_points": 0.005,
+      "leverage_fire_points": 0.012,
+      "leverage_points": 0.009,
+      "station": "J.J. Nagar",
       "survey_priority": 15
     },
     {
       "index": 21,
-      "leverage_ems_points": 0.093,
-      "leverage_fire_points": 0.296,
-      "leverage_points": 0.194,
+      "leverage_ems_points": 0.0,
+      "leverage_fire_points": 0.015,
+      "leverage_points": 0.007,
       "station": "Triplicane",
       "survey_priority": 16
     },
     {
       "index": 6,
-      "leverage_ems_points": 0.166,
-      "leverage_fire_points": 0.2,
-      "leverage_points": 0.183,
+      "leverage_ems_points": 0.0,
+      "leverage_fire_points": 0.008,
+      "leverage_points": 0.004,
       "station": "V.O.C Nagar",
       "survey_priority": 17
     },
     {
-      "index": 27,
-      "leverage_ems_points": 0.199,
-      "leverage_fire_points": 0.158,
-      "leverage_points": 0.179,
-      "station": "Athipattu",
+      "index": 28,
+      "leverage_ems_points": 0.005,
+      "leverage_fire_points": 0.004,
+      "leverage_points": 0.004,
+      "station": "Ennore",
       "survey_priority": 18
     },
     {
-      "index": 19,
-      "leverage_ems_points": 0.091,
-      "leverage_fire_points": 0.262,
-      "leverage_points": 0.176,
-      "station": "Vepery",
+      "index": 30,
+      "leverage_ems_points": 0.007,
+      "leverage_fire_points": 0.0,
+      "leverage_points": 0.003,
+      "station": "Thiruvottiyur",
       "survey_priority": 19
     },
     {
-      "index": 2,
-      "leverage_ems_points": 0.133,
-      "leverage_fire_points": 0.201,
-      "leverage_points": 0.167,
-      "station": "Royapuram",
+      "index": 3,
+      "leverage_ems_points": 0.004,
+      "leverage_fire_points": 0.0,
+      "leverage_points": 0.002,
+      "station": "Secretariat",
       "survey_priority": 20
     },
     {
-      "index": 29,
-      "leverage_ems_points": 0.245,
-      "leverage_fire_points": 0.088,
-      "leverage_points": 0.166,
-      "station": "Manali",
-      "survey_priority": 21
-    },
-    {
       "index": 12,
-      "leverage_ems_points": 0.218,
-      "leverage_fire_points": 0.085,
-      "leverage_points": 0.152,
+      "leverage_ems_points": 0.0,
+      "leverage_fire_points": 0.0,
+      "leverage_points": 0.0,
       "station": "Raj Bhavan",
-      "survey_priority": 22
-    },
-    {
-      "index": 1,
-      "leverage_ems_points": 0.091,
-      "leverage_fire_points": 0.178,
-      "leverage_points": 0.135,
-      "station": "Korukkupet",
-      "survey_priority": 23
-    },
-    {
-      "index": 13,
-      "leverage_ems_points": 0.064,
-      "leverage_fire_points": 0.205,
-      "leverage_points": 0.135,
-      "station": "Saidapet",
-      "survey_priority": 24
-    },
-    {
-      "index": 5,
-      "leverage_ems_points": 0.062,
-      "leverage_fire_points": 0.16,
-      "leverage_points": 0.111,
-      "station": "Tondiarpet",
-      "survey_priority": 25
-    },
-    {
-      "index": 23,
-      "leverage_ems_points": 0.107,
-      "leverage_fire_points": 0.059,
-      "leverage_points": 0.083,
-      "station": "J.J. Nagar",
-      "survey_priority": 26
-    },
-    {
-      "index": 3,
-      "leverage_ems_points": 0.065,
-      "leverage_fire_points": 0.096,
-      "leverage_points": 0.081,
-      "station": "Secretariat",
-      "survey_priority": 27
-    },
-    {
-      "index": 28,
-      "leverage_ems_points": 0.031,
-      "leverage_fire_points": 0.048,
-      "leverage_points": 0.039,
-      "station": "Ennore",
-      "survey_priority": 28
+      "survey_priority": 21
     },
     {
       "index": 16,
@@ -234,52 +181,108 @@
       "leverage_fire_points": 0.0,
       "leverage_points": 0.0,
       "station": "Tambaram",
+      "survey_priority": 22
+    },
+    {
+      "index": 17,
+      "leverage_ems_points": 0.0,
+      "leverage_fire_points": 0.0,
+      "leverage_points": 0.0,
+      "station": "T Nagar",
+      "survey_priority": 23
+    },
+    {
+      "index": 22,
+      "leverage_ems_points": 0.0,
+      "leverage_fire_points": 0.0,
+      "leverage_points": 0.0,
+      "station": "Koyambedu",
+      "survey_priority": 24
+    },
+    {
+      "index": 25,
+      "leverage_ems_points": 0.0,
+      "leverage_fire_points": 0.0,
+      "leverage_points": 0.0,
+      "station": "Ambattur",
+      "survey_priority": 25
+    },
+    {
+      "index": 26,
+      "leverage_ems_points": 0.0,
+      "leverage_fire_points": 0.0,
+      "leverage_points": 0.0,
+      "station": "Avadi",
+      "survey_priority": 26
+    },
+    {
+      "index": 27,
+      "leverage_ems_points": 0.0,
+      "leverage_fire_points": 0.0,
+      "leverage_points": 0.0,
+      "station": "Athipattu",
+      "survey_priority": 27
+    },
+    {
+      "index": 31,
+      "leverage_ems_points": 0.0,
+      "leverage_fire_points": 0.0,
+      "leverage_points": 0.0,
+      "station": "Poonamallee",
+      "survey_priority": 28
+    },
+    {
+      "index": 32,
+      "leverage_ems_points": 0.0,
+      "leverage_fire_points": 0.0,
+      "leverage_points": 0.0,
+      "station": "Redhills",
       "survey_priority": 29
     }
   ],
   "residual_draws": 200,
   "residual_noise": [
     {
-      "ems_p5_p95_points": 6.28,
-      "ems_sd_points": 2.09,
-      "fire_p5_p95_points": 6.0,
-      "fire_sd_points": 1.79,
+      "ems_p5_p95_points": 0.79,
+      "ems_sd_points": 0.25,
+      "fire_p5_p95_points": 1.13,
+      "fire_sd_points": 0.36,
       "still_uncertain": 29,
       "surveyed": 0
     },
     {
-      "ems_noise_reduction_pct": 36.6,
-      "ems_p5_p95_points": 3.98,
-      "ems_sd_points": 1.19,
-      "fire_p5_p95_points": 4.2,
-      "fire_sd_points": 1.19,
+      "ems_noise_reduction_pct": 54.4,
+      "ems_p5_p95_points": 0.36,
+      "ems_sd_points": 0.12,
+      "fire_p5_p95_points": 0.36,
+      "fire_sd_points": 0.1,
       "still_uncertain": 24,
       "surveyed": 5
     },
     {
-      "ems_noise_reduction_pct": 59.9,
-      "ems_p5_p95_points": 2.52,
-      "ems_sd_points": 0.83,
-      "fire_p5_p95_points": 3.17,
-      "fire_sd_points": 0.95,
+      "ems_noise_reduction_pct": 86.1,
+      "ems_p5_p95_points": 0.11,
+      "ems_sd_points": 0.03,
+      "fire_p5_p95_points": 0.14,
+      "fire_sd_points": 0.05,
       "still_uncertain": 19,
       "surveyed": 10
     },
     {
-      "ems_noise_reduction_pct": 73.9,
-      "ems_p5_p95_points": 1.64,
-      "ems_sd_points": 0.5,
-      "fire_p5_p95_points": 2.22,
-      "fire_sd_points": 0.62,
+      "ems_noise_reduction_pct": 96.2,
+      "ems_p5_p95_points": 0.03,
+      "ems_sd_points": 0.01,
+      "fire_p5_p95_points": 0.15,
+      "fire_sd_points": 0.04,
       "still_uncertain": 14,
       "surveyed": 15
     },
     {
-      "ems_noise_reduction_pct": 79.1,
-      "ems_p5_p95_points": 1.31,
-      "ems_sd_points": 0.4,
-      "fire_p5_p95_points": 1.15,
-      "fire_sd_points": 0.34,
+      "ems_noise_reduction_pct": 100.0,
+      "ems_p5_p95_points": 0.0,
+      "ems_sd_points": 0.0,
+      "fire_p5_p95_points": 0.0,
+      "fire_sd_points": 0.0,
       "still_uncertain": 9,
       "surveyed": 20
     },
@@ -293,6 +296,8 @@
       "surveyed": 29
     }
   ],
-  "seconds": 32653.9,
-  "seed": 20260904
+  "run_id": "034f90cea5cff21d",
+  "seconds": 172.6,
+  "seed": 20260904,
+  "stations_signature": "087abc04e0179c24"
 }

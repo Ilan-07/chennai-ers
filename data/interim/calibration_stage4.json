@@ -1,30 +1,30 @@
 {
   "PROVISIONAL": true,
-  "cv_refit_wins_worst_band_share": 0.95,
-  "cv_refit_worst_band_median": 0.0541,
-  "cv_shipped_worst_band_median": 0.1498,
+  "cv_refit_wins_worst_band_share": 0.975,
+  "cv_refit_worst_band_median": 0.0544,
+  "cv_shipped_worst_band_median": 0.1505,
   "cv_splits": 40,
   "gate": {
     "band_median_ratio_le_5pct": true,
     "band_target": 0.05,
     "medape_le_15pct": true
   },
-  "medape": 0.0723,
-  "medape_shipped": 0.0937,
+  "medape": 0.0743,
+  "medape_shipped": 0.0959,
   "per_band": {
     "0-2km": 0.0232,
-    "10-20km": 0.0147,
+    "10-20km": 0.0109,
     "2-5km": -0.0257,
-    "5-10km": 0.0168
+    "5-10km": 0.0184
   },
   "per_band_bootstrap_ci": {
     "0-2km": [
-      -0.033,
+      -0.0362,
       0.1031
     ],
     "10-20km": [
-      -0.0046,
-      0.0327
+      -0.0119,
+      0.0337
     ],
     "2-5km": [
       -0.1032,
@@ -32,16 +32,16 @@
     ],
     "5-10km": [
       0.0,
-      0.0399
+      0.0421
     ]
   },
-  "seconds": 9.6,
+  "seconds": 4.8,
   "selected_junction_scale": 0.1,
   "selected_trip_overhead_s": 17.5,
   "shipped_junction_scale": 0.1,
   "shipped_trip_overhead_s": 45.0,
   "stage": 4,
-  "stations_signature": "e43edc52673e58ab",
+  "stations_signature": "087abc04e0179c24",
   "statistic": "median ratio per band (sum-ratio bias retired)",
   "two_part_overhead_tested_and_rejected": true,
   "worst_band": 0.0257,
