@@ -24,10 +24,11 @@ PROVISIONAL: 29 of 33 station positions are geocoder output, not surveyed.
 """
 import argparse, json, sys, time
 sys.path.insert(0, "src")
-import geopandas as gpd, numpy as np, yaml
+import geopandas as gpd, numpy as np, pandas as pd, yaml
 from ers.model.problem import RobustSitingProblem
 from ers.optimise import exact
-from ers.pipeline import build_scenario_coverage
+from ers.pipeline import demand_column, build_scenario_coverage
+from ers.provenance import config_bundle, stamp
 
 ap = argparse.ArgumentParser()
 ap.add_argument("service", nargs="?", default="ems")
@@ -46,7 +47,7 @@ scs, meta = build_scenario_coverage(SVC, args.scenarios.split(","))
 cand = gpd.read_parquet("data/interim/candidates.parquet")
 cells = gpd.read_parquet("data/interim/demand_cells.parquet")
 prob = RobustSitingProblem(
-    scenarios=tuple(scs), demand=cells["population"].to_numpy().astype("float64"),
+    scenarios=tuple(scs), demand=demand_column(cells, SVC),
     k=K, ward_of=cells["ward_id"].to_numpy(),
     land_feasible=cand["land_feasible"].to_numpy().astype(bool))
 
@@ -113,7 +114,9 @@ print(f"  expected coverage  {100*(best_exp['expected_coverage']-base['expected_
 print(f"  worst-case coverage {100*(best_worst['worst_coverage']-base['worst_coverage']):+.2f} pts "
       f"forgone (best: {best_worst['strategy']})")
 
-report = {"PROVISIONAL": True,
+report = {**stamp(config=config_bundle(SVC), service=SVC,
+                  stations=pd.read_csv("data/interim/stations_resolved.csv")),
+          "PROVISIONAL": True,
           "provisional_reason": "29 of 33 stations are geocoder positions, not surveyed",
           "service": SVC, "k": K, "meta": meta,
           "design_basis_weights": weights,

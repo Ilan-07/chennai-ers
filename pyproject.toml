@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chennai-ers"
+version = "0.1.0"
+description = "Emergency response coverage and station siting for Greater Chennai"
+requires-python = ">=3.12"
+license = { file = "LICENSE" }
+
+# Direct dependencies only. Exact, tested versions for the whole closure are
+# pinned in requirements.txt -- install that for a reproducible run, and this
+# for a permissive one.
+dependencies = [
+  "geopandas>=1.1",
+  "h3>=4.5",
+  "highspy>=1.15",
+  "networkx>=3.6",
+  "numpy>=2.5",
+  "osmnx>=2.1",
+  "pandas>=3.0",
+  "pulp>=3.3",
+  "pyarrow>=25.0",
+  "pyogrio>=0.13",
+  "pyproj>=3.7",
+  "rasterio>=1.5",
+  "requests>=2.34",
+  "scipy>=1.18",
+  "shapely>=2.1",
+  "typer>=0.27",
+  "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=9.1", "hypothesis>=6.16"]
+
+[project.scripts]
+ers = "ers.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"

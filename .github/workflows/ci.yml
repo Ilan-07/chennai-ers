@@ -1,0 +1,58 @@
+name: ci
+
+# Before the 2026-09 repair the project had a 220-test suite that nothing ran
+# automatically, no pinned dependency set, and gates that existed only as fields
+# written into JSON files. All three failure modes it found were of a kind CI
+# catches for free.
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install pinned dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Unit and property tests
+        run: python -m pytest -q
+
+      # Artefacts are gitignored, so these two steps are skipped on a bare
+      # checkout and enforced wherever the pipeline has been run. Guarding on
+      # presence rather than dropping them keeps them live for a self-hosted or
+      # data-carrying run.
+      - name: Registry integrity
+        run: |
+          if [ -f data/registry.json ]; then
+            python scripts/register.py --verify
+          else
+            echo "no registry in this checkout; skipping"
+          fi
+
+      - name: Publish gates
+        run: |
+          if [ -f data/interim/baseline_report.json ]; then
+            python scripts/gate.py
+          else
+            echo "no built artefacts in this checkout; skipping"
+          fi
+
+      - name: Station inventory is reproducible
+        run: |
+          if [ -f data/interim/stations_gmaps_lookup.csv ]; then
+            python scripts/resolve_stations.py --check
+          else
+            echo "no station lookup in this checkout; skipping"
+          fi

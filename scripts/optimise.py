@@ -7,6 +7,7 @@ sys.path.insert(0, "src")
 import geopandas as gpd, numpy as np, pandas as pd, yaml
 from scipy import sparse
 from ers.pipeline import load_service
+from ers.provenance import config_bundle, stamp
 from ers.routing.csr import snap, travel_times, to_seconds
 from ers.model.problem import SitingProblem
 from ers.optimise import greedy, exact
@@ -68,7 +69,8 @@ for label, land in (("land-feasible", feas), ("unconstrained", None)):
               f"proven-gap {str(r['proven_gap']):>8}  {r['exact_s']:6.2f}s"
               f"  {'' if ex.proven_optimal else '  <- ' + ex.optimality_note}", flush=True)
 
-out = {"PROVISIONAL": True, "service": SVC, "travel_budget_s": budget_s,
+out = {**stamp(config=config_bundle(SVC), stations=ctx.stations, service=SVC),
+       "PROVISIONAL": True, "service": SVC, "travel_budget_s": budget_s,
        "baseline_share": round(float(base_share), 4),
        "trip_overhead_s": ctx.overhead_s,
        "precovered_cells": int(precovered.sum()),

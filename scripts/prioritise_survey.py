@@ -27,7 +27,8 @@ sys.path.insert(0, "src")
 import geopandas as gpd, numpy as np, pandas as pd
 from ers import coverage as cov
 from ers.pipeline import load_service
-from ers.routing.csr import snap
+from ers.provenance import config_bundle, stamp
+from ers.routing.csr import snap, travel_times
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--draws", type=int, default=60, help="draws per station for leverage")
@@ -75,18 +76,90 @@ def perturb(mask: np.ndarray) -> np.ndarray:
     return xy
 
 
+def _cutoff(svc: str) -> float:
+    return CTX[svc].budget_s * 10 * 3
+
+
 def shares(xy: np.ndarray, svc: str) -> float:
     ctx = CTX[svc]
     s_idx, _ = snap(ctx.graph, xy[:, 0], xy[:, 1])
     best = cov.response_seconds(ctx.graph, s_idx, ctx.cell_idx, ctx.cell_snap_m,
-                                overhead_s=ctx.overhead_s,
-                                cutoff_ds=ctx.budget_s * 10 * 3)
+                                overhead_s=ctx.overhead_s, cutoff_ds=_cutoff(svc))
     pre = np.isfinite(best) & (best <= ctx.budget_s)
     return float(ctx.demand[pre].sum() / ctx.total_demand)
 
 
+# ------------------------------------------------- the incremental-min cache
+#
+# `scipy.csgraph.dijkstra` runs ONE SWEEP PER SOURCE, so `shares()` above costs
+# 33 Dijkstras -- even when 32 of the 33 stations have not moved. Repeated over
+# 29 stations x 60 draws and then 6 survey levels x 200 draws, that is what made
+# this script a 9.1 hour job (32,654 s recorded in survey_priority.json).
+#
+# Every draw here perturbs a SUBSET. The complement is fixed at XY0 for the
+# whole run, so its best-time field can be computed once and reused, and a draw
+# then costs one Dijkstra per MOVED station plus an elementwise minimum.
+# `ers.coverage.leave_one_out_min` is unit-tested against the naive reduction,
+# so this is the same arithmetic, not an approximation of it.
+
+FIELDS0 = {svc: travel_times(CTX[svc].graph,
+                             CTX[svc].station_idx, CTX[svc].cell_idx,
+                             cutoff_ds=_cutoff(svc))
+           for svc in ("ems", "fire")}
+LOO = {svc: cov.leave_one_out_min(FIELDS0[svc]) for svc in ("ems", "fire")}
+
+
+def _share_from_field(best_ds: np.ndarray, svc: str) -> float:
+    ctx = CTX[svc]
+    resp = cov.to_response_s(best_ds, ctx.cell_snap_m, overhead_s=ctx.overhead_s)
+    pre = np.isfinite(resp) & (resp <= ctx.budget_s)
+    return float(ctx.demand[pre].sum() / ctx.total_demand)
+
+
+def share_one_moved(xy: np.ndarray, i: int, svc: str) -> float:
+    """Coverage with ONLY station `i` displaced to `xy[i]`. One Dijkstra."""
+    ctx = CTX[svc]
+    s_idx, _ = snap(ctx.graph, xy[i:i + 1, 0], xy[i:i + 1, 1])
+    row = travel_times(ctx.graph, s_idx, ctx.cell_idx, cutoff_ds=_cutoff(svc))[0]
+    return _share_from_field(np.minimum(LOO[svc][i], row), svc)
+
+
+def fixed_min(moving: np.ndarray, svc: str) -> np.ndarray:
+    """Best-time field over the stations that are NOT moving in this draw."""
+    keep = ~moving
+    if not keep.any():
+        return np.full(FIELDS0[svc].shape[1], np.inf)
+    return FIELDS0[svc][keep].min(axis=0)
+
+
+def share_subset_moved(xy: np.ndarray, moving: np.ndarray, svc: str,
+                       base: np.ndarray) -> float:
+    """Coverage with the stations in `moving` displaced, the rest at XY0."""
+    ctx = CTX[svc]
+    idx = np.flatnonzero(moving)
+    if len(idx) == 0:
+        return _share_from_field(base, svc)
+    s_idx, _ = snap(ctx.graph, xy[idx, 0], xy[idx, 1])
+    rows = travel_times(ctx.graph, s_idx, ctx.cell_idx, cutoff_ds=_cutoff(svc))
+    return _share_from_field(np.minimum(base, rows.min(axis=0)), svc)
+
+
 # ---------------------------------------------------------------- LEVERAGE
-movable = np.flatnonzero(unc > 60)          # the 29 locality geocodes
+# WHICH stations are still open is a property of the inventory, not of a
+# magic uncertainty threshold. `unc > 60` was written when the 29 provisional
+# positions were locality centroids at 900 m; after E-11c adopted the Google
+# Maps POIs at 50 m it silently selected ONE station (Avadi, at 300 m) and the
+# whole ranking became meaningless. Nothing noticed, because the script had not
+# been re-run since -- the same staleness that put a superseded ordering in the
+# worklist. `survey_required` is the column that actually answers the question
+# this script asks.
+movable = np.flatnonzero(
+    st["survey_required"].astype(str).str.lower().isin(["true", "1"]).to_numpy())
+if len(movable) < 2:
+    raise SystemExit(
+        f"only {len(movable)} station(s) flagged survey_required; a leverage "
+        f"RANKING over fewer than two is not a ranking. Check "
+        f"stations_resolved.csv.")
 print(f"leverage: {len(movable)} stations x {args.draws} draws x 2 services", flush=True)
 lev = []
 for n, i in enumerate(movable):
@@ -94,7 +167,8 @@ for n, i in enumerate(movable):
     mask[i] = True
     per = {}
     for svc in ("ems", "fire"):
-        vals = np.array([shares(perturb(mask), svc) for _ in range(args.draws)])
+        vals = np.array([share_one_moved(perturb(mask), i, svc)
+                         for _ in range(args.draws)])
         # sd, not P5-P95: at this many draws per station a standard deviation is
         # the stabler estimator, and only the RANKING is needed here.
         per[svc] = float(vals.std())
@@ -132,7 +206,9 @@ for N in [int(x) for x in args.top_n.split(",")]:
                      for i in range(len(unc))])
     row = {"surveyed": N, "still_uncertain": int(mask.sum())}
     for svc in ("ems", "fire"):
-        vals = np.array([shares(perturb(mask), svc) for _ in range(args.residual_draws)])
+        base = fixed_min(mask, svc)
+        vals = np.array([share_subset_moved(perturb(mask), mask, svc, base)
+                         for _ in range(args.residual_draws)])
         lo, hi = np.percentile(vals, [5, 95])
         row[f"{svc}_p5_p95_points"] = round(100 * (hi - lo), 2)
         row[f"{svc}_sd_points"] = round(100 * float(vals.std()), 2)
@@ -166,7 +242,9 @@ wl.to_csv(args.worklist, index=False)
 print(f"\nrewrote {args.worklist} in priority order ({len(wl)} rows, "
       f"{unmatched} unmatched)")
 
-json.dump({"experiment": "E-11b", "seed": args.seed, "draws_per_station": args.draws,
+json.dump({**stamp(config=config_bundle("ems"), seed=args.seed,
+                   stations=pd.read_csv("data/interim/stations_resolved.csv")),
+           "experiment": "E-11b", "draws_per_station": args.draws,
            "residual_draws": args.residual_draws,
            "ems_fire_rank_spearman": round(float(rho), 3),
            "leverage": lev, "residual_noise": residual,

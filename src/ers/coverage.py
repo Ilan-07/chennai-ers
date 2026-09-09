@@ -26,8 +26,53 @@ def response_seconds(graph, source_idx: np.ndarray, target_idx: np.ndarray,
     reason for modelling flooding as a graph perturbation.
     """
     d = travel_times(graph, source_idx, target_idx, cutoff_ds=cutoff_ds)
-    best_ds = d.min(axis=0)
+    return to_response_s(d.min(axis=0), target_snap_m, overhead_s=overhead_s)
+
+
+def to_response_s(best_ds: np.ndarray, target_snap_m: np.ndarray, *,
+                  overhead_s: float) -> np.ndarray:
+    """Deciseconds of driving -> a response time in seconds.
+
+    Split out of `response_seconds` so a caller that has already computed the
+    best-time field by another route -- the leave-one-out cache below, say --
+    converts it with the SAME arithmetic rather than a second copy of it. Four
+    scripts each re-implementing station-to-cell routing is what F-16 was.
+    """
     return to_seconds(best_ds) + target_snap_m / ACCESS_SPEED_MS + overhead_s
+
+
+def leave_one_out_min(fields: np.ndarray) -> np.ndarray:
+    """For each source, the elementwise best time over all the OTHER sources.
+
+    `fields` is (n_sources, n_targets) as returned by `travel_times`; the result
+    has the same shape, and row i is `fields[[j != i]].min(axis=0)`.
+
+    This is what makes a one-station-at-a-time sensitivity analysis affordable.
+    `scipy.csgraph.dijkstra` runs one sweep PER SOURCE, so re-routing all 33
+    stations to move one of them costs 33 times what it needs to: the other 32
+    have not moved. E-11b did exactly that and took 9.1 hours. With the
+    unmoved field cached, a draw costs one Dijkstra and a `np.minimum`.
+
+    Computed from the two smallest values per target rather than by 33 separate
+    reductions, so the whole table is O(n_sources * n_targets).
+    """
+    if fields.ndim != 2:
+        raise ValueError(f"expected (n_sources, n_targets), got {fields.shape}")
+    n = fields.shape[0]
+    if n < 2:
+        raise ValueError("leave-one-out is undefined for fewer than two sources")
+
+    order = np.argsort(fields, axis=0, kind="stable")
+    best_idx, second_idx = order[0], order[1]
+    cols = np.arange(fields.shape[1])
+    best, second = fields[best_idx, cols], fields[second_idx, cols]
+
+    # Row i takes the overall best, unless station i IS the best -- then the
+    # runner-up, which is what "without station i" means.
+    out = np.repeat(best[None, :], n, axis=0)
+    rows = np.arange(n)[:, None] == best_idx[None, :]
+    out[rows] = np.broadcast_to(second, (n, len(cols)))[rows]
+    return out
 
 
 def summarise(best_s: np.ndarray, pop: np.ndarray, *, budget_s: float,
@@ -70,6 +115,47 @@ def summarise(best_s: np.ndarray, pop: np.ndarray, *, budget_s: float,
             for label, b in ladder.items()
         }
     return out
+
+
+def graded_share(best_s: np.ndarray, pop: np.ndarray,
+                 bands: list[dict]) -> dict:
+    """Coverage credited on a utility ladder instead of a single threshold.
+
+    Formulation E. Both service configs have declared `bands` since step 05 --
+    EMS `[{t_s:300,u:1.0},{t_s:420,u:0.7},{t_s:600,u:0.3}]` -- and until the
+    2026-09 repair NOTHING READ THE KEY. Every published figure was binary: a
+    cell 301 seconds away counted exactly as much as one 30 minutes away, which
+    is zero.
+
+    Reported ALONGSIDE the binary share, never in place of it. Switching the
+    headline definition would move every number in the repository, the console
+    and the deck simultaneously, and the resulting difference could not be
+    attributed to anything -- the mistake E-10 made once already by changing a
+    parameter and a fitted constant together.
+    """
+    ladder = sorted(bands, key=lambda b: float(b["t_s"]))
+    tot = float(pop.sum())
+    reach = np.isfinite(best_s)
+
+    utility = np.zeros_like(best_s, dtype="float64")
+    assigned = np.zeros_like(best_s, dtype=bool)
+    per_band = []
+    for b in ladder:
+        t, u = float(b["t_s"]), float(b["u"])
+        sel = reach & ~assigned & (best_s <= t)
+        utility[sel] = u
+        assigned |= sel
+        per_band.append({"t_s": t, "u": u,
+                         "population": round(float(pop[sel].sum())),
+                         "population_share": round(float(pop[sel].sum() / tot), 4)})
+
+    return {
+        "graded_share": round(float((pop * utility).sum() / tot), 4),
+        "bands": per_band,
+        "population_beyond_last_band": round(float(pop[~assigned].sum())),
+        "definition": "sum(pop * u(band)) / sum(pop); a cell is credited at the "
+                      "utility of the first band it falls inside",
+    }
 
 
 def by_group(best_s: np.ndarray, pop: np.ndarray, group: np.ndarray,

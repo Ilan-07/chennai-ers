@@ -16,6 +16,7 @@ const SC_LABEL={dry:"Dry day, free flow",peak:"Peak hour congestion",flood5:"5-y
   flood25:"25-year flood",flood100:"100-year flood",f2015:"2015 flood replay"};
 const BANDS=[["within","--green"],["+2 min","--yellow"],["+2-7 min","--amber"],["beyond","--red"]];
 let svc="ems", scen="dry", thrMin=7, kWant=3, picked=[];
+let PLACE=false;   // manual site placement mode
 const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
 const C=D.cells, N=C.lat.length, POP=C.pop, TOTPOP=D.meta.population;
@@ -243,7 +244,26 @@ window.addEventListener("mouseup",e=>{
   }
   if(drag&&!drag.moved){
     const r=cvEl().getBoundingClientRect();
-    const i=nearestCell(e.clientX-r.left,e.clientY-r.top);
+    const mx=e.clientX-r.left, my=e.clientY-r.top;
+    // Manual placement: click a candidate site to add or remove it by hand, and
+    // every statistic recomputes off the same coverage matrix the optimiser
+    // uses. Without this the console can only show what the optimiser chose --
+    // and per ADR-005 the optimiser's list is not identified at current
+    // positional accuracy, so being able to ask "what if we put one HERE"
+    // is the honest interaction.
+    if(PLACE){
+      const j=nearestCandidate(mx,my);
+      if(j>=0){
+        const at=picked.indexOf(j);
+        if(at>=0) picked.splice(at,1); else picked.push(j);
+        paintSites(); draw(); paint();
+        $("copyMsg").textContent=(at>=0?"removed ":"added ")+"candidate "+j+" (manual)";
+        setTimeout(()=>{if($("copyMsg").textContent.endsWith("(manual)"))
+          $("copyMsg").textContent="";},2200);
+      } else $("copyMsg").textContent="no candidate site near that point";
+      drag=null; return;
+    }
+    const i=nearestCell(mx,my);
     if(i<0){SEL=[];SELKIND=null;paintSel();}
     else if(SCOPE==="cell") selectArea("cell",i);
     else if(SCOPE==="zone"){
@@ -374,6 +394,17 @@ function nearestCell(mx,my){
     for(const i of b){const d=(PX[i]-mx)**2+(PY[i]-my)**2; if(d<bd){bd=d;best=i;}}
   }
   return bd<=Math.max(400,900/(Z*Z))?best:-1;
+}
+
+// Candidate sites in screen space. Same projection as paintSites uses, so what
+// the pointer hits is what the eye sees.
+function nearestCandidate(mx,my){
+  const cand=S().candidates; let best=-1,bd=1e18;
+  for(let j=0;j<cand.length;j++){
+    const d=(px(cand[j].lon)-mx)**2+(py(cand[j].lat)-my)**2;
+    if(d<bd){bd=d;best=j;}
+  }
+  return bd<=Math.max(900,2500/(Z*Z))?best:-1;
 }
 
 function selectionStats(){
@@ -598,6 +629,66 @@ $("copy").onclick=async()=>{
     $("copyMsg").textContent="Copied — includes the provisional stamp";}
   catch(e){$("copyMsg").textContent="Clipboard blocked";}
   setTimeout(()=>$("copyMsg").textContent="",2600);};
+
+// Manual placement mode. Off by default: the map's primary interaction is
+// selecting an area, and silently changing what a click does is worse than an
+// explicit mode.
+$("place").onclick=()=>{
+  PLACE=!PLACE;
+  $("place").setAttribute("aria-pressed",String(PLACE));
+  $("place").textContent=PLACE?"Manual placement: ON":"Place a site by hand";
+  cvEl().style.cursor=PLACE?"copy":"crosshair";
+  $("modeHint").textContent=PLACE
+    ? "Click a candidate site to add or remove it. Every statistic recomputes live."
+    : "Click the map to select the ward under the pointer.";
+};
+
+// Export the brief the deck promises. A report that only reaches a clipboard is
+// not an export -- a planner needs a file they can attach.
+$("export").onclick=()=>{
+  const s=stats(), cand=S().candidates, u=S().uncertainty||{};
+  const rows=[
+    "# Chennai emergency response — coverage brief",
+    "# PROVISIONAL: "+D.meta.provisional_reason,
+    "# generated "+new Date().toISOString(),
+    "# stations_signature "+D.meta.stations_signature,
+    "",
+    "## Settings",
+    "service,"+svc, "scenario,"+scen, "threshold_min,"+thrMin,
+    "travel_budget_s,"+budget(),
+    "",
+    "## Coverage",
+    "coverage_share,"+(100*s.share).toFixed(2)+"%",
+    "population_covered,"+Math.round(s.cov),
+    "unreachable_population,"+Math.round(s.unreach),
+    "mean_travel_s,"+Math.round(s.mean),
+    "p90_travel_s,"+Math.round(s.p90),
+    "",
+    "## Uncertainty (E-11g) — the interval, not just the point estimate",
+    "interval_if_unconfirmed_pois_correct_points,"+(u.assumed_correct||{}).spread_points,
+    "interval_if_unconfirmed_pois_wrong_points,"+(u.if_unconfirmed_wrong||{}).spread_points,
+    "",
+    "## Proposed sites ("+(PLACE?"includes manual placements":"as selected")+")",
+    "rank,candidate_id,lat,lon",
+    ...picked.map((j,n)=>[n+1,j,cand[j].lat.toFixed(6),cand[j].lon.toFixed(6)].join(",")),
+    "",
+    "## Stated assumptions",
+    "trip_overhead_s,"+D.meta.trip_overhead_s,
+    "junction_delay_scale,"+D.meta.junction_delay_scale,
+    "note,\"Coverage is population-weighted on the real directed road network. "+
+      "EMS is modelled from fire-station bases; no 108 standby-point inventory exists. "+
+      "Site lists are not identified at current positional accuracy (ADR-005).\"",
+  ].join("\n");
+
+  const blob=new Blob([rows],{type:"text/csv"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=`chennai-ers-${svc}-${scen}-${thrMin}min.csv`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  $("copyMsg").textContent="Exported "+a.download;
+  setTimeout(()=>$("copyMsg").textContent="",2600);
+};
 
 // hover readout
 const cv=$("cv"), tip=$("tip");

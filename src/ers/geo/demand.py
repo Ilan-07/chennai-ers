@@ -147,6 +147,117 @@ def reconcile_to_wards(cells: gpd.GeoDataFrame, ward_totals: dict[int, float],
     return out, report
 
 
+LANDUSE_RISK_TAGS = {
+    # A-07: res 1.0 / com 1.8 / ind 3.0 / haz 5.0, mapped onto OSM tagging.
+    "landuse=residential": "residential",
+    "landuse=commercial": "commercial",
+    "landuse=retail": "commercial",
+    "landuse=industrial": "industrial",
+    "landuse=depot": "industrial",
+    "industrial=chemical": "hazardous",
+    "man_made=storage_tank": "hazardous",
+    "amenity=fuel": "hazardous",
+}
+
+
+def load_landuse(path: str, metric_crs: str) -> tuple[gpd.GeoDataFrame, dict]:
+    """Parse the A-07 land-use layer into risk categories.
+
+    Separate from `candidates.load_osm_parcels` because it answers a different
+    question. That one asks "could a station be BUILT here", so it queries
+    schools, parks and government land. This one asks "what BURNS here", and
+    needs the residential, commercial and hazardous classes that layer does not
+    contain -- which is why A-07 could not have been honoured from it.
+    """
+    import json
+
+    from shapely.geometry import Polygon
+
+    data = json.loads(open(path).read())
+    rows, geoms = [], []
+    skipped = 0
+    for el in data.get("elements", []):
+        geom = el.get("geometry")
+        if not geom or len(geom) < 4:
+            skipped += 1
+            continue
+        try:
+            poly = Polygon([(p["lon"], p["lat"]) for p in geom])
+            if not poly.is_valid:
+                poly = poly.buffer(0)
+            if poly.is_empty or poly.geom_type != "Polygon":
+                skipped += 1
+                continue
+        except Exception:
+            skipped += 1
+            continue
+
+        tags = el.get("tags", {})
+        risk = None
+        for k in ("industrial", "man_made", "amenity", "landuse"):
+            if k in tags:
+                risk = LANDUSE_RISK_TAGS.get(f"{k}={tags[k]}")
+                if risk:
+                    break
+        if risk is None:
+            skipped += 1
+            continue
+        rows.append({"osm_id": el.get("id"), "risk_class": risk})
+        geoms.append(poly)
+
+    g = gpd.GeoDataFrame(rows, geometry=geoms, crs="EPSG:4326").to_crs(metric_crs)
+    g["area_m2"] = g.area
+    report = {"features": len(g), "skipped": skipped,
+              "by_class": g["risk_class"].value_counts().to_dict()}
+    return g, report
+
+
+def landuse_risk_weights(cells: gpd.GeoDataFrame, parcels: gpd.GeoDataFrame,
+                         multipliers: dict, metric_crs: str,
+                         ) -> tuple[pd.Series, dict]:
+    """Fire demand weight. ASSM A-07; swept in E-06.
+
+    A cell's multiplier is the AREA-WEIGHTED MEAN of the risk classes overlapping
+    it, with unmapped area falling back to residential. Area-weighted rather than
+    maximum: a single mis-tagged storage tank should not multiply a whole
+    residential cell by five, and OSM land-use tagging in Chennai is patchy
+    enough that one bad polygon is a realistic input, not a hypothetical one.
+    """
+    cm = cells.to_crs(metric_crs)
+    pm = parcels.to_crs(metric_crs)
+    base = float(multipliers.get("residential", 1.0))
+
+    inter = gpd.overlay(cm[["cell_id", "geometry"]],
+                        pm[["risk_class", "geometry"]],
+                        how="intersection", keep_geom_type=True)
+    inter["a"] = inter.area
+    inter["m"] = inter["risk_class"].map(
+        lambda c: float(multipliers.get(c, base))) * inter["a"]
+
+    agg = inter.groupby("cell_id").agg(w=("m", "sum"), a=("a", "sum"))
+    cell_area = cm.set_index("cell_id").area
+
+    covered = agg["a"].reindex(cell_area.index).fillna(0.0)
+    weighted = agg["w"].reindex(cell_area.index).fillna(0.0)
+    # Unmapped remainder is charged at the residential rate rather than at zero:
+    # absence of an OSM polygon means nobody drew one, not that nothing is there.
+    mult = (weighted + base * (cell_area - covered).clip(lower=0)) / cell_area
+
+    mult = mult.reindex(cells["cell_id"]).to_numpy()
+    out = cells["population"].to_numpy() * mult
+    report = {
+        "multipliers": multipliers,
+        "unmapped_area_charged_at": base,
+        "cell_multiplier_min": round(float(np.nanmin(mult)), 4),
+        "cell_multiplier_median": round(float(np.nanmedian(mult)), 4),
+        "cell_multiplier_max": round(float(np.nanmax(mult)), 4),
+        "cells_above_residential": int((mult > base + 1e-9).sum()),
+        "weighted_total": round(float(np.nansum(out)), 1),
+        "raw_total": round(float(cells["population"].sum()), 1),
+    }
+    return pd.Series(out, index=cells.index), report
+
+
 def service_weights(cells: gpd.GeoDataFrame, *, w0: float, w1: float,
                     share_60plus: pd.Series | float) -> pd.Series:
     """EMS demand weight. ASSM A-06; swept in E-06.

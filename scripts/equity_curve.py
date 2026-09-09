@@ -12,6 +12,7 @@ from scipy import sparse
 from ers.model.problem import SitingProblem
 from ers.optimise import exact
 from ers.pipeline import load_service
+from ers.provenance import config_bundle, stamp
 
 # Usage: equity_curve.py [service] [k,k,...] [maximin_time_limit_s]
 #
@@ -153,7 +154,8 @@ if bad:
                      f"{ctx.baseline_share:.2%} do-nothing baseline: "
                      f"{[(r['k'], r['efficiency_city_coverage']) for r in bad]}")
 
-json.dump({"PROVISIONAL": True, "service": SVC,
+json.dump({**stamp(config=config_bundle(SVC), stations=ctx.stations, service=SVC),
+           "PROVISIONAL": True, "service": SVC,
            "baseline_share": round(ctx.baseline_share, 4),
            "trip_overhead_s": ctx.overhead_s,
            "precovered_cells": int(precov.sum()),

@@ -55,6 +55,17 @@ class ServiceContext:
         return float(self.demand.sum())
 
     @property
+    def stations_signature(self) -> str:
+        """Fingerprint of the positions this context routed from.
+
+        On the context rather than left to each caller, because "record which
+        inventory produced this" is only reliable if it costs nothing: the
+        artefacts that went stale in 2026-09 were written by the scripts that
+        did not bother.
+        """
+        return station_signature(self.stations)
+
+    @property
     def baseline_share(self) -> float:
         return float(self.demand[self.precovered].sum() / self.total_demand)
 
@@ -112,10 +123,29 @@ def load_service(service: str, *, root: str | Path = ".",
         service=service, budget_s=budget_s, overhead_s=overhead, standard=preset,
         metric_crs=metric, graph=g, cells=cells, stations=stations,
         station_idx=station_idx, cell_idx=cell_idx, cell_snap_m=cell_snap_m,
-        demand=cells["population"].to_numpy().astype("float64"),
+        demand=demand_column(cells, service),
         ward=cells["ward_id"].to_numpy(),
         baseline_s=baseline_s, precovered=precovered,
     )
+
+
+def demand_column(cells: "pd.DataFrame", service: str) -> "np.ndarray":
+    """The demand weights for one service.
+
+    `demand_<service>` is written by build_demand from the service's declared
+    `demand_surface` (A-06 age weighting, A-07 land-use risk). Before the
+    2026-09 repair the column did not exist and every consumer used raw
+    `population`, so EMS and fire differed only in turnout offset and speed
+    multiplier -- the two assumptions that were supposed to distinguish their
+    demand did nothing.
+
+    Falls back to `population` for a demand file built before those columns
+    existed, rather than failing: the fallback is exactly the old behaviour and
+    build_demand records which surface was actually used.
+    """
+    col = f"demand_{service}"
+    src = col if col in cells.columns else "population"
+    return cells[src].to_numpy().astype("float64")
 
 
 def station_signature(stations: pd.DataFrame) -> str:
@@ -208,7 +238,7 @@ def build_scenario_coverage(service: str, scenario_ids, *, root: str | Path = ".
             + access_s[None, :] + overhead
         M = sparse.csr_matrix((cand_s <= budget_s).T)
 
-        pop = cells["population"].to_numpy()
+        pop = demand_column(cells, service)
         out.append(ScenarioCoverage(
             scenario=sid, weight=float(sc["weight"]),
             coverage=M, precovered=precovered,

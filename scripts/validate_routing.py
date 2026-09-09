@@ -121,7 +121,9 @@ samp.to_csv("data/interim/routing_validation_pairs.csv", index=False)
 # only valid while those positions hold. Stamp them, so a later run against
 # moved stations is detectable rather than silently wrong (E-11c moved all 29).
 from ers.pipeline import station_signature
-json.dump({"seed": SEED, "overall": overall, "by_band": by_band,
+from ers.provenance import config_bundle, stamp
+json.dump({**stamp(config=config_bundle("ems"), seed=SEED, stations=st),
+           "overall": overall, "by_band": by_band,
            "band_median_ratio": bmr, "gate": gate,
            "oracle": "OSRM public demo, car profile",
            "stations_signature_at_computation": station_signature(st),

@@ -47,8 +47,8 @@ unlabelled, and nothing reaches a slide, an export or a report without its label
 | A-03 | Emergency multiplier within the RSCH envelope | 1.0–1.20 | Step 07 calibration; E-10 ablation (not yet run) |
 | A-04 | Alarm + turnout offsets | EMS 60+60 s; fire 60+80 s | Step 07 calibration |
 | A-05 | Population growth 2011 → now | 1.13 city-wide | E-10 |
-| A-06 | EMS demand weight `w0=0.6, w1=1.6` on 60+ share | — | E-06 |
-| A-07 | Fire land-use risk multipliers | res 1.0 / com 1.8 / ind 3.0 / haz 5.0 | E-06 |
+| A-06 | EMS demand weight `w0=0.6, w1=1.6` on 60+ share | **DATA-GATED — not applied.** No registered dataset carries a ward-level 60+ share; the EMS surface falls back to raw headcount and `demand_report.json` records that it did | E-06, blocked |
+| A-07 | Fire land-use risk multipliers | res 1.0 / com 1.8 / ind 3.0 / haz 5.0 — **APPLIED since 2026-09** (F-22) | E-06 |
 | A-08 | Flood closure depth | 0.30 m | E-09, swept {0.20, 0.30, 0.45} |
 | A-09 | Wading speed factor | 0.35 | E-10 ablation (not yet run); E-09 sweep |
 | A-10 | Scenario weights | dry .70 / peak .15 / f25 .10 / f100 .05 | **Now load-bearing — step 15 shows the siting recommendation depends on them (see below). The E-10 weight sweep is no longer optional.** |
@@ -313,8 +313,19 @@ single smaller constant out of sample (winning only 40% / 18% of splits), so the
 simpler model stands. What looked like a distance-dependent effect was just 45 s
 being too large.
 
-**NOT ADOPTED — the two oracles now conflict head-on.** Cutting the overhead to
-17.5 s drops the modelled EMS response below the published 108/EMRI range:
+**ADOPTED 2026-09-04 (commit `4a8db2a`); the governing decision is recorded in
+[ADR-004](docs/adr/004-trip-overhead-oracle.md).** The paragraph below described
+this refit as NOT ADOPTED for five days after it had in fact been adopted and
+was shipping in `baseline_report.json` as `modelled_response_s: 421.2`. The
+conflict it describes is real and is resolved in ADR-004: **OSRM governs the
+trip overhead and EMRI is demoted to a reported cross-check**, because the
+overhead is a travel-time parameter, the OSRM estimand is defined by us while
+EMRI's is undocumented, and the refit is cross-validated on held-out data. The
+EMRI comparison is still evaluated and still reported as outside its published
+range; it no longer gates anything.
+
+Cutting the overhead to 17.5 s drops the modelled EMS response below the
+published 108/EMRI range:
 
 | overhead | dry-only response | A-10 weighted response |
 |---|---|---|
@@ -700,6 +711,231 @@ weight sweep load-bearing rather than a nicety.
 6 of 10 sites with the dry-only solution while differing by 0.21 points, so many
 quite different site sets are near-optimal. A single "expected" recommendation
 should not be read as *the* answer without reporting that flatness.
+
+## Experiments run in the 2026-09 repair
+
+`scripts/experiments.py`, one JSON per arm in `data/interim/experiments/`, each
+with a run id. Effects are judged against the E-11g noise floor: **±0.8 points**
+if the 15 unconfirmed station listings name the right stations, **±7.6** if not.
+
+### E-09 / A-01 — class speeds ±20%. THE DECK'S FIGURE IS WRONG BY 5x.
+
+| arm | EMS | fire |
+|---|---|---|
+| speeds ×0.80 | 50.08% | 36.59% |
+| **shipped** | **61.75%** | **47.02%** |
+| speeds ×1.20 | 70.30% | 56.75% |
+
+EMS coverage spans **20.22 points**. The deck states this sweep
+as a completed validation — "class speeds varied ±20% shift coverage by roughly
+±4 points — the top three sites do not change" — and it had never been run. The
+true sensitivity is roughly **five times** the published claim, and it is
+above both noise floors.
+
+This matters more than any other assumption tested here: **the speed table is one
+of the few modelling choices in this project that demonstrably outweighs the
+unsurveyed stations.** A-01 is calibrated against the OSRM oracle, so it is not
+free to move ±20% — but the claim that it could and would not matter is retired.
+
+### E-10 / A-10 — design-basis weights. NOT LOAD-BEARING, AFTER ALL.
+
+Dry weight swept 0.50–0.90, k=10, both services, every solve proven optimal.
+
+| | EMS | fire |
+|---|---|---|
+| distinct **maximin** site sets | **1** | **1** |
+| distinct **expected** site sets | 2 | 2 |
+| sites shared by the two objectives | 2–3 of 10 | 4 of 10 |
+
+**The maximin recommendation is completely invariant to A-10**, and its objective
+is unchanged to four decimals at every weight. The expected recommendation takes
+two values, switching between dry 0.60 and 0.70, differing in 3 of 10 slots.
+
+This register promoted the sweep to load-bearing on the grounds that "the siting
+recommendation depends on them". **It does not.** What the recommendation depends
+on is which OBJECTIVE is chosen: the two agree on only 2–4 of 10 sites at every
+weight in the range, and no value of A-10 brings them together. See
+[ADR-005](docs/adr/005-siting-objective.md).
+
+### E-10 / A-09 — wading speed factor. MATERIAL.
+
+| wading factor | EMS flood100 coverage |
+|---|---|
+| 0.20 | 40.07% |
+| **0.35 (shipped)** | **43.32%** |
+| 0.50 | 45.42% |
+
+Span **5.35 points** on the 100-year flood — above the
+optimistic noise floor, below the pessimistic one. A-09 is an unmeasured
+engineering assumption and it moves the flood result by more than the flood
+siting decision is worth. It should be bounded from literature or from TNFRS
+operational practice before any flood figure is quoted as settled.
+
+### E-09 / A-08 — flood closure depth. APPLIES TO ONE SCENARIO ONLY.
+
+| closure depth | EMS f2015 coverage | unreachable | flood100 control |
+|---|---|---|---|
+| 0.20 m | 52.99% | 386,629 | 43.32% |
+| **0.30 m (shipped)** | **54.08%** | 174,246 | 43.32% |
+| 0.45 m | 54.68% | 43,598 | 43.32% |
+
+Span **1.69 points**, below the optimistic noise floor.
+
+**Method note, recorded because the first attempt got it wrong.** This arm
+initially swept the depth and measured `flood100`, which returned exactly 0.00
+points — not because A-08 is inert but because the return-period layers classify
+SEVERITY and carry no depth at all. Only `f2015`, an observed-points layer with
+measured depths, keys off `closure_depth_m`. A sweep that structurally cannot
+move its own outcome reports "this assumption does not matter" when it means
+"this arm measured the wrong thing", and the two are indistinguishable in the
+output. `flood100` is now carried as an explicit control and asserted inert.
+
+### E-10 / A-05 — growth factor. INERT FOR EVERY SHARE.
+
+A-05 is a uniform multiplier on every cell, so it scales absolute population
+counts proportionally and leaves **every coverage share exactly unchanged**.
+It is load-bearing for statements of the form "N million residents beyond 8
+minutes" — which is precisely the form the deck uses — and inert for the
+percentages the pipeline reports. Recording which is which stops a future reader
+treating the two as equally uncertain.
+
+### Still not run
+
+- **E-06** (A-06 EMS age weighting) is blocked on Census ward age tables; A-07
+  is now applied and can be swept once a second surface exists to compare it to.
+- **E-09 candidate resample** (A-12, 800 m minimum separation).
+- **E-10 / A-03** emergency multiplier, within the RSCH envelope.
+
+---
+
+## The 2026-09 repair — F-20 to F-26
+
+An audit of the whole project found six defects of one kind: **a decision that
+had been made, recorded, and never turned into code that anyone could re-run.**
+Each is now a script, a registry entry and a test. None of them moved a headline
+number by much, which is the point — they were invisible precisely because the
+outputs looked fine.
+
+### F-20 — the station inventory was hand-edited and unreproducible
+
+`data/interim/stations_resolved.csv` is read by `ers.pipeline` and eight
+scripts, and **was produced by no script at all.**
+`ers.io.stations.resolve()` was registered as its provenance and called only
+from the test suite. It had drifted from its own registry checksum: 6866 bytes
+registered against 6423 on disk.
+
+This is a direct violation of the rule at the top of this file, on the single
+most load-bearing input in the project.
+
+Fixed: `ers.io.stations.adopt_gmaps_lookup()` + `scripts/resolve_stations.py`,
+deterministic and network-free, with `--check` diffing a fresh resolve against
+the file on disk. [ADR-003](docs/adr/003-station-position-adoption.md).
+
+**It also found a real drift.** E-11e resolved Tambaram to candidate B — OSM's
+"Tamil Nadu Fire and Rescue Services" lies 41 m from B and 260 m from A — and
+the hand-edited inventory still carried **candidate A**. The model had been
+routing from the rejected coordinate. Tambaram's leverage is 0.000 points
+(E-11b: it lies outside the GCC demand surface) so no coverage figure moves,
+but every `stations_signature` downstream does.
+
+A second error: `identity_confirmed_by` counted **15** confirmations where A-15
+records 14, because `contested_unresolved` — Athipattu, a marker of doubt — was
+being counted as evidence.
+
+### F-21 — ward and zone geometry had no provenance at all
+
+`wards.parquet` and `zones.parquet` were likewise written by no script and
+appeared in **no registry entry**: no source, no licence, no checksum — for the
+geometry every ward-equity result in the project is grouped by.
+`ers.geo.wards` had existed and been unit tested since step 04; nothing called
+it. `scripts/build_wards.py` now does, and regenerates both files
+**byte-identically**, which is what makes the fix provable rather than merely
+plausible.
+
+### F-22 — two demand surfaces were declared in config and read by nothing
+
+`config/services/ems.yml` declares `demand_surface: age_weighted` and
+`fire.yml` declares `landuse_weighted`. **Nothing read the key.** Every coverage
+figure in the project, both services, was weighted by raw headcount, so EMS and
+fire differed only in turnout offset and speed multiplier — the two assumptions
+meant to distinguish their demand did nothing.
+
+`demand.service_weights()` had existed and been unit tested since step 05 and
+was called from no script. And it could not have worked: the registered parcels
+layer was fetched to find *candidate sites*, so it carries schools, parks and
+industrial estates — **no residential, no commercial, no hazardous class**,
+three of A-07's four categories. The data to honour A-07 had never been fetched.
+
+Fixed: `scripts/fetch_landuse.py` (registry id 17, 3,100 features),
+`demand.landuse_risk_weights()`, and dispatch in `build_demand.py` where an
+unimplementable `demand_surface` now **raises** instead of being ignored.
+
+- **A-07 is applied.** 1,455 cells above residential, cell multiplier max 3.67,
+  fire demand total 9.05 M against a raw 7.63 M. Fire coverage moves from
+  47.44% to **47.02%**.
+- **A-06 is not.** No registered dataset carries a ward-level 60+ share.
+  The EMS surface falls back to headcount and says so in `demand_report.json`.
+
+### F-23 — graded coverage (formulation E) was declared and unused
+
+Both service configs have carried `bands` since step 05 — EMS
+`[{300,1.0},{420,0.7},{600,0.3}]` — and nothing read them. Every published
+figure was binary: a cell 301 seconds away counted exactly as much as one 30
+minutes away, which is zero.
+
+`coverage.graded_share()` implements it, reported ALONGSIDE the binary share and
+not in place of it. Switching the headline definition would move every number in
+the repository, the console and the deck at once, and the difference could not
+then be attributed to anything.
+
+### F-24 — the gates existed only as fields in JSON files
+
+`degradation_report.json` recorded `within_published_range: false` for the
+project's own like-for-like EMRI comparison, and nothing read it back: no script
+exited non-zero, no test asserted on it. A gate that nothing enforces is a
+comment.
+
+`ers.gates` now evaluates every gate with a severity — **BUILD** (fails the
+build), **PUBLICATION** (the survey is outstanding; enforced by requiring the
+PROVISIONAL stamp rather than by going red for months), **REPORTED** (a
+cross-check that does not govern). `scripts/gate.py` exits non-zero on a BUILD
+failure and runs in CI.
+
+### F-25 — two artefacts had gone stale in place
+
+Both were internally consistent, which is why no consistency test could see
+them:
+
+- **`stations_qa.json`** published `by_confidence: {locality: 29}` against an
+  inventory reading `google_maps_poi: 29`, with `plausibility` labels
+  (`settlement_centroid`, `unrelated_feature`) describing the **discarded**
+  Nominatim positions. Thiruvanmiyur — the one station confirmed by an exact
+  phone match, whose POI is named "Thiruvanmiyur Fire Station" — was labelled
+  `settlement_centroid`.
+- **`survey_priority.json`**, which decides which stations to visit first, was
+  computed 68 minutes *before* the positions it ranks were replaced. The
+  worklist copied its ordering forward. The project's own stated next action was
+  ordered by a calculation on superseded coordinates.
+
+Fixed by making provenance cheap and staleness detectable:
+`ers.provenance.stamp()` puts a `run_id` (code commit + config hash + input
+digests + seed) and a `stations_signature` on every report, and
+`tests/integration/test_artefact_freshness.py` fails the build when an
+artefact's signature does not match the inventory on disk. The `run_id` is the
+mechanism this file's opening rule always assumed and never had.
+
+### F-26 — a 9.1-hour job that did not need to be
+
+`survey_priority.json` recorded **32,654 s**. `scipy.csgraph.dijkstra` runs one
+sweep PER SOURCE, so re-routing all 33 stations to move one of them costs 33
+times what it needs to — and the leverage loop moves exactly one at a time.
+
+`coverage.leave_one_out_min()` caches the best-time field over the unmoved
+stations; a draw then costs one Dijkstra and an elementwise minimum. Verified
+**exactly equal** to the full re-route on the real graph over 12 trials
+(max difference 0.0), at a measured **33.1x** speedup.
+
+---
 
 ## Known omissions, declared
 

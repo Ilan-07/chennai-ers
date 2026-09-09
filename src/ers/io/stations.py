@@ -15,6 +15,7 @@ import csv
 import json
 import re
 import time
+from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -40,6 +41,13 @@ _NOISE = {
 # geocode to "verified" would open the publish gate on desk research, which is
 # the precise failure this gate exists to prevent.
 CONFIDENCE = ("surveyed", "osm", "google_maps_poi", "geocoded", "locality", "inferred")
+
+# `identity_confirmed_by` values that are NOT a confirmation. `contested_unresolved`
+# is Athipattu: the TNFRS directory lists two stations there, neither Google
+# listing publishes a phone, and OSM names the nearer candidate as the power
+# station's own fire post. Counting that as confirmed put the total at 15 where
+# A-15 records 14, by treating a marker of doubt as evidence.
+IDENTITY_UNCONFIRMED = {"", "contested_unresolved"}
 SURVEY_REQUIRED = ("google_maps_poi", "geocoded", "locality", "inferred")
 
 # ASSM: positional uncertainty credited to each confidence class, metres.
@@ -68,6 +76,12 @@ class ResolvedStation:
     osm_class: str = ""
     osm_type: str = ""
     plausibility: str = ""
+    # E-11f/E-11g: WHICH station a position names, as distinct from how precise
+    # it is. The noise floor is +/-0.8 pts if the unconfirmed POIs name the right
+    # station and +/-7.6 pts if they do not, so the error model cannot be built
+    # without this. It previously lived only in a side lookup file, which is why
+    # the two could drift apart.
+    identity_confirmed_by: str = ""
 
 
 def load_authoritative(path: str | Path) -> list[dict]:
@@ -119,6 +133,114 @@ def _plausibility(r: dict) -> str:
     if typ == "administrative":
         return "boundary_centroid"
     return "unrelated_feature"         # e.g. "Sembium" -> Sembium PHC (a clinic)
+
+
+def _plausibility_gmaps(row: dict) -> str:
+    """How usable is a Google Maps POI as a station position?
+
+    NOT the same question `_plausibility` asks. That one grades a geocoder hit
+    by what KIND of feature it landed on, because the failure mode there was
+    landing on a road or a railway station. Every POI here is already
+    categorised `Fire station`, so feature type carries no information and the
+    residual doubt is about IDENTITY: does this listing name the station we
+    think it names?
+
+    Carrying the geocoder's labels over to these positions -- which is what the
+    hand-edited inventory did -- describes the discarded Nominatim points, not
+    the adopted ones. It read `settlement_centroid` for Thiruvanmiyur, whose POI
+    is literally named "Thiruvanmiyur Fire Station" and is the one station
+    confirmed by an exact phone match.
+    """
+    name = (row.get("gmaps_name") or "").strip()
+    note = (row.get("note") or "")
+    confirmed = (row.get("identity_confirmed_by") or "").strip()
+
+    if confirmed == "contested_unresolved" or note.startswith("UNRESOLVED"):
+        return "contested"
+    if (row.get("ambiguous") or "").strip().lower() == "true":
+        # Two candidate listings and no evidence separating them.
+        return "ambiguous_candidates"
+    if confirmed:
+        return "identity_confirmed"
+    if not name or name.casefold() in {"fire station", "fire and rescue station"}:
+        return "generic_name"
+    return "named_fire_station"
+
+
+def adopt_gmaps_lookup(
+    resolved: list[ResolvedStation],
+    lookup_rows: list[dict],
+) -> tuple[list[ResolvedStation], dict]:
+    """Adopt the E-11c Google Maps positions over the provisional geocodes.
+
+    This step existed as a decision (E-11c, E-11e, commit 2b18e96) but never as
+    code: `stations_resolved.csv` was edited by hand, so it matched no script,
+    drifted from its own registry checksum, and -- as this function's own
+    acceptance check found -- never picked up E-11e's Tambaram resolution.
+
+    `gmaps_lat/lon` is the PRIMARY candidate and already carries every tie-break
+    that has been settled; `alt_lat/lon` is the rejected one, kept for audit.
+    Adoption does NOT open the publish gate: `google_maps_poi` is in
+    SURVEY_REQUIRED, because a better geocode is not a verification.
+    """
+    by_name = {r.station_name: r for r in resolved}
+    adopted, unknown, moved = [], [], []
+
+    for row in lookup_rows:
+        name = row["station_name"]
+        if name not in by_name:
+            unknown.append(name)
+            continue
+        prev = by_name[name]
+        lat, lon = float(row["gmaps_lat"]), float(row["gmaps_lon"])
+
+        # `residual_m` is the per-station uncertainty the lookup assigns: 50 m
+        # for a normal POI, wider where the listing itself is doubtful (Avadi,
+        # 300 m, whose POI is named only "Fire station").
+        unc = float(row.get("residual_m") or UNCERTAINTY_M["google_maps_poi"])
+
+        p_lat, p_lon = prev.lat, prev.lon
+        if p_lat is not None and p_lon is not None:
+            d = haversine_m(p_lat, p_lon, lat, lon)
+            if d > 1.0:
+                moved.append({"station": name, "moved_m": round(d),
+                              "was": f"{p_lat:.7f},{p_lon:.7f}",
+                              "now": f"{lat:.7f},{lon:.7f}"})
+
+        detail = f"{(row.get('gmaps_name') or '').strip()} [{(row.get('gmaps_category') or '').strip()}]"
+        if (row.get("note") or "").strip():
+            detail = f"{detail} {row['note'].strip()}"
+
+        by_name[name] = ResolvedStation(
+            prev.station_name, prev.division, prev.service, lat, lon,
+            "google_maps_poi", "google_maps_poi_lookup", detail[:400],
+            # int where integral, so the CSV round-trips to the same text and a
+            # diff against it shows real changes rather than "50" vs "50.0".
+            int(unc) if float(unc).is_integer() else unc,
+            True,
+            # A Maps POI is not an OSM feature. The previous inventory carried
+            # the discarded Nominatim hit's tags here (`place/suburb`,
+            # `railway/station`), which described a position no longer in use.
+            # Empty is the truth: these columns describe an OSM match, and there
+            # is none.
+            "", "",
+            _plausibility_gmaps(row),
+            (row.get("identity_confirmed_by") or "").strip(),
+        )
+        adopted.append(name)
+
+    merged = [by_name[r.station_name] for r in resolved]
+    report = {
+        "adopted": len(adopted),
+        "unknown_station_names": sorted(unknown),
+        "kept_osm_positions": sorted(r.station_name for r in merged
+                                     if r.geocode_confidence == "osm"),
+        "moved_from_previous": sorted(moved, key=lambda m: -m["moved_m"]),
+        "identity_confirmed": sorted(r.station_name for r in merged
+                                     if r.identity_confirmed_by not in IDENTITY_UNCONFIRMED),
+        "by_plausibility": dict(Counter(r.plausibility for r in merged)),
+    }
+    return merged, report
 
 
 def _nominatim(query: str, viewbox: tuple[float, float, float, float]) -> dict | None:
@@ -229,7 +351,6 @@ def resolve(
 
 
 def qa_report(rows: list[ResolvedStation]) -> dict:
-    from collections import Counter
     c = Counter(r.geocode_confidence for r in rows)
     unresolved = [r.station_name for r in rows if r.lat is None]
     survey = [r.station_name for r in rows if r.geocode_confidence in SURVEY_REQUIRED]
@@ -330,11 +451,12 @@ def ingest_survey(
             continue
 
         prev = by_name[name]
-        moved = (haversine_m(prev.lat, prev.lon, lat, lon)
-                 if prev.lat is not None else None)
+        p_lat, p_lon = prev.lat, prev.lon
+        moved = (haversine_m(p_lat, p_lon, lat, lon)
+                 if p_lat is not None and p_lon is not None else None)
         if moved is not None and moved > LARGE_MOVE_M:
             flagged.append({"station": name, "moved_m": round(moved),
-                            "was": f"{prev.lat:.5f},{prev.lon:.5f}",
+                            "was": f"{p_lat:.5f},{p_lon:.5f}",
                             "now": f"{lat:.5f},{lon:.5f}"})
 
         by_name[name] = ResolvedStation(

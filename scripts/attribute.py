@@ -1,12 +1,24 @@
-"""Attribute traversal times to the real network. Build step 06."""
-import json, sys, time
+"""Attribute traversal times to the real network. Build step 06.
+
+`--speeds` exists so E-09 can sweep the class speed table +/-20% without editing
+the shipped config. The deck publishes that sweep's result as an established
+fact; until 2026-09 the sweep had never been run, and could not be run without
+hand-editing config between passes.
+"""
+import argparse, json, sys, time
 sys.path.insert(0, "src")
 import numpy as np, pandas as pd, yaml
 from ers.geo.graph import read_graph_tables
 from ers.geo.attrs import attribute_edges, junction_delay, primary_highway
 
+ap = argparse.ArgumentParser()
+ap.add_argument("--speeds", default="config/speeds/base.yml")
+ap.add_argument("--arc-out", default="data/interim/arc_times.parquet")
+ap.add_argument("--out", default="data/interim/attribution_report.json")
+args = ap.parse_args()
+
 t0 = time.time()
-speeds = yaml.safe_load(open("config/speeds/base.yml"))
+speeds = yaml.safe_load(open(args.speeds))
 nodes, edges = read_graph_tables("data/interim/graph")
 print(f"loaded {len(nodes):,} nodes  {len(edges):,} edges  ({time.time()-t0:.1f}s)", flush=True)
 
@@ -47,7 +59,7 @@ report = {
     "composition_km": {k: round(v, 1) for k, v in by_class["sum"].items()},
     "seconds": round(time.time()-t0, 1),
 }
-json.dump(report, open("data/interim/attribution_report.json", "w"), indent=2, sort_keys=True)
-edges[["u", "v", "key", "tau_ds_ems", "tau_ds_fire", "length"]].to_parquet(
-    "data/interim/arc_times.parquet")
-print(f"\nwrote arc_times.parquet ({time.time()-t0:.1f}s)")
+report["speeds_config"] = args.speeds
+json.dump(report, open(args.out, "w"), indent=2, sort_keys=True)
+edges[["u", "v", "key", "tau_ds_ems", "tau_ds_fire", "length"]].to_parquet(args.arc_out)
+print(f"\nwrote {args.arc_out} ({time.time()-t0:.1f}s)")

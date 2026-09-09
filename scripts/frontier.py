@@ -16,6 +16,7 @@ from scipy import sparse
 from ers.model.problem import SitingProblem
 from ers.optimise import exact
 from ers.pipeline import load_service, ward_shares as _ward_shares
+from ers.provenance import config_bundle, stamp
 
 SVC = sys.argv[1] if len(sys.argv) > 1 else "ems"
 K = int(sys.argv[2]) if len(sys.argv) > 2 else 5
@@ -132,7 +133,8 @@ if len(feasible) > 1:
           f"costs {100*(a['coverage_share']-b['coverage_share']):.2f} points of city coverage")
     print(f"site displacement: {len(set(a['sites'])^set(b['sites']))} of {2*K} site-slots differ")
 
-json.dump({"PROVISIONAL": True, "service": SVC, "k": K,
+json.dump({**stamp(config=config_bundle(SVC), stations=ctx.stations, service=SVC),
+           "PROVISIONAL": True, "service": SVC, "k": K,
            "degenerate": bool(degenerate),
            "degenerate_reason": (f"maximin floor is 0% at k={K}: the equity constraint "
                                  f"binds nothing and the ladder collapses to the "

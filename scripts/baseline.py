@@ -4,14 +4,19 @@ OUTPUT IS PROVISIONAL. 29 of 33 stations still carry geocoder positions rather
 than surveyed ones, so the publish gate is closed and every figure here is
 stamped accordingly. The pipeline runs anyway so the whole chain is exercised.
 """
-import csv, json, sys, time
+import argparse, csv, json, sys, time
 from pathlib import Path
+
+_ap = argparse.ArgumentParser()
+_ap.add_argument("--quiet", action="store_true")
+_args, _ = _ap.parse_known_args()
 sys.path.insert(0, "src")
 import geopandas as gpd, numpy as np, pandas as pd, yaml
 from ers import coverage
 from ers.geo.graph import read_graph_tables
 from ers.routing.csr import build_graph, snap
 from ers.io.stations import qa_report, ResolvedStation
+from ers.pipeline import demand_column
 
 t0 = time.time()
 SPEEDS = yaml.safe_load(open("config/speeds/base.yml"))
@@ -54,7 +59,7 @@ for svc in ("ems", "fire"):
     # 4x-budget cutoff used previously reported 7 fire cells as unreachable that
     # are simply distant; population coverage was unaffected, the honesty of the
     # unreachable count was not.
-    pop = cells["population"].to_numpy()
+    pop = demand_column(cells, svc)
     best_s = coverage.response_seconds(g, s_idx, c_idx, c_dist,
                                        overhead_s=OVERHEAD, cutoff_ds=None)
     off = scfg["t_alarm_s"] + scfg["t_turnout_s"]
@@ -71,6 +76,11 @@ for svc in ("ems", "fire"):
         "cell_snap_max_m": round(float(c_dist.max()), 1),
         "cells_snap_over_300m": int((c_dist > 300).sum()),
     }
+    # Formulation E, reported alongside the binary share rather than replacing
+    # it. `bands` has been declared in both service configs since step 05 and
+    # was read by nothing until the 2026-09 repair.
+    if scfg.get("bands"):
+        results[svc]["graded"] = coverage.graded_share(best_s, pop, scfg["bands"])
     tot = pop.sum()
     r = results[svc]
     print(f"\n{svc.upper()}  {preset}: target {t_target}s - alarm {scfg['t_alarm_s']}s "
@@ -81,11 +91,16 @@ for svc in ("ems", "fire"):
           f"P90 {r['p90_travel_s']/60:.1f} | max {r['max_travel_s']/60:.1f}", flush=True)
     print(f"  unreachable cells {r['unreachable_cells']} | snap>300m {r['cells_snap_over_300m']}",
           flush=True)
+    if "graded" in r:
+        print(f"  graded (formulation E) {r['graded']['graded_share']:.1%}  "
+              f"[binary {r['coverage_share']:.1%}; the binary figure remains the headline]",
+              flush=True)
 
 # E-11: station position uncertainty puts a measured interval under every figure
 # below. A bare point estimate implies a precision this data does not have, so the
 # headline is reported WITH its interval or explicitly marked as lacking one.
 from ers.pipeline import station_signature
+from ers.provenance import config_bundle, service_bases, stamp
 SIG = station_signature(st)
 SENS, STALE = {}, {}
 for svc in ("ems", "fire"):
@@ -152,7 +167,14 @@ print(f"  within range: {in_range}  —  NOT a gate: a free-flow scenario is the
 print(f"  counterpart to an operational mean. See degradation_report.json for the")
 print(f"  A-10 weighted comparison, which is the like-for-like one.")
 
+# Every service result states which bases it was routed from. EMS has no base
+# inventory of its own -- the block says so, next to the number, rather than in
+# a paragraph of ASSUMPTIONS.md that the number travels without.
+for svc, r in results.items():
+    r["bases"] = service_bases(svc, st)
+
 report = {
+    **stamp(config=config_bundle(), stations=st),
     "connectivity": conn,
     "position_uncertainty_measured": bool(SENS),
     "stations_signature": SIG,

@@ -20,13 +20,16 @@ sys.path.insert(0, "src")
 import geopandas as gpd, numpy as np, pandas as pd, yaml
 from ers import coverage
 from ers.geo.graph import read_graph_tables
+from ers.pipeline import demand_column
+from ers.provenance import config_bundle, service_bases, stamp
 from ers.routing.csr import build_graph, snap
 from ers.scenario import build_network, flood_arc_states, load_scenario
 
 SCENARIOS = ["dry", "peak", "flood5", "flood25", "flood100", "f2015"]
 
 
-def run(junction_scale=None, overhead_s=None, services=("ems", "fire"),
+def run(junction_scale=None, overhead_s=None, closure_depth_m=None,
+        wading_factor=None, services=("ems", "fire"),
         scen_ids=SCENARIOS, quiet=False) -> dict:
     """`junction_scale` and `overhead_s` override the shipped calibration.
 
@@ -45,7 +48,7 @@ def run(junction_scale=None, overhead_s=None, services=("ems", "fire"),
     nodes, edges = read_graph_tables("data/interim/graph")
     cells = gpd.read_parquet("data/interim/demand_cells.parquet")
     st = pd.read_csv("data/interim/stations_resolved.csv")
-    pop = cells["population"].to_numpy()
+    pop = {s: demand_column(cells, s) for s in ("ems", "fire")}
     ward = cells["ward_id"].to_numpy()
 
     # Snap ONCE, on the dry topology, and reuse the node indices for every
@@ -59,6 +62,19 @@ def run(junction_scale=None, overhead_s=None, services=("ems", "fire"),
     c_idx, c_dist = snap(g0, cc.x.to_numpy(), cc.y.to_numpy())
 
     scenarios = [load_scenario(f"config/scenarios/{s}.yml") for s in scen_ids]
+
+    # E-09 / A-08 and A-09 sweeps. Overriding here rather than by hand-editing
+    # the shipped scenario configs between passes is what makes those two
+    # assumptions testable at all -- both were declared with an experiment
+    # against them and neither had ever been run.
+    for sc in scenarios:
+        fl = sc.get("flood")
+        if not fl:
+            continue
+        if closure_depth_m is not None and "closure_depth_m" in fl:
+            fl["closure_depth_m"] = float(closure_depth_m)
+        if wading_factor is not None:
+            fl["wading_speed_factor"] = float(wading_factor)
 
     # Flood state is a property of the water, not of the vehicle: classify arcs
     # once per scenario and share the result across services.
@@ -100,7 +116,8 @@ def run(junction_scale=None, overhead_s=None, services=("ems", "fire"),
             # No cutoff: unreachable must mean unreachable, not merely truncated.
             best_s = coverage.response_seconds(g, s_idx, c_idx, c_dist,
                                                overhead_s=overhead, cutoff_ds=None)
-            r = coverage.summarise(best_s, pop, budget_s=budget, ladder=ladder)
+            r = coverage.summarise(best_s, pop[svc_name], budget_s=budget,
+                                   ladder=ladder)
             r["scenario"] = sc["id"]
             r["label"] = sc["label"]
             r["weight"] = float(sc["weight"])
@@ -141,10 +158,11 @@ def run(junction_scale=None, overhead_s=None, services=("ems", "fire"),
         "junction_delay_scale": (float(speeds.get("junction_delay_scale", 1.0))
                                  if junction_scale is None else float(junction_scale)),
         "trip_overhead_s": overhead,
-        "shipped_calibration": (junction_scale is None and overhead_s is None),
+        "shipped_calibration": (junction_scale is None and overhead_s is None
+                                and closure_depth_m is None and wading_factor is None),
         "stations": len(st),
         "cells": len(cells),
-        "demand_total": round(float(pop.sum())),
+        "demand_total": {s: round(float(v.sum())) for s, v in pop.items()},
         "station_snap_max_m": round(float(s_dist.max()), 1),
         "cell_snap_max_m": round(float(c_dist.max()), 1),
         "cutoff": "none (exhaustive sweep)",
@@ -165,10 +183,15 @@ if __name__ == "__main__":
                          "--junction-scale is changed (the two were fitted jointly)")
     ap.add_argument("--scenarios", default=",".join(SCENARIOS))
     ap.add_argument("--out", default="data/interim/degradation_report.json")
+    ap.add_argument("--closure-depth", type=float, default=None,
+                    help="A-08 override, metres. Swept in E-09.")
+    ap.add_argument("--wading-factor", type=float, default=None,
+                    help="A-09 override. Swept in E-10.")
     ap.add_argument("--quiet", action="store_true")
     args = ap.parse_args()
 
     rep = run(junction_scale=args.junction_scale, overhead_s=args.trip_overhead,
+              closure_depth_m=args.closure_depth, wading_factor=args.wading_factor,
               services=args.services.split(","), scen_ids=args.scenarios.split(","),
               quiet=args.quiet)
 
@@ -211,7 +234,16 @@ if __name__ == "__main__":
         wmean = sum(v["weight"] * v["mean_travel_s"] for v in db.values()) / wsum
         dry = res["scenarios"]["dry"]["mean_travel_s"]
         ok = tgt["value_min_s"] <= wmean + off <= tgt["value_max_s"]
-        rep["emri_gate"] = {
+        # ADR-004: EMRI is a CROSS-CHECK, not a gate. OSRM constrains travel time
+        # directly and the stage-4 overhead refit is cross-validated against it
+        # (winning worst-band in 95% of splits and MedAPE in 100%); EMRI is a
+        # single published range whose estimand -- which dispatches, which
+        # geography, which year -- is undocumented in our sources, and it
+        # compares an operational mean against modelled scenarios. Recorded and
+        # reported; it does not govern the trip overhead.
+        rep["emri_comparison"] = {
+            "is_gate": False,
+            "governs": "no - see docs/adr/004-trip-overhead-oracle.md",
             "statistic": "A-10 weighted mean EMS response across design-basis scenarios",
             "weighted_response_s": round(wmean + off, 1),
             "dry_only_response_s": round(dry + off, 1),
@@ -220,10 +252,14 @@ if __name__ == "__main__":
             "note": "dry-only is reported for continuity but is not the test: a free-flow "
                     "scenario is the wrong counterpart to an operational mean.",
         }
-        print(f"\n--- 108/EMRI gate (A-10 weighted, the like-for-like comparison) ---")
+        print(f"\n--- 108/EMRI cross-check (A-10 weighted; reported, not a gate) ---")
         print(f"  weighted EMS response {wmean + off:6.1f}s   vs published "
               f"{tgt['value_min_s']}-{tgt['value_max_s']}s   within range: {ok}")
         print(f"  (dry-only, for continuity: {dry + off:.1f}s — not the test)")
 
+    _st = pd.read_csv("data/interim/stations_resolved.csv")
+    rep.update(stamp(config=config_bundle("ems"), stations=_st))
+    for svc, block in rep.get("services", {}).items():
+        block["bases"] = service_bases(svc, _st)
     json.dump(rep, open(args.out, "w"), indent=2, sort_keys=True)
     print(f"\nwrote {args.out}  ({rep['seconds']}s)")
