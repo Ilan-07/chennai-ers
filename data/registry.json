@@ -637,5 +637,20 @@
     "source": "stations_metro",
     "uri": "derived://resolve_metro_stations",
     "version_label": "2026-09-13"
+  },
+  {
+    "bytes": 16207,
+    "fetched_at": "2026-09-13T18:04:46+00:00",
+    "id": 40,
+    "licence": "derived",
+    "local_path": "data/interim/full_area.parquet",
+    "notes": {
+      "km2": null,
+      "profile": "full"
+    },
+    "sha256": "b63c478e38fc85222acc1f6211e6cfeca74702da86fb2e793fb3e2342e1cbfd5",
+    "source": "metro_study_area",
+    "uri": "derived://ers.geo.urban",
+    "version_label": "2026-09-13"
   }
 ]

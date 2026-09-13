@@ -1625,6 +1625,47 @@ indistinguishable from a bug, and no test was ever going to say so.
 
 ---
 
+### F-37 — a profile build registered its output into a registry nobody keeps
+
+Found by CI, on the first push. `make verify` failed:
+
+```
+FAIL id=34 metro_study_area: data/interim/full_area.parquet
+     does not match its registered hash
+```
+
+The hash was not wrong. The **file** had legitimately changed — F-33 corrected
+the full profile's boundary from 1,581 km² to 1,456 — and the registry had never
+been told.
+
+`build_profile.sh` seeds the isolated tree by copying the repo's
+`registry.json` into it. The tree's `build_metro_area.py` then registers the
+study area it writes... into that copy. The copy is discarded when the build
+ends. The **artefact**, meanwhile, is copied back to the repo. So the repo ended
+up holding a boundary newer than its own registration, and the append-only
+registry — whose entire job is to make a run replayable against the data it
+actually used — was quietly describing a file that no longer existed.
+
+Same shape as F-30 (evidence nothing read) and F-34 (a refusal nothing enforced):
+a step whose output goes somewhere nobody looks. Three in one audit is not a
+coincidence; it is what happens when a pipeline is assembled by hand often enough
+that each piece is verified in isolation and the seams never are.
+
+**Fixed by registering the artefact where it lands.** The copy-back step now
+registers each study area in the *repo's* registry, from the repo, and prints the
+version it assigned. Registration is idempotent on the digest, so a rebuild that
+changes nothing adds nothing.
+
+`make verify`: 22 current sources, 0 failures.
+
+> **Why CI caught this and the local suite did not.** Registry integrity is not a
+> unit test — it compares committed files against recorded hashes, so it can only
+> fail on a tree where both exist together. That is exactly what a first push
+> produces, and it is the argument for CI running the same four commands the
+> Makefile does rather than the tests alone.
+
+---
+
 ## Known omissions, declared
 
 - **Turn restrictions** (`type=restriction` relations) are not modelled. Junction

@@ -120,4 +120,37 @@ cp "data/interim/${PROFILE}_area.parquet" \
    "$REPO/data/interim/${PROFILE}_area.parquet"
 echo "==> refreshed $REPO/data/interim/${PROFILE}_area.parquet"
 
+# Register it WHERE IT LANDED. The registry lives in the repo; this tree holds a
+# COPY that was seeded at startup and is discarded at the end, so a study area
+# registered in here was registered into a file nobody keeps -- while the
+# artefact itself was copied back. The repo was then holding a boundary newer
+# than its own registration, and `make verify` failed on a hash that had
+# legitimately moved (F-37). Registration is idempotent on the digest, so a
+# rebuild that changes nothing adds nothing.
+(
+  cd "$REPO"
+  PYTHONPATH=src "$PY" - "$PROFILE" <<'REGEOF'
+import json
+import sys
+from pathlib import Path
+
+from ers.io.registry import DatasetRegistry
+
+profile = sys.argv[1]
+area = Path(f"data/interim/{profile}_area.parquet")
+report = Path(f"data/interim/{profile}_area_report.json")
+notes = {"profile": profile}
+if report.exists():
+    try:
+        r = json.loads(report.read_text())
+        notes["km2"] = r.get("study_area_km2")
+    except (OSError, json.JSONDecodeError):
+        pass
+v = DatasetRegistry().register(source="metro_study_area",
+                               uri="derived://ers.geo.urban",
+                               local_path=area, licence="derived", notes=notes)
+print(f"==> registered {area} as {v.version_label}")
+REGEOF
+)
+
 echo "==> done: $PROFILE"
