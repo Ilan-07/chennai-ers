@@ -34,7 +34,9 @@ Use **GHS-POP R2023A, 100 m, epoch 2020** (EC JRC), Mollweide tile `R8_C26`.
 - The building-mask step is dropped as redundant. ASSUMPTIONS.md updated.
 - WorldPop is retained as a **sensitivity comparator** (experiment E-06) if it
   can be obtained out-of-band; it is not on the critical path.
-- Pycnophylactic reconciliation is unchanged in design but currently runs against
-  a **placeholder** target (city total distributed proportionally), which is why
-  every ward scale factor is identical at 1.0554. Real Census 2011 ward totals
-  are still required — tracked as build step 08b.
+- Pycnophylactic reconciliation is unchanged in design but ran against a
+  **placeholder** target (city total distributed proportionally), which is why
+  every ward scale factor was identical at 1.0554. **Closed 2026-09-12 by
+  [ADR-007](007-census-ward-reconciliation.md)**: build step 08b re-cuts the
+  Census 2011 ward totals from the 155 pre-expansion wards onto the 200 mapped
+  ones, and ward scale factors now run 0.38–3.43.

@@ -94,13 +94,30 @@ def test_survey_worklist_covers_every_provisional_station():
 
 
 def test_committed_artifacts_are_consistent():
-    """The checked-in resolution must still describe 33 stations with coords."""
+    """The resolution holds every station both sources name, each with coordinates.
+
+    This asserted `== 33` until ADR-001a, which is a count rather than a property
+    and had to be edited the moment the inventory legitimately grew. The invariant
+    is the union: the GCC page's stations plus the TNFRS supplement's, none
+    dropped, none positionless.
+    """
     rows = list(csv.DictReader(Path("data/interim/stations_resolved.csv").open()))
-    assert len(rows) == 33
+    names = {r["station_name"] for r in rows}
+
+    auth = {r["station_name"] for r in
+            csv.DictReader(Path("data/reference/tnfrs_stations_gcc.csv").open())}
+    supp_path = Path("data/reference/tnfrs_gcc_supplementary.csv")
+    supp = ({r["station_name"] for r in csv.DictReader(supp_path.open())}
+            if supp_path.exists() else set())
+
+    assert auth <= names, f"GCC stations missing from the resolution: {sorted(auth - names)}"
+    assert supp <= names, f"TNFRS stations missing from the resolution: {sorted(supp - names)}"
+    assert len(rows) == len(auth | supp)
     assert all(r["lat"] and r["lon"] for r in rows)
+
     qa = json.loads(Path("data/interim/stations_qa.json").read_text())
-    assert qa["total"] == 33
-    assert qa["passes_publish_gate"] is False   # 29 still provisional
+    assert qa["total"] == len(rows)
+    assert qa["passes_publish_gate"] is False   # positions are listings, not surveys
     assert qa["runnable"] is True               # but the pipeline can run
 
 

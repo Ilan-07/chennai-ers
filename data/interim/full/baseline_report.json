@@ -1,0 +1,200 @@
+{
+  "PROVISIONAL": true,
+  "cells": 12895,
+  "code_commit": "unknown",
+  "config_hash": "051c92ae697ea9970bcfd2bedf7f6f9718abf8c92bb693ab4644415031d1057f",
+  "connectivity": {
+    "largest_strong_nodes": 125098,
+    "largest_strong_share": 0.99983,
+    "largest_weak_nodes": 125119,
+    "largest_weak_share": 1.0,
+    "nodes": 125119,
+    "nodes_outside_largest_scc": 21,
+    "scc_singletons": 14,
+    "strong_components": 17,
+    "weak_components": 1
+  },
+  "demand_total": 11282566,
+  "emri_comparison_dry_context_only": {
+    "is_gate": false,
+    "modelled_response_s": 449.0,
+    "published_max_s": 450,
+    "published_min_s": 426,
+    "source": "108 / EMRI published Chennai metro mean response",
+    "why_not": "EMRI publish an operational mean across real dispatches; the dry scenario is free-flow. The like-for-like test is the A-10 weighted response, gated in degradation_report.json.",
+    "within_published_range": true
+  },
+  "headline_caveat": "Station position uncertainty is NOT quantified for this run; the coverage shares below are point estimates with an unknown error bar.",
+  "input_digests": [],
+  "position_uncertainty_measured": false,
+  "provisional_reason": "station inventory not built",
+  "publication_basis": "blocked",
+  "results": {
+    "ems": {
+      "bases": {
+        "bases": 45,
+        "by_service": {
+          "fire": 45
+        },
+        "note": "No EMS base inventory exists. Coverage is modelled from the 45 authoritative fire stations, using EMS turnout offsets, speed multipliers and response standard. The 108 ambulance standby points are not published and are absent from OSM.",
+        "proxy": "fire_stations",
+        "resolves_when": "EMRI supplies the 108 standby-point list",
+        "source": "none"
+      },
+      "cell_snap_max_m": 1691.6,
+      "cells_snap_over_300m": 2611,
+      "coverage_share": 0.5592,
+      "graded": {
+        "bands": [
+          {
+            "population": 6309537,
+            "population_share": 0.5592,
+            "t_s": 300.0,
+            "u": 1.0
+          },
+          {
+            "population": 2204232,
+            "population_share": 0.1954,
+            "t_s": 420.0,
+            "u": 0.7
+          },
+          {
+            "population": 1669047,
+            "population_share": 0.1479,
+            "t_s": 600.0,
+            "u": 0.3
+          }
+        ],
+        "definition": "sum(pop * u(band)) / sum(pop); a cell is credited at the utility of the first band it falls inside",
+        "graded_share": 0.7404,
+        "population_beyond_last_band": 1099751
+      },
+      "max_travel_s": 2622.4,
+      "mean_travel_s": 329.0,
+      "p50_travel_s": 275.8,
+      "p90_travel_s": 596.2,
+      "population_covered": 6309537,
+      "population_outside": 4973030,
+      "standard": "SFAC-7",
+      "station_snap_max_m": 922.0,
+      "t_alarm_s": 60,
+      "t_target_s": 420,
+      "t_turnout_s": 60,
+      "threshold_ladder": {
+        "NFPA-travel-4min": {
+          "coverage_share": 0.3987,
+          "travel_budget_s": 240
+        },
+        "SFAC-5": {
+          "coverage_share": 0.2201,
+          "travel_budget_s": 180
+        },
+        "SFAC-7": {
+          "coverage_share": 0.5592,
+          "travel_budget_s": 300
+        },
+        "deck-8min": {
+          "coverage_share": 0.6749,
+          "travel_budget_s": 360
+        }
+      },
+      "travel_budget_s": 300.0,
+      "unreachable_cells": 0,
+      "unreachable_population": 0,
+      "unreachable_share": 0.0
+    },
+    "fire": {
+      "bases": {
+        "bases": 45,
+        "by_service": {
+          "fire": 45
+        },
+        "proxy": null,
+        "source": "authoritative"
+      },
+      "cell_snap_max_m": 1691.6,
+      "cells_snap_over_300m": 2611,
+      "coverage_share": 0.4101,
+      "graded": {
+        "bands": [
+          {
+            "population": 4095925,
+            "population_share": 0.313,
+            "t_s": 240.0,
+            "u": 1.0
+          },
+          {
+            "population": 4739567,
+            "population_share": 0.3621,
+            "t_s": 420.0,
+            "u": 0.7
+          },
+          {
+            "population": 2267673,
+            "population_share": 0.1733,
+            "t_s": 600.0,
+            "u": 0.3
+          }
+        ],
+        "definition": "sum(pop * u(band)) / sum(pop); a cell is credited at the utility of the first band it falls inside",
+        "graded_share": 0.6184,
+        "population_beyond_last_band": 1984519
+      },
+      "max_travel_s": 2929.0,
+      "mean_travel_s": 379.5,
+      "p50_travel_s": 315.1,
+      "p90_travel_s": 693.4,
+      "population_covered": 5367300,
+      "population_outside": 7720384,
+      "standard": "SFAC-7",
+      "station_snap_max_m": 922.0,
+      "t_alarm_s": 60,
+      "t_target_s": 420,
+      "t_turnout_s": 80,
+      "threshold_ladder": {
+        "NFPA-travel-4min": {
+          "coverage_share": 0.313,
+          "travel_budget_s": 240
+        },
+        "SFAC-5": {
+          "coverage_share": 0.1231,
+          "travel_budget_s": 160
+        },
+        "SFAC-7": {
+          "coverage_share": 0.4101,
+          "travel_budget_s": 280
+        },
+        "deck-8min": {
+          "coverage_share": 0.546,
+          "travel_budget_s": 340
+        }
+      },
+      "travel_budget_s": 280.0,
+      "unreachable_cells": 0,
+      "unreachable_population": 0,
+      "unreachable_share": 0.0
+    }
+  },
+  "run_id": "08dbc26d9ddb0903",
+  "seconds": 5.0,
+  "seed": null,
+  "stale_intervals_ignored": {
+    "ems": "5f75290306df8dd3",
+    "fire": "5f75290306df8dd3"
+  },
+  "station_gate": {
+    "by_confidence": {
+      "google_maps_poi": 36,
+      "osm": 4,
+      "osm_feature": 1,
+      "osm_fire_feature": 1,
+      "town_centroid": 3
+    },
+    "passes_publish_gate": false,
+    "runnable": true,
+    "total": 45,
+    "unresolved": [],
+    "with_coordinates": 45
+  },
+  "stations_signature": "c2e0a187d9bb4826"
+}

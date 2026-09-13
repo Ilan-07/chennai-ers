@@ -1,0 +1,51 @@
+{
+  "by_position_source": {
+    "osm_feature": 2,
+    "resolved": 33,
+    "town_centroid": 17
+  },
+  "directory_entries": 101,
+  "inside_metro_plus_buffer": 52,
+  "inside_study_area": 52,
+  "keep_buffer_m": 3000.0,
+  "matched_to_a_resolved_station_by_position": [],
+  "not_found_by_geocoder": [
+    "Washermempet FS",
+    "Sectariate FS",
+    "Madhavaram FS",
+    "Thiruvallur FS",
+    "Thirur FS",
+    "Odugathur FS",
+    "Uthiramerur FS",
+    "Mathuranthagam FS",
+    "Cheyyur FS",
+    "Mahindra World City FS",
+    "Jawadhumalai FS",
+    "Peranamallur FS",
+    "Thandarampet FS",
+    "Annamalaiyar Temple FS",
+    "Nattrampalli FS"
+  ],
+  "note": "Extending the study area past the GCC means placing stations on geocoder output for the first time since E-11c discredited it. Positions sourced 'geocoder' carry the 900 m displacement that experiment measured.",
+  "osm_snap_m": 1500.0,
+  "passes_publish_gate": false,
+  "rejected_ambiguous_name": [
+    {
+      "reason": "north-western station geocoded inside the GCC boundary; the name is shared with a Chennai locality",
+      "rejected_at": [
+        13.13076,
+        80.15328
+      ],
+      "station": "Oragadam FS"
+    }
+  ],
+  "seconds": 78.5,
+  "survey_debt": 52,
+  "surveyed": 0,
+  "uncertainty_m_by_source": {
+    "osm_feature": 150.0,
+    "resolved": null,
+    "town_centroid": 2000.0
+  },
+  "unique_stations": 86
+}

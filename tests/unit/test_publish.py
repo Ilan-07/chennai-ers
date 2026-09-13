@@ -8,6 +8,7 @@ could mistake for evidence.
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import pytest
 import yaml
@@ -133,3 +134,28 @@ def test_the_shipped_waiver_states_everything_the_gate_requires():
     assert u.get("if_unconfirmed_listings_wrong_points")
     assert (u["if_unconfirmed_listings_wrong_points"]
             > u["if_unconfirmed_listings_correct_points"])
+
+
+def test_the_waiver_interval_is_the_one_that_was_measured():
+    """A transcribed constant goes stale silently; this catches it.
+
+    Both ends of the published interval come from E-11 runs on disk. The waiver
+    is a YAML file a human edits, so nothing stops it drifting away from the
+    measurement it claims to report — which it did once already, by a quarter of
+    a point, and survived a full rebuild.
+    """
+    w = load_waiver(".")
+    if w is None:
+        pytest.skip("no active waiver in this checkout")
+    pairs = [("if_unconfirmed_listings_correct_points",
+              "data/interim/sensitivity_stations_ems.json"),
+             ("if_unconfirmed_listings_wrong_points",
+              "data/interim/sensitivity_mixed_ems.json")]
+    for key, path in pairs:
+        p = Path(path)
+        if not p.exists():
+            pytest.skip(f"{path} not built")
+        measured = json.loads(p.read_text())["noise_floor_points"]
+        assert w["uncertainty"][key] == pytest.approx(measured, abs=0.005), (
+            f"waiver says {w['uncertainty'][key]} for {key}; {path} measured "
+            f"{measured}")

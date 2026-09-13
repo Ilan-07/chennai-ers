@@ -1,0 +1,42 @@
+{
+  "arms": [
+    {
+      "alpha": 0.0,
+      "ems": 0.6681,
+      "ems_arterial_multiplier": 1.0,
+      "fire": 0.592
+    },
+    {
+      "alpha": 0.5,
+      "ems": 0.6927,
+      "ems_arterial_multiplier": 1.1,
+      "fire": 0.571
+    },
+    {
+      "alpha": 1.0,
+      "ems": 0.7177,
+      "ems_arterial_multiplier": 1.2,
+      "fire": 0.5443
+    },
+    {
+      "alpha": 1.5,
+      "ems": 0.7458,
+      "ems_arterial_multiplier": 1.25,
+      "fire": 0.5238
+    }
+  ],
+  "assumption": "A-03",
+  "code_commit": "099ca6bdbb2f7d352792f19b4582a562491ea684-dirty",
+  "config_hash": "5f977eb68fac2ef082aab92476e53185bac79d0979c8598bf5cda868c6c72b0f",
+  "ems_span_points": 7.77,
+  "experiment": "E-10 / A-03 emergency speed multiplier",
+  "fire_span_points": 6.82,
+  "input_digests": [],
+  "parameterisation": "m' = min(1.25, 1 + alpha * (m - 1)); alpha=1 is shipped",
+  "rsch_ceiling": 1.25,
+  "run_id": "1c833926b5b091f8",
+  "seconds": 139.8,
+  "seed": null,
+  "stations_signature": "f98b313a5600a358",
+  "verdict_vs_noise_floor": "BELOW the pessimistic noise floor (8.6 pts) -- above the optimistic one (1.1 pts)"
+}

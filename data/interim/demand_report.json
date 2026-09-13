@@ -10,14 +10,33 @@
   },
   "cells": 3838,
   "cells_with_zero_population": 180,
+  "census_recut": {
+    "cells_fully_inside_2008": 1417,
+    "cells_outside_2008": 2234,
+    "cells_partly_inside_2008": 187,
+    "census_population": 4621135.0,
+    "city_total": 6748026.0,
+    "method": "dasymetric re-cut of Census 2011 ward totals onto 2022 wards",
+    "residual_population": 2126891.0,
+    "residual_share_of_city": 0.3152,
+    "ward_target_over_model_max": 3.2523,
+    "ward_target_over_model_median": 0.8664,
+    "ward_target_over_model_min": 0.3608,
+    "wards_2008_counted": 155,
+    "wards_2008_mapped": 155,
+    "wards_2008_without_modelled_population": [],
+    "wards_2022_targeted": 200,
+    "wards_moved_over_10pct": 186
+  },
+  "growth_factor": 1.13,
   "join": {
     "cells_without_ward": 0
   },
   "population_total": 7625269.4,
   "reconciliation": {
-    "scale_factor_max": 1.0554,
-    "scale_factor_median": 1.0554,
-    "scale_factor_min": 1.0554,
+    "scale_factor_max": 3.4326,
+    "scale_factor_median": 0.9144,
+    "scale_factor_min": 0.3808,
     "target_total": 7625269.4,
     "total_after": 7625269.4,
     "total_before": 7224730.8,
@@ -25,9 +44,9 @@
     "wards_reconciled": 200,
     "wards_with_no_modelled_population": []
   },
-  "reconciliation_status": "PLACEHOLDER city-total scaling; needs Census 2011 ward totals",
+  "reconciliation_status": "Census 2011 ward totals, re-cut from the 155 pre-expansion wards (4,621,135 residents) onto the 200 mapped wards; the 32% of the city inside the 2011 expansion area has no ward-level census and takes the residual model-proportionally (ADR-007)",
   "resolution": 9,
-  "seconds": 1.1,
+  "seconds": 8.2,
   "service_surfaces": {
     "ems": {
       "assumption": "A-06",
@@ -39,6 +58,7 @@
     },
     "fire": {
       "assumption": "A-07",
+      "landuse_scale": 1.0,
       "parcels": {
         "by_class": {
           "commercial": 865,
@@ -52,19 +72,46 @@
       "surface": "landuse_weighted",
       "tested_by": "E-06",
       "weighting": {
-        "cell_multiplier_max": 3.6668,
+        "cell_multiplier_bounds": [
+          1.0,
+          5.0
+        ],
+        "cell_multiplier_max": 3.0681,
         "cell_multiplier_median": 1.0,
         "cell_multiplier_min": 1.0,
-        "cells_above_residential": 1455,
+        "cells_above_residential": 1452,
         "multipliers": {
           "commercial": 1.8,
           "hazardous": 5.0,
           "industrial": 3.0,
           "residential": 1.0
         },
+        "overlap_resolution": {
+          "area_m2_after": 144600414.6,
+          "area_m2_before": 145917023.2,
+          "claimed_from_lower_m2": {
+            "commercial": 104534.3,
+            "hazardous": 0.0,
+            "industrial": 114184.0,
+            "residential": 182563.7
+          },
+          "classes_not_in_priority": [],
+          "priority": [
+            "hazardous",
+            "industrial",
+            "commercial",
+            "residential"
+          ],
+          "within_class_overlap_m2": {
+            "commercial": 619005.0,
+            "hazardous": 0.0,
+            "industrial": 148240.2,
+            "residential": 148081.4
+          }
+        },
         "raw_total": 7625269.4,
         "unmapped_area_charged_at": 1.0,
-        "weighted_total": 9046981.3
+        "weighted_total": 8935948.1
       }
     }
   }

@@ -194,3 +194,78 @@ def test_sensitivity_sampling_filter_is_not_the_binding_constraint(svc):
         pytest.skip("run predates the rejection-rate field")
     assert sn["rejection_rate_per_station_draw"] < 0.5, \
         "the filter is rejecting more than half of all station draws"
+
+
+@pytest.mark.parametrize("svc", ["ems", "fire"])
+def test_a_curve_point_that_spends_stations_names_them(svc):
+    """The baseline test above cannot catch this one.
+
+    When the lexicographic re-solve came back infeasible, `objective` was 0.0 and
+    `selected` was empty, so `(baseline_covered + 0) / total` scored EXACTLY the
+    do-nothing baseline — not below it. Fire k=20 shipped a 22.92-point equity
+    cost measured against a siting the solver never found.
+    """
+    p = Path(f"data/interim/equity_curve_{svc}.json")
+    if not p.exists():
+        pytest.skip("equity curve not built")
+    for row in json.loads(p.read_text())["curve"]:
+        if row["k"] > 0:
+            assert row["sites"], (
+                f"k={row['k']} spends {row['k']} stations and names none; its "
+                f"equity coverage {row['maximin_city_coverage']} is the "
+                f"do-nothing baseline wearing a solution's label")
+
+
+@pytest.mark.parametrize("svc", ["ems", "fire"])
+def test_a_curve_point_says_where_its_equity_figure_came_from(svc):
+    """Three provenances, and they are not interchangeable."""
+    p = Path(f"data/interim/equity_curve_{svc}.json")
+    if not p.exists():
+        pytest.skip("equity curve not built")
+    rows = json.loads(p.read_text())["curve"]
+    if "equity_coverage_from" not in rows[0]:
+        pytest.skip("curve predates the provenance field; re-run equity_curve.py")
+    for row in rows:
+        assert row["equity_coverage_from"], f"k={row['k']} does not say"
+        if row.get("lexicographic_failed"):
+            assert "maximin siting" in row["equity_coverage_from"]
+
+
+def test_a_profile_study_area_matches_the_size_its_config_declares():
+    """F-33: the metro grew 73 km2 per rebuild by reading its own output.
+
+    `build_metro_units.py` overwrites wards.parquet with the profile's 287
+    reporting units, and `build_metro_area.py` was reading that file as the
+    AUTHORITY boundary to union the urban centre with. Built once from a clean
+    tree it gave the right answer; rebuilt, it annexed whatever the last run
+    reached. Nothing failed — the config just drifted from the pipeline.
+    """
+    import geopandas as gpd
+    import yaml
+
+    for profile, cfg_name in (("metro", "chennai_metro.yml"),
+                              ("full", "chennai_full.yml")):
+        cfg_path = Path("config/city") / cfg_name
+        area_path = Path(f"data/interim/{profile}/{profile}_area.parquet")
+        if not (cfg_path.exists() and area_path.exists()):
+            continue
+        declared = float(yaml.safe_load(cfg_path.read_text())["area_km2"])
+        built = gpd.read_parquet(area_path).to_crs("EPSG:32644").union_all().area / 1e6
+        assert built == pytest.approx(declared, rel=0.02), (
+            f"{profile}: config declares {declared:,.0f} km2, the built area is "
+            f"{built:,.0f} km2. If the built area is LARGER, check that "
+            f"build_metro_area.py read the authority boundary and not the "
+            f"profile's own units (F-33).")
+
+
+def test_the_authority_snapshot_is_not_a_profile_unit_file():
+    """The snapshot is what makes the profile build idempotent."""
+    import geopandas as gpd
+
+    snap = Path("data/interim/gcc_wards.parquet")
+    if not snap.exists():
+        pytest.skip("no profile tree has been built in this checkout")
+    g = gpd.read_parquet(snap)
+    assert "unit_kind" not in g.columns, (
+        "gcc_wards.parquet holds profile units; the authority boundary it is "
+        "meant to preserve has been lost")

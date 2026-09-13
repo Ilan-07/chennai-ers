@@ -1,0 +1,83 @@
+{
+  "PROVISIONAL": true,
+  "coverage": {
+    "bias_vs_point_estimate_points": 0.15,
+    "max": 0.4448,
+    "mean": 0.4303,
+    "min": 0.4162,
+    "p5": 0.4237,
+    "p5_p95_spread_points": 1.34,
+    "p95": 0.4371,
+    "sd": 0.0043
+  },
+  "decision": {
+    "distinct_sites_ever_selected": 18,
+    "draws_reproducing_the_point_estimate_set": 137,
+    "mean_jaccard_vs_point_estimate": 0.887,
+    "point_estimate_sites": [
+      20,
+      38,
+      84,
+      265,
+      326,
+      432,
+      458,
+      652,
+      756,
+      1057
+    ],
+    "site_selection_frequency": {
+      "1057": 1.0,
+      "1061": 0.083,
+      "194": 0.043,
+      "20": 0.557,
+      "255": 0.003,
+      "265": 0.997,
+      "296": 0.003,
+      "299": 0.003,
+      "326": 1.0,
+      "38": 1.0,
+      "428": 0.003,
+      "432": 1.0,
+      "458": 0.997,
+      "477": 0.053,
+      "6": 0.443,
+      "652": 1.0,
+      "756": 0.813,
+      "84": 1.0
+    },
+    "sites_selected_in_95pct_of_draws": [
+      38,
+      84,
+      265,
+      326,
+      432,
+      458,
+      652,
+      1057
+    ]
+  },
+  "draws": 300,
+  "effects_vs_noise": {},
+  "error_model": "gmaps",
+  "experiment": "E-11",
+  "k": 10,
+  "max_snap_m": 1000.0,
+  "noise_floor_points": 1.34,
+  "point_estimate_coverage": 0.4288,
+  "provisional_reason": "station inventory not built",
+  "publication_basis": "blocked",
+  "rejected_station_draws": 0,
+  "rejection_rate_per_station_draw": 0.0,
+  "seconds": 131.0,
+  "seed": 20260904,
+  "service": "fire",
+  "stations_signature": "e7afde47c072b369",
+  "uncertainty_m": {
+    "150.0": 1,
+    "2000.0": 2,
+    "300.0": 1,
+    "50.0": 34,
+    "60.0": 5
+  }
+}

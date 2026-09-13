@@ -1,10 +1,10 @@
 """Prioritise the station survey by leverage. Follows E-11.
 
-E-11 showed station position uncertainty (900 m on 29 of 33) puts a +/-6.7 point
+E-11 showed station position uncertainty (900 m on 34 of 39) puts a +/-8.6 point
 noise floor under every coverage figure and makes the recommended site list
 irreproducible. The survey is therefore the binding constraint on the project.
 
-But 29 site visits are not equally worth making. This ranks them, and prices the
+But 34 site visits are not equally worth making. This ranks them, and prices the
 answer to the question a project manager actually asks: "if I can only send
 someone to ten of these, which ten, and what does it buy me?"
 
@@ -93,9 +93,10 @@ def shares(xy: np.ndarray, svc: str) -> float:
 # ------------------------------------------------- the incremental-min cache
 #
 # `scipy.csgraph.dijkstra` runs ONE SWEEP PER SOURCE, so `shares()` above costs
-# 33 Dijkstras -- even when 32 of the 33 stations have not moved. Repeated over
-# 29 stations x 60 draws and then 6 survey levels x 200 draws, that is what made
-# this script a 9.1 hour job (32,654 s recorded in survey_priority.json).
+# one Dijkstra per station -- even when only one of them has moved. Repeated
+# over every unsurveyed station x 60 draws and then 6 survey levels x 200 draws,
+# that is what made this script a 9.1 hour job on the 33-station inventory
+# (32,654 s recorded in survey_priority.json).
 #
 # Every draw here perturbs a SUBSET. The complement is fixed at XY0 for the
 # whole run, so its best-time field can be computed once and reused, and a draw

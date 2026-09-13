@@ -26,3 +26,8 @@ data/interim/console.html
 # Experiment scratch: intermediate degradation reports written per sweep arm.
 # The ARM RESULTS (depth.json, wading.json, ...) are kept; these are not.
 data/interim/experiments/_degr_*.json
+
+# React console (build step 19). Both are reproducible from ui/src:
+#   make ui   ->  npm ci && vite build
+ui/node_modules/
+ui/dist/

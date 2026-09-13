@@ -1,0 +1,66 @@
+{
+  "a06_still_blocked": "the EMS half of E-06 needs ward-level age tables; C-13/C-14 are published at town level only",
+  "arms": [
+    {
+      "ems_control": 0.7177,
+      "fire": 0.5578,
+      "landuse_scale": 0.0,
+      "multipliers": {
+        "commercial": 1.0,
+        "hazardous": 1.0,
+        "industrial": 1.0,
+        "residential": 1.0
+      },
+      "weighted_total": 7627461.9
+    },
+    {
+      "ems_control": 0.7177,
+      "fire": 0.5505,
+      "landuse_scale": 0.5,
+      "multipliers": {
+        "commercial": 1.4,
+        "hazardous": 3.0,
+        "industrial": 2.0,
+        "residential": 1.0
+      },
+      "weighted_total": 8286703.8
+    },
+    {
+      "ems_control": 0.7177,
+      "fire": 0.5443,
+      "landuse_scale": 1.0,
+      "multipliers": {
+        "commercial": 1.8,
+        "hazardous": 5.0,
+        "industrial": 3.0,
+        "residential": 1.0
+      },
+      "weighted_total": 8945945.7
+    },
+    {
+      "ems_control": 0.7177,
+      "fire": 0.5343,
+      "landuse_scale": 2.0,
+      "multipliers": {
+        "commercial": 2.6,
+        "hazardous": 9.0,
+        "industrial": 5.0,
+        "residential": 1.0
+      },
+      "weighted_total": 10264429.6
+    }
+  ],
+  "assumption": "A-07",
+  "code_commit": "099ca6bdbb2f7d352792f19b4582a562491ea684-dirty",
+  "config_hash": "5f977eb68fac2ef082aab92476e53185bac79d0979c8598bf5cda868c6c72b0f",
+  "control_ems_inert": true,
+  "experiment": "E-06 / A-07 fire land-use risk multipliers",
+  "fire_span_points": 2.35,
+  "input_digests": [],
+  "parameterisation": "m' = 1 + scale * (m - 1); scale=1 is shipped, 0 is headcount",
+  "run_id": "1c833926b5b091f8",
+  "seconds": 20.6,
+  "seed": null,
+  "stations_signature": "f98b313a5600a358",
+  "verdict_vs_noise_floor": "BELOW the pessimistic noise floor (8.6 pts) -- above the optimistic one (1.2 pts)"
+}

@@ -37,10 +37,16 @@ import yaml  # noqa: E402
 
 from ers.hashing import run_id  # noqa: E402
 from ers.io.registry import DatasetRegistry  # noqa: E402
-from ers.io.stations import adopt_gmaps_lookup, qa_report, resolve  # noqa: E402
+from ers.io.stations import (ResolvedStation, adopt_gmaps_lookup,  # noqa: E402
+                             qa_report, resolve)
 from ers.provenance import stamp  # noqa: E402
 
 AUTH = "data/reference/tnfrs_stations_gcc.csv"
+# ADR-001a: TNFRS operates the stations, the corporation publishes a page about
+# them, and the page is missing six that exist. The operator's own regional
+# directory is the authority on EXISTENCE; E-11 remains the authority on
+# POSITION, so each of the six arrives with the evidence that placed it.
+SUPP = "data/reference/tnfrs_gcc_supplementary.csv"
 OSM = "data/raw/osm_stations_overpass.json"
 LOOKUP = "data/interim/stations_gmaps_lookup.csv"
 OUT = "data/interim/stations_resolved.csv"
@@ -69,6 +75,24 @@ with open(LOOKUP, newline="") as fh:
     lookup = list(csv.DictReader(fh))
 rows, adoption = adopt_gmaps_lookup(rows, lookup)
 
+supp_added = []
+with open(SUPP, newline="") as fh:
+    known = {r.station_name.lower() for r in rows}
+    for row in csv.DictReader(fh):
+        if row["station_name"].lower() in known:
+            continue
+        rows.append(ResolvedStation(
+            station_name=row["station_name"], division=row["division"], service="fire",
+            lat=float(row["lat"]), lon=float(row["lon"]),
+            geocode_confidence=row["evidence"],
+            match_source=row["source"], match_detail=row["note"],
+            # 60 m for an OSM fire feature (the E-11e residual), 50 m for a single
+            # unambiguous map listing (the E-11c adoption). Neither is a survey.
+            uncertainty_m=60 if row["evidence"] == "osm_fire_feature" else 50,
+            survey_required=True, osm_class=None, osm_type=None,
+            plausibility="ok", identity_confirmed_by=None))
+        supp_added.append(row["station_name"])
+
 unresolved = [r.station_name for r in rows if r.lat is None]
 if unresolved:
     raise SystemExit(f"UNRESOLVED after adoption: {unresolved}")
@@ -76,7 +100,10 @@ if unresolved:
 gate = qa_report(rows)
 fields = list(asdict(rows[0]))
 
-print(f"stations       : {len(rows)}")
+print(f"stations       : {len(rows)}  (GCC page {len(rows) - len(supp_added)} "
+      f"+ TNFRS-only {len(supp_added)})")
+if supp_added:
+    print(f"TNFRS-only     : {', '.join(supp_added)}")
 print(f"adopted (gmaps): {adoption['adopted']}")
 print(f"kept (osm)     : {len(adoption['kept_osm_positions'])}")
 print(f"identity conf. : {len(adoption['identity_confirmed'])} of 29 (A-15 records 14)")

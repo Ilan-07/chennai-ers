@@ -12,7 +12,12 @@ the 2026-09 repair, one arm of one experiment had actually been run:
     "class speeds varied +/-20% shift coverage by roughly +/-4 points -- the top
     three sites do not change."
   * E-06 -- the demand weights A-06 and A-07 -- could not have been run: the
-    surfaces were not implemented and the land-use data was not fetched.
+    surfaces were not implemented and the land-use data was not fetched. A-07 is
+    now applied and swept here; A-06 stays blocked on ward-level age tables,
+    which the census publishes at town level only.
+
+Three arms were added in 2026-09 to close the register: `candidates` (E-09/A-12),
+`emergency` (E-10/A-03) and `landuse` (E-06/A-07).
 
     python scripts/experiments.py all
     python scripts/experiments.py weights speeds depth wading growth
@@ -309,8 +314,222 @@ def exp_growth() -> dict:
             "seconds": round(time.time() - t0, 1)}
 
 
+# ------------------------------------------------------------------- E-09
+# A-12: the 800 m minimum separation between candidate sites.
+
+def exp_candidates() -> dict:
+    """Resample the candidate lattice at four separations and re-solve.
+
+    A-12 decides how finely the city is sampled for places a station could go.
+    Too coarse and the optimiser cannot express a good site; too fine and the
+    MCLP grows without adding anything a planner could act on, because two
+    candidates 200 m apart are the same decision.
+
+    The site lists are NOT comparable by index -- each separation renumbers the
+    candidates -- so stability is measured geographically: how many of the ten
+    sites chosen at 800 m have a counterpart within 800 m in the other arm.
+    """
+    t0 = time.time()
+    import geopandas as gpd
+    from scipy import sparse
+    from scipy.spatial import cKDTree
+
+    from ers.geo.candidates import build_candidates, load_osm_parcels
+    from ers.geo.graph import read_graph_tables
+    from ers.model.problem import SitingProblem
+    from ers.optimise import exact
+    from ers.pipeline import load_service
+    from ers.routing.csr import snap, to_seconds, travel_times
+
+    cfg = yaml.safe_load(open("config/city/chennai.yml"))
+    metric = cfg["crs"]["metric"]
+    nodes, edges = read_graph_tables("data/interim/graph")
+    parcels, _ = load_osm_parcels("data/raw/osm_parcels_overpass.json", metric)
+
+    ctxs = {svc: load_service(svc) for svc in ("ems", "fire")}
+    rows, chosen_xy = [], {}
+
+    for sep in (400.0, 600.0, 800.0, 1200.0):
+        cs = build_candidates(nodes, edges, parcels, metric, min_separation_m=sep)
+        cand = cs.frame
+        for svc, ctx in ctxs.items():
+            c = cand.to_crs(ctx.metric_crs)
+            j_idx, _ = snap(ctx.graph, c.geometry.x.to_numpy(), c.geometry.y.to_numpy())
+            feas = c["land_feasible"].to_numpy().astype(bool)
+
+            d_c = travel_times(ctx.graph, j_idx, ctx.cell_idx, cutoff_ds=ctx.budget_s * 10 * 3)
+            cand_s = to_seconds(d_c) + (ctx.cell_snap_m / 1.2)[None, :] + ctx.overhead_s
+            M = sparse.csr_matrix((cand_s <= ctx.budget_s).T)
+
+            prob = SitingProblem(coverage=M, precovered=ctx.precovered, demand=ctx.demand,
+                                 k=10, ward_of=ctx.ward, land_feasible=feas)
+            ex = exact.solve(prob, time_limit_s=300)
+            share = (ex.baseline_covered + ex.objective) / ctx.total_demand
+            sel = list(ex.selected)
+            chosen_xy[(sep, svc)] = np.column_stack(
+                [c.geometry.x.to_numpy()[sel], c.geometry.y.to_numpy()[sel]])
+
+            rows.append({
+                "min_separation_m": sep, "service": svc,
+                "candidates": int(len(cand)),
+                "candidates_land_feasible": int(feas.sum()),
+                "coverage_share_k10": round(float(share), 4),
+                "proven_optimal": bool(ex.proven_optimal),
+                "proven_gap": ex.gap,
+            })
+            print(f"  sep {sep:6.0f} m  {svc:4s}  {len(cand):5,} candidates "
+                  f"({int(feas.sum()):,} feasible)  k=10 coverage {share:.2%}"
+                  f"{'' if ex.proven_optimal else '  <- ' + ex.optimality_note}", flush=True)
+
+    # Geographic stability against the shipped 800 m lattice.
+    for r in rows:
+        ref = chosen_xy[(800.0, r["service"])]
+        got = chosen_xy[(r["min_separation_m"], r["service"])]
+        d, _ = cKDTree(ref).query(got, k=1)
+        r["sites_within_800m_of_shipped"] = int((d <= 800.0).sum())
+
+    spans = {}
+    for svc in ("ems", "fire"):
+        sel = [r for r in rows if r["service"] == svc]
+        spans[svc] = round(100 * (max(r["coverage_share_k10"] for r in sel)
+                                  - min(r["coverage_share_k10"] for r in sel)), 2)
+    span = spans["ems"]
+    print(f"\n  EMS k=10 coverage spans {span:.2f} points across the lattice sweep")
+    print(f"  {verdict(span)}")
+
+    return {"experiment": "E-09 / A-12 candidate minimum separation",
+            "assumption": "A-12", "shipped_min_separation_m": 800.0,
+            "arms": rows, "coverage_span_points": spans,
+            "ems_span_points": span,
+            "stability_note": ("sites_within_800m_of_shipped counts how many of the "
+                               "ten sites an arm chooses have a counterpart within "
+                               "800 m in the shipped lattice; candidate indices are "
+                               "not comparable across arms"),
+            "verdict_vs_noise_floor": verdict(span),
+            "seconds": round(time.time() - t0, 1)}
+
+
+# ------------------------------------------------------------------- E-10
+# A-03: the emergency speed multiplier, inside the RSCH envelope.
+
+def exp_emergency() -> dict:
+    """Rescale the emergency multiplier and rebuild the travel-time model.
+
+    A-03 is bounded by the lights-and-siren literature (<= 1.25 on arterials,
+    ~1.0 residential) and was set by step 07 calibration, never swept. The arm
+    scales each class multiplier's DEVIATION from 1.0, which handles both
+    services with one parameter: EMS multipliers are gains above 1.0, fire's are
+    penalties below it for a heavy appliance on a narrow street. Alpha 0 is "no
+    emergency driving effect at all", 1.0 is shipped.
+
+    Capped at the RSCH ceiling of 1.25 so no arm leaves the envelope
+    ASSUMPTIONS.md says calibration may not leave either.
+    """
+    t0 = time.time()
+    CEILING = 1.25
+    base = {svc: yaml.safe_load(open(f"config/services/{svc}.yml"))
+            for svc in ("ems", "fire")}
+    tmp = {svc: Path(f"config/services/_e10_tmp_{svc}.yml") for svc in base}
+    rows = []
+
+    try:
+        for alpha in (0.0, 0.5, 1.0, 1.5):
+            for svc, cfg in base.items():
+                scaled = copy.deepcopy(cfg)
+                scaled["emergency_multiplier"] = {
+                    k: min(CEILING, 1.0 + alpha * (v - 1.0))
+                    for k, v in cfg["emergency_multiplier"].items()}
+                tmp[svc].write_text(yaml.safe_dump(scaled, sort_keys=True))
+
+            _run([PY, "scripts/attribute.py",
+                  "--service-config", f"ems={tmp['ems']}",
+                  "--service-config", f"fire={tmp['fire']}"])
+            _run([PY, "scripts/baseline.py", "--quiet"])
+            rep = json.loads(Path("data/interim/baseline_report.json").read_text())
+            rows.append({
+                "alpha": alpha,
+                "ems_arterial_multiplier": round(min(CEILING, 1 + alpha * 0.20), 3),
+                "ems": rep["results"]["ems"]["coverage_share"],
+                "fire": rep["results"]["fire"]["coverage_share"],
+            })
+            print(f"  alpha {alpha:.1f} (EMS motorway x"
+                  f"{rows[-1]['ems_arterial_multiplier']:.2f}): "
+                  f"EMS {rows[-1]['ems']:.2%}  fire {rows[-1]['fire']:.2%}", flush=True)
+    finally:
+        for p in tmp.values():
+            p.unlink(missing_ok=True)
+        _run([PY, "scripts/attribute.py"])          # restore the shipped model
+        _run([PY, "scripts/baseline.py"])
+
+    span = 100 * (max(r["ems"] for r in rows) - min(r["ems"] for r in rows))
+    fspan = 100 * (max(r["fire"] for r in rows) - min(r["fire"] for r in rows))
+    print(f"\n  EMS coverage spans {span:.2f} points, fire {fspan:.2f}, across A-03")
+    print(f"  {verdict(span)}")
+    return {"experiment": "E-10 / A-03 emergency speed multiplier",
+            "assumption": "A-03", "rsch_ceiling": CEILING,
+            "parameterisation": "m' = min(1.25, 1 + alpha * (m - 1)); alpha=1 is shipped",
+            "arms": rows,
+            "ems_span_points": round(span, 2), "fire_span_points": round(fspan, 2),
+            "verdict_vs_noise_floor": verdict(span),
+            "seconds": round(time.time() - t0, 1)}
+
+
+# ------------------------------------------------------------------- E-06
+# A-07: the fire land-use risk multipliers.
+
+def exp_landuse() -> dict:
+    """Sweep A-07's risk multipliers and watch the fire coverage share move.
+
+    E-06 could not run at all before 2026-09: the land-use layer was not fetched
+    and nothing read `demand_surface`. Both are fixed, so the half of E-06 that
+    is not blocked on census age tables can finally be measured.
+
+    EMS is the control. Its surface is raw headcount, so A-07 must move it by
+    exactly zero points; if it ever moves, the land-use weighting has leaked
+    into a service that does not use it.
+    """
+    t0 = time.time()
+    rows = []
+    try:
+        for scale in (0.0, 0.5, 1.0, 2.0):
+            _run([PY, "scripts/build_demand.py", "--landuse-scale", str(scale), "--quiet"])
+            _run([PY, "scripts/baseline.py", "--quiet"])
+            rep = json.loads(Path("data/interim/baseline_report.json").read_text())
+            dem = json.loads(Path("data/interim/demand_report.json").read_text())
+            w = dem["service_surfaces"]["fire"]["weighting"]
+            rows.append({
+                "landuse_scale": scale,
+                "multipliers": w["multipliers"],
+                "weighted_total": w["weighted_total"],
+                "fire": rep["results"]["fire"]["coverage_share"],
+                "ems_control": rep["results"]["ems"]["coverage_share"],
+            })
+            print(f"  scale {scale:.1f}: fire {rows[-1]['fire']:.2%}  "
+                  f"EMS control {rows[-1]['ems_control']:.2%}", flush=True)
+    finally:
+        _run([PY, "scripts/build_demand.py", "--quiet"])     # restore the shipped surface
+        _run([PY, "scripts/baseline.py"])
+
+    span = 100 * (max(r["fire"] for r in rows) - min(r["fire"] for r in rows))
+    control = {round(r["ems_control"], 6) for r in rows}
+    print(f"\n  fire coverage spans {span:.2f} points across the A-07 sweep")
+    print(f"  control (EMS, raw headcount): "
+          f"{'inert as expected' if len(control) == 1 else 'MOVED -- investigate'}")
+    print(f"  {verdict(span, 'fire')}")
+    return {"experiment": "E-06 / A-07 fire land-use risk multipliers",
+            "assumption": "A-07",
+            "parameterisation": "m' = 1 + scale * (m - 1); scale=1 is shipped, 0 is headcount",
+            "arms": rows, "fire_span_points": round(span, 2),
+            "control_ems_inert": len(control) == 1,
+            "a06_still_blocked": ("the EMS half of E-06 needs ward-level age tables; "
+                                  "C-13/C-14 are published at town level only"),
+            "verdict_vs_noise_floor": verdict(span, "fire"),
+            "seconds": round(time.time() - t0, 1)}
+
+
 ARMS = {"weights": exp_weights, "speeds": exp_speeds, "depth": exp_depth,
-        "wading": exp_wading, "growth": exp_growth}
+        "wading": exp_wading, "growth": exp_growth, "candidates": exp_candidates,
+        "emergency": exp_emergency, "landuse": exp_landuse}
 
 if __name__ == "__main__":
     which = sys.argv[1:] or ["all"]

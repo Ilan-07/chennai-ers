@@ -22,6 +22,8 @@ unlabelled, and nothing reaches a slide, an export or a report without its label
 |---|---|
 | GCC area 426 km², 200 wards, 15 zones | Greater Chennai Corporation |
 | GCC population 6,748,026 within the expanded 426 km² limits | Census of India 2011 |
+| Chennai (M Corp.) held 4,621,135 residents across **155 wards over 174 km²** before the 2011 expansion | Census of India 2011 PCA, enumeration-block level (registry id 19) |
+| The 42 local bodies merged in 2011 hold the remaining 2,126,891 — **no ward-level census exists for them** | Residual of the two figures above; [ADR-007](docs/adr/007-census-ward-reconciliation.md) |
 | **33 fire stations** in GCC: 9 North, 9 South, 7 Central, 8 Suburban | GCC fire station listing; corroborated by TNFRS division counts |
 | SFAC norm: 1 station / 10 km² urban, 1 / 50 km² rural | Standing Fire Advisory Council, MHA |
 | SFAC urban response expectation 5–7 min | SFAC / DGFS |
@@ -43,25 +45,32 @@ unlabelled, and nothing reaches a slide, an export or a report without its label
 | # | Assumption | Value | Tested by |
 |---|---|---|---|
 | A-01 | Free-flow speed by highway class | `config/speeds/base.yml` | Step 07 calibration; E-09 (±20%) |
-| A-02 | Junction delay | 12 s signalised / 5 s degree≥3, scaled ×0.10 | **E-10 re-run on corrected positions: ablation NOT supported. RETAIN. The earlier 'delete it' verdict is withdrawn.** |
-| A-03 | Emergency multiplier within the RSCH envelope | 1.0–1.20 | Step 07 calibration; E-10 ablation (not yet run) |
+| A-02 | Junction delay | 12 s signalised / 5 s degree≥3, scaled ×0.10 | **UNSTABLE — the verdict has flipped three times across four input revisions (delete → retain → retain → delete). Latest, on the 39-station inventory: ablation SUPPORTED, materiality 6.20 pts, inside the pessimistic floor. Do not act on it; see "A-02 has flipped three times" below.** |
+| A-03 | Emergency multiplier within the RSCH envelope | 1.0–1.20 | Step 07 calibration; **E-10 α-sweep, latest 2026-09-12 on the 39-station inventory: 7.77 pts EMS, 6.82 fire — inside the pessimistic floor** |
 | A-04 | Alarm + turnout offsets | EMS 60+60 s; fire 60+80 s | Step 07 calibration |
+| A-04b | Ward-total reconciliation | Census 2011 ward totals, dasymetrically re-cut from the 2008 ward geography onto the 2022 wards; the expansion area takes the residual model-proportionally ([ADR-007](docs/adr/007-census-ward-reconciliation.md)) | Mass-balance and provenance asserted in `tests/unit/test_census.py`; the re-cut's own report states the covered share |
 | A-05 | Population growth 2011 → now | 1.13 city-wide | E-10 |
-| A-06 | EMS demand weight `w0=0.6, w1=1.6` on 60+ share | **DATA-GATED — not applied.** No registered dataset carries a ward-level 60+ share; the EMS surface falls back to raw headcount and `demand_report.json` records that it did | E-06, blocked |
-| A-07 | Fire land-use risk multipliers | res 1.0 / com 1.8 / ind 3.0 / haz 5.0 — **APPLIED since 2026-09** (F-22) | E-06 |
+| A-06 | EMS demand weight `w0=0.6, w1=1.6` on 60+ share | **DATA-GATED — not applied.** No registered dataset carries a ward-level 60+ share; the EMS surface falls back to raw headcount and `demand_report.json` records that it did. ADR-007 ingests the Census 2011 ward PCA, which carries totals only — C-13/C-14 age tables are published at town level, so this stays blocked | E-06, blocked half |
+| A-07 | Fire land-use risk multipliers | res 1.0 / com 1.8 / ind 3.0 / haz 5.0 — **APPLIED since 2026-09** (F-22) | **E-06 sweep, latest 2026-09-12: 2.35 pts on fire coverage, EMS control exactly inert. See F-29 for a defect the control exposed** |
 | A-08 | Flood closure depth | 0.30 m | E-09, swept {0.20, 0.30, 0.45} |
-| A-09 | Wading speed factor | 0.35 | E-10 ablation (not yet run); E-09 sweep |
-| A-10 | Scenario weights | dry .70 / peak .15 / f25 .10 / f100 .05 | **Now load-bearing — step 15 shows the siting recommendation depends on them (see below). The E-10 weight sweep is no longer optional.** |
+| A-09 | Wading speed factor | 0.35 | E-10 sweep, latest: **5.55 pts** on flood100 |
+| A-10 | Scenario weights | dry .70 / peak .15 / f25 .10 / f100 .05 | **E-10 sweep re-run 2026-09-12: LOAD-BEARING. The expected-objective site set takes 4 (EMS) / 5 (fire) distinct values across dry 0.50–0.90, and at the shipped 0.70 the expected and maximin objectives now share NOTHING. This reverses the 2026-09-10 reading.** |
 | A-11 | Demand tessellation | H3 resolution 9 | Sensitivity at r10 |
-| A-12 | Candidate minimum separation | 800 m | E-09 (candidate resample) |
+| A-12 | Candidate minimum separation | 800 m | **E-09 resample, latest 2026-09-12: coverage moves 0.78 pts across 400–1200 m; the SITE LIST moves much more (6/10 retained at 400 m)** |
 | A-13 | Parcel snap radius | 400 m | Reported per site |
-| A-15 | Station position uncertainty | 50 m residual on the adopted Maps positions — **but only 14 of 29 have a confirmed identity**. Results are published under the ADR-006 waiver, NOT on surveyed positions | E-11 to E-11g. The noise floor is **±0.8 pts if the 15 unconfirmed POIs are right, ±7.6 if they are not** (E-11g). Verification outstanding. |
+| A-15 | Station position uncertainty | 50 m residual on the adopted Maps positions — **34 of 39 unsurveyed, only 14 with a confirmed identity**. Results are published under the ADR-006 waiver, NOT on surveyed positions | E-11 to E-11g, re-measured 2026-09-13 on the 39-station inventory. The noise floor is **±1.10 pts if the 15 unconfirmed POIs are right, ±8.55 if they are not** (E-11g, after F-32). Verification outstanding. |
 | A-14 | Demand snap flag threshold | 300 m | Reported per cell |
+| A-16 | Study-area density threshold | 1,500/km² urban centre (metro) / 500/km² raised cluster floor (full), EU/OECD Degree of Urbanisation ([ADR-011](docs/adr/011-study-area-boundaries.md)) | **Not swept.** `urban.py` stamps `assumption: A-16` into every area report, and the 500 floor is a compute limit rather than a chosen value — the standard 300 returns 3,463 km² and was OOM-killed |
+| A-17 | Flood-layer applicability | a layer serves a study area only where its modelling domain covers ≥ 90% of it; observed-point layers declare `sourced_for` ([ADR-010](docs/adr/010-flood-layer-extent.md)) | Measured per profile in `flood_extent.json`; held by the `flood_layers_cover_their_study_area` BUILD gate |
 
 ## Experiment results
 
-E-10 covers five assumptions (A-02, A-03, A-05, A-09, A-10). Only the A-02 arm
-has been run; the other four remain outstanding.
+E-10 covers five assumptions (A-02, A-03, A-05, A-09, A-10). **All five have now
+been run**, along with E-09 and the unblocked half of E-06 — see
+[Experiments — all eight arms](#experiments--all-eight-arms-re-run-2026-09-12)
+for the current numbers. The section immediately below is the ORIGINAL A-02
+ablation and its later reversal, kept in place because the reasoning is the
+record; its materiality figure was superseded by the 2026-09-12 re-run.
 
 ### E-10a — junction-delay ablation (A-02). Hypothesis SUPPORTED.
 
@@ -435,32 +444,37 @@ Two revisions it forces:
 
 ### E-11g — what the 15 UNCONFIRMED stations are worth
 
-The ±0.8 point noise floor reported after E-11c is an ASSUMPTION for 15 of the
+The narrow noise floor reported after E-11c is an ASSUMPTION for 15 of the
 29 — that their Google POI really is that station. Nobody has checked. So the
 `mixed` error model measures the cost of being wrong: identity-confirmed
 stations keep a 50 m residual, unconfirmed ones are drawn from the same
 empirical displacement distribution the discredited Nominatim positions had.
 
-| error model | assumes | EMS P5–P95 | sites stable ≥95% |
-|---|---|---|---|
-| gmaps | all 29 POIs are correct | **±0.83 pts** | 6 of 10 |
-| **mixed** | the 15 unconfirmed are no better than the old geocode | **±7.63 pts** | **1 of 10** |
+Re-measured 2026-09-12 on the census-reconciled surface (ADR-007); the earlier
+run of the same experiment gave ±0.83 and ±7.63.
 
-At ±7.6 every effect this project has measured is back below the noise floor, and
-the site list is unidentified again — 64 distinct sites for 10 slots.
+| error model | assumes | EMS P5–P95 | distinct sites for 10 slots | draws reproducing the point estimate |
+|---|---|---|---|---|
+| gmaps | all 29 POIs are correct | **±0.87 pts** | 11 | 279 of 300 |
+| **mixed** | the 15 unconfirmed are no better than the old geocode | **±8.05 pts** | **69** | **3 of 300** |
+
+At ±8.05 the site list is unidentified again — **69 distinct sites competed for
+10 slots and only 3 draws in 300 reproduced the published set** — and all but two
+measured effects fall back inside the noise. The two that clear it are the ±20%
+class-speed band (20.4 points) and the junction term (10.8).
 
 `mixed` is a deliberate worst case: it assumes identity confirmation bought those
 15 nothing, when a POI named "Kilpauk Fire Station" and categorised as a fire
 station is plainly better evidence than a locality centroid. The truth lies
 between the two rows, and it cannot be located without checking.
 
-**What this licenses.** Reporting `61.8% ±0.8` as a bare number is not supported.
+**What this licenses.** Reporting `65.8% ±0.9` as a bare number is not supported.
 Two honest options: send the 15 emails and earn the tighter figure, or publish
 the bracket —
 
 > Assuming the 15 unverified POIs correctly identify their stations, EMS coverage
-> is 61.8% ±0.8. If they are no better than the geocoder positions they replaced,
-> the interval is ±7.6.
+> is 65.8% ±0.87. If they are no better than the geocoder positions they
+> replaced, the interval is ±8.05.
 
 The bracket needs no contact with anyone and is consistent with the project's
 existing PROVISIONAL discipline. What is not defensible is quoting the narrow
@@ -712,74 +726,166 @@ weight sweep load-bearing rather than a nicety.
 quite different site sets are near-optimal. A single "expected" recommendation
 should not be read as *the* answer without reporting that flatness.
 
-## Experiments run in the 2026-09 repair
+## Experiments — all eight arms, re-run 2026-09-12
 
 `scripts/experiments.py`, one JSON per arm in `data/interim/experiments/`, each
-with a run id. Effects are judged against the E-11g noise floor: **±0.8 points**
-if the 15 unconfirmed station listings name the right stations, **±7.6** if not.
+with a run id. Effects are judged against the E-11g noise floor: **±0.87 points**
+if the 15 unconfirmed station listings name the right stations, **±8.05** if not.
+
+> **Superseded the same day.** Every figure in this section was measured on the
+> 33-station GCC inventory. ADR-001a added the six stations TNFRS operates that
+> the GCC page omits, and all eight arms were re-run against the 39-station
+> inventory — see [the ADR-001a re-run](#2026-09-12-later--adr-001a-the-inventory-grew-and-every-experiment-was-re-run)
+> at the end of this file for the shipped numbers. This section is kept as the
+> record of what the smaller inventory said, because the comparison is what
+> shows how much of this project's measured effect is really inventory
+> uncertainty.
+
+> **Every arm below was re-run after the census re-cut (ADR-007).** The
+> reconciliation moved 186 of 200 ward totals, so results measured against the
+> old demand surface describe a surface the project no longer ships. One
+> conclusion reversed outright (A-10), one effect trebled (the junction term),
+> and the three arms that had never run are now measured.
 
 ### E-09 / A-01 — class speeds ±20%. THE DECK'S FIGURE IS WRONG BY 5x.
 
 | arm | EMS | fire |
 |---|---|---|
-| speeds ×0.80 | 50.08% | 36.59% |
-| **shipped** | **61.75%** | **47.02%** |
-| speeds ×1.20 | 70.30% | 56.75% |
+| speeds ×0.80 | 53.67% | 39.70% |
+| **shipped** | **65.75%** | **50.25%** |
+| speeds ×1.20 | 74.11% | 60.47% |
 
-EMS coverage spans **20.22 points**. The deck states this sweep
-as a completed validation — "class speeds varied ±20% shift coverage by roughly
-±4 points — the top three sites do not change" — and it had never been run. The
-true sensitivity is roughly **five times** the published claim, and it is
-above both noise floors.
+EMS coverage spans **20.44 points** — the only effect this project has measured
+that clears **both** noise floors. The deck states this sweep as a completed
+validation ("class speeds varied ±20% shift coverage by roughly ±4 points — the
+top three sites do not change") and it had never been run. The true sensitivity
+is roughly **five times** the published claim.
 
-This matters more than any other assumption tested here: **the speed table is one
-of the few modelling choices in this project that demonstrably outweighs the
-unsurveyed stations.** A-01 is calibrated against the OSRM oracle, so it is not
-free to move ±20% — but the claim that it could and would not matter is retired.
+A-01 is calibrated against the OSRM oracle, so it is not free to move ±20% — but
+the claim that it could and would not matter is retired.
 
-### E-10 / A-10 — design-basis weights. NOT LOAD-BEARING, AFTER ALL.
+### E-10 / A-10 — design-basis weights. **LOAD-BEARING. THIS REVERSES THE 2026-09-10 FINDING.**
 
 Dry weight swept 0.50–0.90, k=10, both services, every solve proven optimal.
 
 | | EMS | fire |
 |---|---|---|
 | distinct **maximin** site sets | **1** | **1** |
-| distinct **expected** site sets | 2 | 2 |
-| sites shared by the two objectives | 2–3 of 10 | 4 of 10 |
+| distinct **expected** site sets | **4** | **5** |
+| sites shared by the two objectives, at the shipped 0.70 | **0 of 10** | **2 of 10** |
+| shared-site range across the sweep | 0–3 of 10 | 2–3 of 10 |
 
-**The maximin recommendation is completely invariant to A-10**, and its objective
-is unchanged to four decimals at every weight. The expected recommendation takes
-two values, switching between dry 0.60 and 0.70, differing in 3 of 10 slots.
+The earlier run of this arm concluded **NOT LOAD-BEARING**: the expected site set
+took two values and the two objectives shared 2–4 sites. On the census-reconciled
+surface the expected set takes **four** values for EMS and **five** for fire, and
+at the shipped weight the two objectives now share **nothing at all**.
 
-This register promoted the sweep to load-bearing on the grounds that "the siting
-recommendation depends on them". **It does not.** What the recommendation depends
-on is which OBJECTIVE is chosen: the two agree on only 2–4 of 10 sites at every
-weight in the range, and no value of A-10 brings them together. See
-[ADR-005](docs/adr/005-siting-objective.md).
+Both readings agree on the part that matters for [ADR-005](docs/adr/005-siting-objective.md)
+— the objective dominates the weights, and the maximin recommendation is
+invariant to A-10 — but the weight sweep can no longer be called inert. **A
+conclusion that survived one demand surface and not the other is itself the
+finding**: neither run was wrong, and the earlier one was reported without a
+sensitivity to the input it turned out to depend on.
+
+### E-10 / A-03 — emergency speed multiplier. FIRST RUN. MATERIAL.
+
+Never run before 2026-09-12; `scripts/attribute.py --service-config` exists so it
+can be swept without hand-editing the shipped config. Each class multiplier's
+deviation from 1.0 is scaled by α and capped at the RSCH ceiling of 1.25, which
+handles both services with one parameter: EMS multipliers are gains above 1.0,
+fire's are penalties below it for a heavy appliance on a narrow street.
+
+| α | EMS motorway | EMS | fire |
+|---|---|---|---|
+| 0.0 — no emergency driving effect | ×1.00 | 61.06% | 54.56% |
+| 0.5 | ×1.10 | 63.37% | 52.52% |
+| **1.0 (shipped)** | **×1.20** | **65.75%** | **50.25%** |
+| 1.5 — at the RSCH ceiling | ×1.25 | 68.37% | 48.50% |
+
+EMS spans **7.31 points**, fire **6.06** — the second-largest effect measured,
+above the optimistic noise floor and just below the pessimistic one. The two
+services move in **opposite directions**, which is the point of the
+parameterisation: the same α that speeds an ambulance up slows a fire appliance
+down, so a single "emergency driving" fudge factor cannot be tuned to flatter
+both.
+
+A-03 is calibrated (step 07) rather than assumed, so the envelope is narrower
+than this sweep. What the sweep retires is the idea that it is a detail.
+
+### E-09 / A-12 — candidate minimum separation. FIRST RUN. THE SITES MOVE; THE NUMBER DOES NOT.
+
+Never run before 2026-09-12. The lattice is rebuilt at four separations and the
+k=10 problem re-solved from scratch for each, every solve proven optimal. Site
+lists are not comparable by index — each separation renumbers the candidates — so
+stability is geographic: how many of the ten sites have a counterpart within
+800 m of the shipped lattice's choice.
+
+| separation | candidates | feasible | EMS k=10 | fire k=10 | EMS sites near shipped | fire |
+|---|---|---|---|---|---|---|
+| 400 m | 2,354 | 986 | 84.08% | 69.04% | 6/10 | 3/10 |
+| 600 m | 1,395 | 539 | 83.92% | 68.64% | 9/10 | 6/10 |
+| **800 m (shipped)** | **948** | **352** | **83.89%** | **68.07%** | 10/10 | 10/10 |
+| 1200 m | 519 | 174 | 83.03% | 68.44% | 5/10 | 6/10 |
+
+Coverage spans **1.05 points** (EMS) and **0.97** (fire) — a quarter of a point
+of headline coverage per doubling of the lattice, and below the pessimistic noise
+floor. **The site identities are a different story.** Refining the lattice to
+400 m keeps only 6 of 10 EMS sites and 3 of 10 fire sites near where the shipped
+lattice put them, at a coverage gain of 0.19 points.
+
+This is independent corroboration of [ADR-005](docs/adr/005-siting-objective.md)
+from a direction that has nothing to do with station positions: the coverage
+*attainable* at k=10 is robust, and the *list of places to build* is not. A
+planner given the 800 m list is being given one of many near-identical optima.
+
+### E-06 / A-07 — fire land-use risk multipliers. FIRST RUN (the half that is not blocked).
+
+Never run before 2026-09-12: the surface was not implemented until F-22 and the
+land-use layer was not fetched. Each multiplier's deviation from 1.0 is scaled,
+so 0.0 is pure headcount and 2.0 doubles the spread between a residential block
+and a fuel depot.
+
+| scale | multipliers (com / ind / haz) | fire coverage | EMS control |
+|---|---|---|---|
+| 0.0 — headcount | 1.0 / 1.0 / 1.0 | 51.11% | 65.75% |
+| 0.5 | 1.4 / 2.0 / 3.0 | 50.64% | 65.75% |
+| **1.0 (shipped)** | **1.8 / 3.0 / 5.0** | **50.25%** | 65.75% |
+| 2.0 | 2.6 / 5.0 / 9.0 | 49.61% | 65.75% |
+
+Fire coverage spans **1.50 points** and falls monotonically: weighting demand
+toward industrial and hazardous land moves demand *away* from the well-covered
+residential core. The EMS control is **exactly inert** at every scale, as it must
+be — EMS demand is raw headcount, and any movement there would mean the fire
+weighting had leaked into a service that does not use it.
+
+**A-06 remains blocked and this arm does not touch it.** Ward-level age tables
+(C-13/C-14) are published at town level only, so the EMS age weighting still
+falls back to headcount and `demand_report.json` still records that it did.
 
 ### E-10 / A-09 — wading speed factor. MATERIAL.
 
 | wading factor | EMS flood100 coverage |
 |---|---|
-| 0.20 | 40.07% |
-| **0.35 (shipped)** | **43.32%** |
-| 0.50 | 45.42% |
+| 0.20 | 44.25% |
+| **0.35 (shipped)** | **47.61%** |
+| 0.50 | 49.67% |
 
-Span **5.35 points** on the 100-year flood — above the
-optimistic noise floor, below the pessimistic one. A-09 is an unmeasured
-engineering assumption and it moves the flood result by more than the flood
-siting decision is worth. It should be bounded from literature or from TNFRS
-operational practice before any flood figure is quoted as settled.
+Span **5.42 points** on the 100-year flood — above the optimistic noise floor,
+below the pessimistic one. A-09 is an unmeasured engineering assumption and it
+moves the flood result by more than the flood siting decision is worth. It should
+be bounded from literature or from TNFRS operational practice before any flood
+figure is quoted as settled.
 
 ### E-09 / A-08 — flood closure depth. APPLIES TO ONE SCENARIO ONLY.
 
 | closure depth | EMS f2015 coverage | unreachable | flood100 control |
 |---|---|---|---|
-| 0.20 m | 52.99% | 386,629 | 43.32% |
-| **0.30 m (shipped)** | **54.08%** | 174,246 | 43.32% |
-| 0.45 m | 54.68% | 43,598 | 43.32% |
+| 0.20 m | 57.04% | 359,593 | 47.61% |
+| **0.30 m (shipped)** | **57.92%** | 168,553 | 47.61% |
+| 0.45 m | 58.28% | 39,106 | 47.61% |
 
-Span **1.69 points**, below the optimistic noise floor.
+Span **1.24 points**, above the optimistic noise floor and well below the
+pessimistic one.
 
 **Method note, recorded because the first attempt got it wrong.** This arm
 initially swept the depth and measured `flood100`, which returned exactly 0.00
@@ -799,12 +905,24 @@ minutes" — which is precisely the form the deck uses — and inert for the
 percentages the pipeline reports. Recording which is which stops a future reader
 treating the two as equally uncertain.
 
-### Still not run
+### E-10a / A-02 — junction delay. RE-RUN. THE EFFECT TREBLED.
 
-- **E-06** (A-06 EMS age weighting) is blocked on Census ward age tables; A-07
-  is now applied and can be swept once a second surface exists to compare it to.
-- **E-09 candidate resample** (A-12, 800 m minimum separation).
-- **E-10 / A-03** emergency multiplier, within the RSCH envelope.
+`scripts/ablate_e10.py`, re-run against the census-reconciled surface. The
+verdict is unchanged — **hypothesis NOT SUPPORTED, retain the term** — because
+deleting it fails the band-bias criterion. What changed is its materiality:
+the largest coverage move across the 12 (service, scenario) cells is now
+**10.76 points**, against 3.4 before.
+
+That matters for how the noise floor is read. Under the old numbers every
+measured effect sat inside the pessimistic ±8.05; now the junction term and the
+±20% speed band both clear it. The register's summary sentence has been corrected
+in `config/publish_waiver.yml` accordingly.
+
+### Nothing is left unrun
+
+All eight arms in `ARMS` have results with run ids, plus the E-10a ablation.
+The only outstanding experiment is the blocked half of E-06 (A-06), which needs
+a dataset that does not exist at ward level.
 
 ---
 
@@ -871,8 +989,9 @@ Fixed: `scripts/fetch_landuse.py` (registry id 17, 3,100 features),
 unimplementable `demand_surface` now **raises** instead of being ignored.
 
 - **A-07 is applied.** 1,455 cells above residential, cell multiplier max 3.67,
-  fire demand total 9.05 M against a raw 7.63 M. Fire coverage moves from
-  47.44% to **47.02%**.
+  fire demand total 8.95 M against a raw 7.63 M. On the census-reconciled surface
+  (ADR-007) fire coverage moves from 51.11% headcount to **50.25%** weighted —
+  the E-06 sweep's `scale = 0` arm now measures that gap directly.
 - **A-06 is not.** No registered dataset carries a ward-level 60+ share.
   The EMS surface falls back to headcount and says so in `demand_report.json`.
 
@@ -937,6 +1056,575 @@ stations; a draw then costs one Dijkstra and an elementwise minimum. Verified
 
 ---
 
+## 2026-09-12 — F-27 and F-28: the two things the register still called placeholders
+
+Both were recorded honestly and neither was built. That is the same defect class
+as F-20 to F-26, one level up: not a decision that never became code, but a
+**gap that was documented so well it stopped being a task**.
+
+### F-27 — the ward reconciliation reconciled nothing
+
+`build_demand.py` carried the string `PLACEHOLDER city-total scaling; needs
+Census 2011 ward totals` for nine days, and ADR-002 pointed at it. What the code
+actually did was distribute the census CITY total across wards *in proportion to
+the model*, which gives every ward the identical scale factor — 1.0554, all 200
+of them — so the census fixed the magnitude and GHS-POP alone decided where in
+Chennai people live.
+
+The reason it stayed unbuilt is that the obvious fix is impossible. Census 2011
+enumerated **155 wards over 174 km²**; this project maps **200 wards over
+426 km²**, the difference being the 42 local bodies merged in the expansion of
+that same year. There is no published crosswalk, and no ward-wise Census 2011
+table for the modern wards exists or can exist.
+
+Fixed by going through the demand cells instead of through a ward table
+([ADR-007](docs/adr/007-census-ward-reconciliation.md)): each 2008 ward's census
+total is spread over the H3 cells intersecting it, weighted by GHS-POP mass in
+the intersection, then summed back up to the 2022 wards.
+
+`scripts/fetch_census_wards.py` (registry ids 19 and 20), `ers.geo.census`,
+`tests/unit/test_census.py`.
+
+- **The reconciliation now moves the map.** Ward scale factors run **0.38 to
+  3.43** (median 0.91) where all 200 were 1.0554, and **186 of 200 wards** shift
+  by more than 10% against the targets they had.
+- **Every coverage number moved with them.** EMS baseline **61.75% → 65.75%**,
+  fire **47.02% → 50.25%**. Both moves are far outside the optimistic ±0.87-point
+  station-position noise floor and comparable to the pessimistic ±8.05.
+- **The city total is untouched** — targets sum to the configured 2011
+  population exactly, so this is a redistribution, not a re-magnitude.
+- **One third of the city is still not ward-reconciled.** The expansion area's
+  2,126,891 residents have no ward-level census and take the residual
+  model-proportionally. `demand_report.json.census_recut.residual_share_of_city`
+  reports it as 0.3152 rather than describing the whole city as reconciled.
+- **A-06 is unaffected and still blocked.** Ward-level age tables do not exist;
+  C-13/C-14 are published at town level.
+
+### F-28 — the architecture slide described software that was not written
+
+The DA-1 deck specified a FastAPI service with a React + Leaflet console over
+REST. `docs/deck-figures.md` carried it as **NOT BUILT** — the project shipped
+one static HTML file — and left it there.
+
+That mattered for a reason beyond the slide being wrong: the static console's
+"Optimise" button ran **a greedy MCLP in JavaScript**. The console could show a
+planner a site list that this project's optimiser had never seen and could not
+bound, which is the second-implementation problem F-16 removed from routing,
+reintroduced in the one place a user actually clicks.
+
+Built: `src/ers/api` (FastAPI) and `ui/` (React 18 + Leaflet 1.9 on Vite),
+[ADR-008](docs/adr/008-service-and-react-console.md). Siting is now solved
+server-side by `ers.optimise` — greedy **and** the exact MIP — so the console
+reports a proven gap because the solver proved it. `tests/unit/test_api.py`
+asserts the service agrees with `baseline_report.json` to 5e-4 on both services,
+so API-versus-report drift fails the build.
+
+The deck's hosting claim — "cloud, cached spatial data store" — remains NOT
+BUILT, and is recorded that way rather than quietly satisfied by a localhost
+server.
+
+### F-29 — overlapping land-use parcels were double-counted (CLOSED, ADR-009)
+
+Found by the E-06 control, not by inspection. `landuse_risk_weights()` documents
+its cell multiplier as an **area-weighted mean** of the risk classes overlapping
+a cell, with unmapped area charged at the residential rate. A mean is bounded by
+its inputs, so setting every multiplier to 1.0 must return exactly 1.0 for every
+cell. The sweep's `scale = 0.0` arm does exactly that, and **15 cells came back
+above 1.0, up to 1.56**.
+
+The cause was that `covered` summed intersection areas, and OSM land-use polygons
+overlap — a retail way inside a commercial relation is counted twice. Where that
+happens the denominator understates the covered area and the "mean" exceeds every
+multiplier that went into it.
+
+**Closed 2026-09-12 by [ADR-009](docs/adr/009-overlapping-landuse-parcels.md).**
+The register held this open because resolving an overlap looked like a modelling
+decision. Measuring it first showed that most of it is not:
+
+| | area | needs a decision? |
+|---|---|---|
+| sum of parcel areas | 145.9 km² | |
+| union | 144.6 km² | |
+| **double-counted** | **1.3 km² (0.9%)** | |
+| — within one class | 0.92 km² | **no — arithmetic** |
+| — across classes | 0.40 km² (0.27% of mapped area) | yes |
+
+Two polygons both tagged commercial describe commercial ground, so dissolving
+them decides nothing, and that is 70% of the defect. The cross-class remainder
+now resolves by an explicit priority — risk-descending by default — and the
+cell multiplier is an area-weighted mean over a **partition**, which is what the
+docstring always claimed.
+
+**The decision was bracketed before it was taken.** Running the surface under
+risk-descending and its exact reverse bounds every possible priority order:
+weighted fire demand 8,935,948 against 8,927,933, **0.090% apart, 69 of 3,838
+cells**. The rule is recorded because it is a decision, not because it is
+load-bearing.
+
+The function now **asserts** its own boundedness instead of describing it, so a
+future input that breaks the partition stops the build rather than shipping a
+plausible-looking surface. Six tests in `tests/unit/test_demand.py` hold the
+properties, including the E-06 control itself.
+
+**The published fire coverage did not move: 54.43% before the fix and 54.43%
+after.** The share is a ratio, and the defect inflated numerator and denominator
+together across 15 of 3,838 cells. That is the outcome this entry predicted when
+it was opened, and it is the reason the fix is recorded as a correctness repair
+rather than a restatement of results. Had the number moved, the repair would have
+been the same and the headline would have changed with it — which is the point of
+fixing it before asking whether it mattered.
+
+## 2026-09-12 (later) — ADR-001a: the inventory grew, and every experiment was re-run
+
+[ADR-001a](docs/adr/001-authoritative-station-inventory-amendment.md) resolved a
+conflict between two authorities. The GCC page lists 33 fire stations inside the
+corporation; the TNFRS Northern and North Western regional directories list
+those 33 **and six more** — Velachery, Thuraipakkam, Medavakkam, Kolathur,
+Maduravoyal, Virugambakkam — all with an official landline and all inside the
+corporation boundary. The operator's own directory is the better authority for
+what the operator runs, so the inventory is now **39 stations**, and everything
+measured against 33 was measured against an inventory that was missing 15% of
+its stations.
+
+### What moved
+
+| | 33 stations | 39 stations |
+|---|---|---|
+| EMS coverage at 8 min | 65.75% | **71.77%** |
+| Fire coverage at 10 min | 50.25% | **54.43%** |
+| Noise floor, listings correct | ±0.87 pts | **±1.11 pts** (±1.10 after F-32) |
+| Noise floor, listings wrong | ±8.05 pts | **±8.55 pts** |
+| Distinct site sets across draws | 11 / 69 | **14 / 85** |
+| Unsurveyed positions | 29 of 33 | **34 of 39** |
+
+The headline moved **6.02 points** on EMS and 4.18 on fire — which is to say
+that finding six stations on a directory page moved the published figure by more
+than every measured effect in this project except the class-speed band. The
+uncertainty interval widened rather than narrowed, because five of the six new
+stations are themselves map listings.
+
+### Every arm, re-run
+
+| arm | assumption | span | vs ±1.10 | vs ±8.55 |
+|---|---|---|---|---|
+| class speeds ±20% | A-01 | **21.29 pts** | clears | **clears** |
+| emergency multiplier | A-03 | 7.77 pts | clears | inside |
+| junction ablation | A-02 | 6.20 pts | clears | inside |
+| equity cost at k=10 | — | 6.29 pts | clears | inside |
+| wading factor | A-09 | 5.55 pts | clears | inside |
+| maximin siting | A-10 | 3.35 pts | clears | inside |
+| land-use multipliers | A-07 | 2.35 pts | clears | inside |
+| flood closure depth | A-08 | 1.28 pts | clears | inside |
+| equity cost at k=20 | — | 0.84 pts | inside | inside |
+| candidate lattice | A-12 | 0.78 pts | inside | inside |
+| growth multiplier | A-05 | 0.00 pts | inert on shares | inert |
+
+**Exactly one effect this project has measured clears the pessimistic floor.**
+That is the finding, and it is not a comfortable one: until the 34 unsurveyed
+positions are checked, almost every modelling decision here is smaller than the
+uncertainty in where the stations are.
+
+### A-02 has flipped three times. Stop acting on it.
+
+| run | inputs | verdict | materiality |
+|---|---|---|---|
+| 2026-09-09 | original demand surface | delete | 3.4 pts |
+| 2026-09-10 | OSRM-resampled OD pairs | **retain** | 10.8 pts |
+| 2026-09-12 (a) | census-reconciled surface (ADR-007) | **retain** | 10.76 pts |
+| 2026-09-12 (b) | 39-station inventory (ADR-001a) | delete | 6.20 pts |
+
+The latest run says the ablation fits at least as well (objective 0.0953 ablated
+against 0.0971 incumbent, MedAPE 6.8% against 6.9%) and recommends deleting the
+junction term with `trip_overhead_s = 45`.
+
+**The recommendation is not adopted, and A-02 stays as it is.** Not because the
+run is wrong, but because a criterion that has returned a different answer on
+four consecutive input revisions is not measuring the junction term — it is
+measuring whatever changed most recently. The two configurations sit 0.0018
+apart on an objective whose value moves by more than that when six stations are
+added to the inventory. Deleting a modelled term on that basis would be reading
+noise as evidence.
+
+What would settle it is an input the ablation is not sensitive to: the station
+survey. Until then A-02 is recorded as **unstable**, the junction term is
+retained at ×0.10 because it is what the calibration selected, and the flip
+history above travels with it.
+
+### The stage-4 refit moved too, and the same reasoning applies
+
+Re-running `calibrate4.py` on the 39-station inventory selects **×0.05 + 22.5 s**
+where the previous run selected ×0.10 + 17.5 s — the same halving of the junction
+scale the ablation reports, arrived at independently. Both points clear both
+gates on the same pairs:
+
+| configuration | worst band \|median ratio−1\| | MedAPE | gates |
+|---|---|---|---|
+| stage-3 reference (×0.10 + 45 s) | 14.48% | 9.90% | fails the band gate |
+| **shipped (×0.10 + 17.5 s)** | **3.07%** | **6.92%** | **both pass** |
+| refit on 39 stations (×0.05 + 22.5 s) | 0.72% | 5.61% | both pass |
+
+The shipped point stays. It clears both gates with margin, and the refit's
+preference for a different point is the same flatness the ablation keeps
+tripping over: the junction scale and the trip overhead trade off against each
+other, so the pair that wins depends on which station-to-cell pairs happen to be
+in the sample — and the sample changed because the inventory did.
+
+Two defects were fixed on the way to finding this:
+
+- **`calibration_stage4.json` was outside the build DAG.** It is
+  station-dependent (it fits on station-to-cell pairs) but no Makefile rule
+  produced it, so ADR-001a left it carrying the old inventory signature and only
+  `test_artefact_freshness` noticed. It now has a target and is part of `make all`.
+- **The script called the stage-3 point "shipped".** It compared every refit
+  against a hard-coded ×0.10 + 45 s, which stopped being what the project ships
+  the moment stage 4 first ran. It now reads the shipped values from
+  `config/speeds/base.yml`, scores them, and states whether they still clear the
+  gates — which is the question a reader of this file actually has.
+
+---
+
+## 2026-09-13 — the three items the register still carried open
+
+### F-30 — a file of evidence that nothing read
+
+`data/interim/stations_metro_gmaps_lookup.csv` held 15 hand-gathered Google
+Maps place results for metro stations, with place ids recorded so the lookups
+could be repeated. **No script in the repository wrote it and no script read
+it.** It was produced by hand during one session and orphaned in the next — the
+F-20 class of defect this register is named for, one step worse: not a dataset
+consumed by nothing, but *evidence* consumed by nothing.
+
+The consequence was visible in the inventory and nobody looked. **Maraimalai
+Nagar** sat at a town centroid with 2,000 m of uncertainty while a single
+unambiguous POI for "Maraimalai Nagar Fire Station" sat in that file at 50 m.
+
+Fixed: the file moved to `data/reference/tnfrs_metro_gmaps_lookup.csv`, beside
+the GCC supplement it is a sibling of, and `resolve_metro_stations.py` now reads
+it as position source 3 — ahead of the town centroid, behind OSM and the E-11
+work. Maraimalai Nagar moved 700 m and its uncertainty fell by a factor of 40.
+
+### The metro's unresolved positions, closed out
+
+Re-running the resolver after ADR-001a and with the map listings wired in:
+
+| position source | before | after | uncertainty |
+|---|---|---|---|
+| resolved (E-11 work) | 33 | **39** | 50 m |
+| map listing | 5 | 1 | 50 m |
+| OSM fire feature | 2 | 1 | 150 m |
+| **town centroid** | **6** | **2** | **2,000 m** |
+
+The six ADR-001a stations propagated into the metro inventory as `resolved`
+rather than being re-derived, which is what took Maduravoyal off a centroid.
+
+**Two centroids remain, and neither can be improved with the evidence that
+exists.** Tambaram STC and Irungattukottai Sipcot both return
+`no_place_result_search_page_only` — Google has no place for them either — and
+only Tambaram STC is inside the study area. The nearest OSM fire feature to
+Tambaram STC's centroid is 2.9 km away and sits **40 m from the already-resolved
+Tambaram station**, so it belongs to that station and claiming it would duplicate
+one station into two. The resolver's `claimed` check is what refused it; this is
+the Athipattu lesson holding.
+
+What closes them is a phone call. Both carry an official TNFRS landline in the
+directory, and that is now the recorded next action rather than a better guess.
+
+### A-17 — flood layers may only be asked about the area they were drawn for
+
+New assumption, and the honest close on the metro's missing floods. See
+[ADR-010](docs/adr/010-flood-layer-extent.md).
+
+The metro and full profiles offered only dry and peak, explained by a sentence
+typed into the console. Measuring it instead: Chennai Flows' modelling domain
+covers **93% of the corporation, 47% of the built-up metro and 28% of the full
+settlement**. It was produced for the corporation.
+
+Running it anyway would not have failed — it would have returned the metro's
+extra 486 km² and the full profile's extra 1,124 km² as **dry**, which reads as
+flood resilience exactly where the study area was widened to include the places
+2015 hit hardest.
+
+The refusal is now measured, served through `/api/meta`, rendered in the console
+with its number, and held by a BUILD gate
+(`flood_layers_cover_their_study_area`). The naive test — how much of the layer
+lies inside the study area — was tried first and discarded: it scores 98–100%
+for every profile and therefore distinguishes nothing.
+
+| | A-17 |
+|---|---|
+| **Assumption** | A flood layer's convex hull approximates its modelling domain, and a domain covering < 90% of a study area cannot speak for it |
+| **Why a hull** | Absence of a polygon *inside* the domain means modelled-and-dry; absence *outside* means nobody modelled it. The two must not report as one |
+| **Exception** | Observed-point layers declare `sourced_for` instead. A sample's hull is where it found something, not where it looked |
+| **Tested by** | `tests/unit/test_flood.py` (3), `tests/unit/test_api.py` (4), and the gate |
+
+---
+
+### F-31 — a 22.92-point equity cost measured against a solution that was never found
+
+Surfaced by the F-29 rebuild, which changed the fire demand surface enough to
+push one solve over a line it had been sitting just inside.
+
+`equity_curve.py` computes the equitable siting in two stages: maximise the worst
+ward's share (maximin), then re-solve for maximum coverage **subject to** the
+floor that achieved, so the reported "equity" column is the best equitable
+solution rather than an arbitrary tie. At fire **k=20** the second stage came
+back `Infeasible`.
+
+**Nothing noticed.** An infeasible pulp solve returns `objective = 0.0` and an
+empty site list, so `(baseline_covered + 0) / total` evaluated to **exactly the
+do-nothing baseline**, 54.43%. The curve published a 22.92-point equity cost —
+five times any neighbouring k — computed against a siting the solver never
+found. The existing invariant could not catch it: it tests for points falling
+*below* the baseline, and this one landed precisely *on* it.
+
+**Root cause: the solver's objective is not a property of its own solution.**
+
+| | |
+|---|---|
+| `z` reported by the maximin solve | 0.13339714534867728 |
+| worst ward actually achieved by that siting | 0.13339614534867728 |
+| difference | **exactly 1.000e-06** |
+
+That is HiGHS's primal feasibility tolerance. The maximin constraints are
+satisfied to within it, so the reported `z` sits a tolerance *above* what the
+integer solution delivers — and re-imposing `z` as a hard floor is infeasible
+against the very siting that produced it. A relative slack does not fix this:
+`z * (1 - 1e-6)` is still 1.3e-7 short of a 1e-6 absolute gap, and it failed too.
+
+**Fixed three ways, because one was not enough:**
+
+1. The floor is now **recomputed from the maximin siting** rather than read off
+   the objective. A number that is true of the solution cannot be infeasible for
+   it, at any tolerance. Both values are recorded, with their difference.
+2. A failed second stage **falls back to the maximin siting** — feasible by
+   construction — and the row says so in `equity_coverage_from` instead of
+   quietly publishing a baseline.
+3. A new invariant: **a curve point that spends k stations must name them.**
+   An empty siting scores the baseline exactly, which is why the existing
+   below-baseline test was blind to it.
+
+**What changed in the published numbers:** fire k=20 equity coverage 54.43% →
+**72.36%**, equity cost 22.92 → **4.99 points**, which sits where the curve says
+it should (k=15: 5.11, k=30: 2.35). The fire curve now has **0 unproven** points.
+Every EMS figure was already correct and is unchanged — the fix altered nothing
+that was right, which is the check that it is a fix and not a new choice.
+
+---
+
+### F-32 — a 2,000 m town centroid drawn as though it were known to 60 m
+
+Found by running the profile build end to end for the first time, which is also
+how it had stayed hidden: the metro profile's sensitivity had only ever been run
+by hand.
+
+E-11's `gmaps` error model perturbs each station inside its own uncertainty disc.
+The radius came from the Google-position lookup, with a flat fallback:
+
+```python
+unc = j["residual_m"].fillna(60.0)
+```
+
+That is correct for the corporation, where **every** station is in the lookup.
+It is wrong for every wider study area, where it is not. The metro's two
+town-centroid stations carry **2,000 m** in the station table and were being
+drawn at **60 m** — understating their spread by a factor of 33, in the one
+direction `draw_positions` explicitly says this experiment must not err in.
+
+The fallback now reads the station's **own** recorded uncertainty before
+reaching for a constant, so a station is drawn at the radius its own evidence
+supports.
+
+**It moved the published GCC interval too.** Five of the six stations ADR-001a
+added are not in the 29-row lookup, so they were being charged the flat 60 m —
+the OSM proximity residual — when their evidence is a map listing at 50 m. The
+optimistic noise floor narrows **±1.11 → ±1.10 points**; the pessimistic ±8.55 is
+unchanged, because the mixed model sets its radii from identity confirmation
+rather than from the lookup and never touched this line.
+
+A hundredth of a point is not a material correction to the headline. It is
+recorded because the *reason* was material: a constant standing in for evidence,
+in the experiment whose entire job is to say how much the evidence is worth.
+
+> **A second defect, found while fixing the first.** Re-running the four
+> sensitivity arms by hand overwrote `sensitivity_stations_ems.json` with the
+> mixed-model result, because the output path defaults to the gmaps name and only
+> the Makefile passes `--out`. The waiver-freshness test added earlier today
+> caught it immediately — it compares the shipped interval against the file that
+> measured it, and 1.10 against 8.55 is not a rounding difference. The rebuild
+> runs through `make`, which passes the flag.
+
+---
+
+### F-33 — the metro study area grew from its own output on every rebuild
+
+The worst of the four found by making the profile build reproducible, and the
+one that could only ever appear on a **second** run — which, until this script
+existed, never happened.
+
+Two scripts share one filename:
+
+- `build_metro_area.py` unions the measured urban centre with the **authority**
+  boundary, read from `data/interim/wards.parquet`.
+- `build_metro_units.py` then **overwrites** `wards.parquet` with the profile's
+  287 reporting units — 200 GCC wards plus 87 outer H3 cells covering the whole
+  metro.
+
+So the authority a rebuild reads is the previous run's *study area*, not the
+corporation. Rebuilding the metro produced:
+
+| | authority read | study area |
+|---|---|---|
+| as shipped (built once, fresh tree) | 431.9 km² — the corporation | **931.7 km²** |
+| first rebuild | 889.6 km² — its own 287 units | **1,004.7 km²** |
+
+**+73 km² per rebuild, compounding.** The urban-centre derivation is stable at
+910 km²; every bit of the growth came from re-reading the output as an input.
+Nothing would have failed. The number in `config/city/chennai_metro.yml` would
+simply have drifted further from the number the pipeline produced each time
+anyone re-ran it, and the study area would have quietly annexed whatever the
+last run reached.
+
+**Fixed by making the authority a thing that is kept rather than inferred.**
+`build_metro_units.py` now snapshots the corporation boundary to
+`gcc_wards.parquet` *before* overwriting `wards.parquet`, and refuses outright if
+it is asked to run against a file that already holds profile units with no
+snapshot to recover from. `build_metro_area.py` prefers that snapshot, takes an
+explicit `--authority`, prints which boundary it used, and rejects a file
+carrying a `unit_kind` column — because unioning the urban centre with the
+profile's own units is exactly the mistake, and it is cheap to detect.
+
+The snapshot existed in the shipped tree only because somebody had copied it
+there by hand. Nothing wrote it, so nothing would have restored it.
+
+**Verified idempotent:** the metro rebuild now reports authority 431.9 km² and
+study area 931.7 km², the same numbers as the original build and the same as the
+config declares.
+
+**The full profile was already wrong when it shipped.** The metro survived
+because it happened to be built once from a clean tree. The full profile was not:
+rebuilt against the authority snapshot it measures **1,455.7 km², not the 1,581
+km² recorded in its config** — an 8.6% overstatement, carried in every figure
+that named its extent.
+
+The arithmetic gives it away once the authority is printed. The urban cluster at
+500/km² is 1,451.6 km² and it already contains all but **4.1 km²** of the
+corporation, so the union can only add about 4 km². Reaching 1,581 required
+unioning the cluster with the profile's own 413 reporting units (1,576.9 km²).
+`config/city/chennai_full.yml` now records 1,456 km² and states why it moved.
+
+---
+
+### F-34 — the flood refusal was advisory, and the gate proved it
+
+Found the way a gate is supposed to find things: it failed a build.
+
+A-17 measures which flood layers were drawn for a study area and refuses the
+rest. `flood_extent_report.py` wrote the verdict, `/api/meta` served it, and the
+console rendered it with its numbers. **Nothing acted on it.**
+`export_ui_data.py` carried a hard-coded list of six scenarios and computed all
+of them regardless, so the rebuilt metro shipped flood coverage for 486 km² of
+ground no layer covers — reported as *dry*.
+
+The gate `flood_layers_cover_their_study_area` caught it on the first build that
+produced the data, named all four scenarios, and failed:
+
+```
+FAIL  flood_layers_cover_their_study_area   4 served beyond its layer
+      ... ground nobody modelled is returned as dry: f2015, flood100, flood25, flood5
+```
+
+This is worth recording for what it says about the order the work was done in.
+The refusal was measured, published and explained a day before anything enforced
+it, and in that state it was **decoration** — a study area that describes its own
+limits accurately while serving numbers that ignore them is worse than one that
+says nothing, because the caveat buys the figures credibility they have not
+earned.
+
+The export now reads the verdict for the profile it is building and skips what
+was refused, printing which and why. The previously shipped metro was correct by
+accident: it had been exported before the wider scenarios were ever computed for
+it.
+
+---
+
+### F-35 — the widest study area could only see the narrowest one's stations
+
+`resolve_metro_stations.py` places every station in the two TNFRS regional
+directories, then writes **only those within the metro study area plus 3 km**.
+The file is named `stations_metro.csv`, so this looked like scoping rather than
+loss — but it is the only table of positioned directory stations the project
+produces, and the full profile is built from it.
+
+The full profile is **1,456 km²**, half a district wider than the metro. Every
+station serving only its outer ring — Chengalpattu, Kanchipuram, Padappai,
+Kalavakkam, Mahindra World City — was filtered out two steps upstream. Those
+places would then have been scored as **unserved**, because the stations that
+serve them had been deleted before the coverage run began.
+
+That is the worst direction for this particular error to point. Gaps are this
+project's product; the optimiser is aimed at ground no station reaches, and the
+headline claim is about how much of Chennai cannot be reached in time. An
+upstream filter that removes stations from the widest map **manufactures the
+finding the project is looking for**.
+
+The resolver now writes **86 positioned stations** instead of 43, flags
+`in_metro_keep_zone` rather than acting on it, and
+`project_stations_to_profile.py` does the per-profile filtering — which is its
+entire job, and it needs a table to do it on. The profiles now draw:
+
+| profile | extent | stations |
+|---|---|---|
+| gcc | 432 km² | 39 |
+| metro | 932 km² | 43 |
+| full | 1,456 km² | **45** |
+
+The two the full profile gains over the metro are the ones serving its outer
+ring. The previously shipped full profile had **47**, but that count belongs to
+the inflated 1,581 km² boundary of F-33 — two of those stations were only ever
+inside a study area that should not have existed. Against the corrected extent
+the number is 45, and both corrections had to be made before either figure could
+be trusted.
+
+The manual process got the station scoping right by happening to run the resolver
+against the full boundary that day. Nothing recorded that it had to, so the
+scripted build got 43 and would have shipped it.
+
+---
+
+### F-36 — the hand-placed pin appeared somewhere other than where you clicked
+
+Reported by the user, which is the only way this one was ever going to be found:
+every test passed, and the behaviour was correct.
+
+A station may only be placed where the candidate lattice allows one, because an
+off-network point produces a coverage figure the optimiser could never reproduce.
+So a map click snaps to the nearest candidate. That is right, and it was
+**completely invisible** — the pin simply appeared somewhere else, and the
+console said nothing about why.
+
+Measured, the snap is not small. Clicking on a demand cell, the nearest candidate
+is a median **447 m** away, 956 m at the 95th percentile and up to **2.2 km**;
+against land-feasible candidates only, up to 3.1 km. And the search had **no
+distance limit at all**, so a click on the sea or in the next district snapped to
+whatever candidate happened to be nearest — one test click 17 km offshore would
+have planted a station in the city.
+
+Three changes, because the cause is one thing and the symptom is another:
+
+1. **The lattice is drawn while placing.** 948 candidate sites as small dots. The
+   question "why did my pin move" cannot arise when the sites you may click are
+   on screen — you aim at one instead of at a street.
+2. **The snap reports itself**: "Snapped 149 m to the nearest buildable site."
+3. **A click too far from any candidate is refused**, with the distance, instead
+   of placing a station somewhere the user never indicated. The limit is 3 km —
+   wider than the worst in-city gap to a candidate, so every click inside the
+   study area still works.
+
+The lesson is not about the snap. It is that a correct rule applied silently is
+indistinguishable from a bug, and no test was ever going to say so.
+
+---
+
 ## Known omissions, declared
 
 - **Turn restrictions** (`type=restriction` relations) are not modelled. Junction
@@ -948,10 +1636,22 @@ stations; a draw then costs one Dijkstra and an elementwise minimum. Verified
   (an Overpass query over the GCC bbox returns **zero** `emergency=ambulance_station`
   features). EMS results therefore carry an explicit completeness caveat until
   EMRI supplies the list.
-- **OSM fire station completeness is ~48%** — 16 mapped features against 33
+- **OSM fire station completeness is ~41%** — 16 mapped features against 39
   authoritative stations, and two of the 16 are industrial/airport rather than
   municipal. The authoritative list is the source of truth; OSM is used only
   for coordinate corroboration.
+- **The metro and full profiles have no flood results.** The Chennai Flows
+  layers and the 2015 replay were produced for the corporation and their
+  modelling domain covers 47% / 28% of the wider study areas, so asking them is
+  refused rather than answered with unmodelled ground reported as dry (A-17,
+  [ADR-010](docs/adr/010-flood-layer-extent.md)). This is a real gap, not a
+  technicality: Tambaram, Pallavaram and Chromepet are among the places the
+  study area was widened to reach *and* among the places 2015 hit hardest.
+  Closing it needs a return-period layer whose domain covers ≥ 90% of 932 km².
+- **Two metro stations are placed on a town centroid** at 2,000 m uncertainty —
+  Tambaram STC (in the study area) and Irungattukottai Sipcot (outside it).
+  Neither has an OSM feature or a map listing; both have an official TNFRS
+  landline, so what closes them is a phone call rather than more geocoding.
 - **No machine learning.** There is no learning problem in this system. The only
   defensible one — imputing link speeds from vehicle GPS traces — is data-gated
   and listed as future work rather than fabricated.

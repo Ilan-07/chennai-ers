@@ -1,0 +1,207 @@
+{
+ "elements": [
+  {
+   "id": 264480826,
+   "lat": 13.0637765,
+   "lon": 80.2356816,
+   "tags": {
+    "amenity": "fire_station",
+    "created_by": "JOSM"
+   },
+   "type": "node"
+  },
+  {
+   "id": 302899362,
+   "lat": 13.0474469,
+   "lon": 80.249119,
+   "tags": {
+    "amenity": "fire_station",
+    "created_by": "Potlatch 0.10f",
+    "name": "Teynampet FS"
+   },
+   "type": "node"
+  },
+  {
+   "id": 2427727851,
+   "lat": 13.0351313,
+   "lon": 80.2306922,
+   "tags": {
+    "amenity": "fire_station"
+   },
+   "type": "node"
+  },
+  {
+   "id": 3029313653,
+   "lat": 12.9436361,
+   "lon": 80.1335964,
+   "tags": {
+    "amenity": "fire_station",
+    "name": "Tamil Nadu Fire and Rescue Services",
+    "phone": "+91-44-22380206, 22382204"
+   },
+   "type": "node"
+  },
+  {
+   "id": 5304198425,
+   "lat": 12.8310173,
+   "lon": 80.2224311,
+   "tags": {
+    "amenity": "fire_station"
+   },
+   "type": "node"
+  },
+  {
+   "id": 5354315736,
+   "lat": 12.9768528,
+   "lon": 80.2276341,
+   "tags": {
+    "addr:city": "chennai",
+    "addr:postcode": "600042",
+    "addr:street": "Thiruvallur Street",
+    "amenity": "fire_station",
+    "name": "Fire service station;Fire Force Service center",
+    "operator": "Government"
+   },
+   "type": "node"
+  },
+  {
+   "id": 12181440340,
+   "lat": 13.1378247,
+   "lon": 79.907707,
+   "tags": {
+    "amenity": "fire_station",
+    "name": "Thiruvallur fire station"
+   },
+   "type": "node"
+  },
+  {
+   "center": {
+    "lat": 13.0429393,
+    "lon": 80.2777191
+   },
+   "id": 211274291,
+   "tags": {
+    "amenity": "fire_station"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 13.0352121,
+    "lon": 80.2306257
+   },
+   "id": 217731034,
+   "tags": {
+    "addr:housename": "Fire and Rescue station",
+    "amenity": "fire_station",
+    "designation": "Fire and Rescue station",
+    "name": "Fire and Rescue station"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 12.9925029,
+    "lon": 80.1660222
+   },
+   "id": 620705901,
+   "tags": {
+    "amenity": "fire_station",
+    "building": "yes",
+    "fire_station:type": "airport",
+    "name": "Chennai International Airport Fire Station 2"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 13.2512323,
+    "lon": 80.3272453
+   },
+   "id": 1074457140,
+   "tags": {
+    "amenity": "fire_station",
+    "building": "yes",
+    "name": "NCTPS Fire Station"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 13.1133322,
+    "lon": 80.2963723
+   },
+   "id": 1075921840,
+   "tags": {
+    "amenity": "fire_station",
+    "building": "yes"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 12.9884768,
+    "lon": 80.1716794
+   },
+   "id": 1096512891,
+   "tags": {
+    "amenity": "fire_station",
+    "building": "fire_station",
+    "fire_station:type": "airport"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 13.1055078,
+    "lon": 80.2782141
+   },
+   "id": 1105414357,
+   "tags": {
+    "amenity": "fire_station",
+    "building": "yes",
+    "name": "Moolakothalam Fire Station"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 13.0686327,
+    "lon": 80.2613334
+   },
+   "id": 1107911283,
+   "tags": {
+    "amenity": "fire_station",
+    "building": "yes",
+    "building:levels": "2",
+    "name": "Egmore fire and Rescue station",
+    "operator": "Tamilnadu government"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 13.0864782,
+    "lon": 80.2860635
+   },
+   "id": 1122111815,
+   "tags": {
+    "amenity": "fire_station",
+    "name": "Esplanade Fire Station"
+   },
+   "type": "way"
+  },
+  {
+   "center": {
+    "lat": 13.1024404,
+    "lon": 80.2744007
+   },
+   "id": 1172399106,
+   "tags": {
+    "amenity": "fire_station",
+    "name": "Washermanpet Fire & Rescue Station"
+   },
+   "type": "way"
+  }
+ ]
+}

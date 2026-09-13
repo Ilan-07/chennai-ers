@@ -18,6 +18,19 @@ import yaml
 from ers.geo.graph import write_graph_tables
 
 CKPT = Path("data/interim/graph_consolidated.pkl")
+
+# Consolidation rebuilds the whole graph in memory and is the step that fails
+# first on a large extent: a 657k-edge box exhausted 8 GB and was killed. The
+# flag exists so a build can proceed without it, and the cost is stated rather
+# than discovered -- junction delay is charged PER NODE, so an unconsolidated
+# graph counts each dual-carriageway junction several times and systematically
+# overcharges travel time. Use it only with that caveat recorded in the report.
+import argparse as _argparse
+_ap = _argparse.ArgumentParser()
+_ap.add_argument("--no-consolidate", action="store_true",
+                 help="skip intersection consolidation (large extents; biases junction delay up)")
+_ap.add_argument("--tolerance", type=float, default=12.0)
+_args = _ap.parse_args()
 cfg = yaml.safe_load(open("config/city/chennai.yml"))
 south, west, north, east = cfg["bbox"]
 
@@ -44,9 +57,15 @@ else:
     print(f"raw: {G.number_of_nodes():,} nodes {G.number_of_edges():,} edges "
           f"({time.time()-t0:.0f}s)", flush=True)
     Gp = ox.projection.project_graph(G, to_crs=cfg["crs"]["metric"])
-    print("consolidating intersections (tolerance 12 m) ...", flush=True)
-    Gc = ox.simplification.consolidate_intersections(
-        Gp, tolerance=12, rebuild_graph=True, dead_ends=False, reconnect_edges=True)
+    if _args.no_consolidate:
+        print("SKIPPING consolidation (--no-consolidate): junction delay will be "
+              "charged at every raw OSM node and is biased UP", flush=True)
+        Gc = Gp
+    else:
+        print(f"consolidating intersections (tolerance {_args.tolerance:.0f} m) ...", flush=True)
+        Gc = ox.simplification.consolidate_intersections(
+            Gp, tolerance=_args.tolerance, rebuild_graph=True, dead_ends=False,
+            reconnect_edges=True)
     print(f"consolidated: {Gc.number_of_nodes():,} nodes {Gc.number_of_edges():,} edges "
           f"({time.time()-t0:.0f}s)", flush=True)
     stage1 = {"raw_nodes": G.number_of_nodes(), "raw_edges": G.number_of_edges(),

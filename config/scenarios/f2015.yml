@@ -18,6 +18,12 @@ flood:
   closure_depth_m: 0.30       # ASSM A-08
   wading_speed_factor: 0.35
   bridges_exempt: true
+  # The study area this layer was PRODUCED for. Chennai Flows and the 2015
+  # NRSC/UNOSAT survey are both corporation products; neither was drawn for the
+  # built-up metro, let alone the full settlement. Declared rather than inferred,
+  # because a sample's convex hull is not its domain -- points cluster where
+  # flooding happened, not where the survey could have looked.
+  sourced_for: gcc
 # Weight 0.0 — REPORTED, NEVER OPTIMISED AGAINST.
 # An extreme historical event is not a design basis. (Finding F-09)
 weight: 0.00

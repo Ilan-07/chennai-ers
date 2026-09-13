@@ -20,7 +20,7 @@ same places, robustness is free and the dry-day answer was accidentally fine.
 
   python scripts/optimise_robust.py [service] [k] [--time-limit S]
 
-PROVISIONAL: 29 of 33 station positions are geocoder output, not surveyed.
+PROVISIONAL: 34 of 39 station positions are geocoder output, not surveyed.
 """
 import argparse, json, sys, time
 sys.path.insert(0, "src")
@@ -118,7 +118,6 @@ print(f"  worst-case coverage {100*(best_worst['worst_coverage']-base['worst_cov
 report = {**stamp(config=config_bundle(SVC), service=SVC,
                   stations=pd.read_csv("data/interim/stations_resolved.csv")),
           **publication_basis(),
-          "provisional_reason": "29 of 33 stations are geocoder positions, not surveyed",
           "service": SVC, "k": K, "meta": meta,
           "design_basis_weights": weights,
           "report_only": [s.scenario for s in scs if s not in prob.design_basis],

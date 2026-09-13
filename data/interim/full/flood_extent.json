@@ -1,0 +1,281 @@
+{
+  "PROVISIONAL": true,
+  "note": "A flood scenario is applicable to a study area only if its layer extends beyond that area. A layer wholly contained in the area cannot distinguish 'dry' from 'not modelled', and reporting the second as the first understates flood impact exactly where the study area was widened.",
+  "profiles": {
+    "full": {
+      "applicable": [
+        "dry",
+        "peak"
+      ],
+      "refused": [
+        "f2015",
+        "flood100",
+        "flood25",
+        "flood5"
+      ],
+      "scenarios": {
+        "dry": {
+          "applicable": true,
+          "network_state": "dry",
+          "reason": "not a flood scenario",
+          "scenario": "dry"
+        },
+        "f2015": {
+          "applicable": false,
+          "domain_covers_study_area": 0.1611,
+          "geometry": "points",
+          "layer": "data/raw/chennai_inundation_points_depth.kml",
+          "layer_km2": 19.0,
+          "min_domain_share": 0.9,
+          "modelling_domain_km2": 234.5,
+          "network_state": "flood",
+          "reason": "observed points produced for the 'gcc' study area, not for 'full': outside the surveyed city an absent point means nobody looked, not that nothing flooded",
+          "scenario": "f2015",
+          "sourced_for": "gcc",
+          "study_area_km2": 1455.7,
+          "study_area_outside_domain_km2": 1221.2,
+          "test": "declared source extent"
+        },
+        "flood100": {
+          "applicable": false,
+          "domain_covers_study_area": 0.3097,
+          "geometry": "zones",
+          "layer": "data/raw/chennai_flows_100yr.kml",
+          "layer_km2": 248.1,
+          "min_domain_share": 0.9,
+          "modelling_domain_km2": 468.6,
+          "network_state": "flood",
+          "reason": "the layer was drawn for a smaller city: its modelling domain covers only 31.0% of this study area, leaving 1,005 km\u00b2 where a flood would be reported as dry",
+          "scenario": "flood100",
+          "sourced_for": "gcc",
+          "study_area_km2": 1455.7,
+          "study_area_outside_domain_km2": 1004.9,
+          "test": "modelling domain"
+        },
+        "flood25": {
+          "applicable": false,
+          "domain_covers_study_area": 0.3075,
+          "geometry": "zones",
+          "layer": "data/raw/chennai_flows_25yr.kml",
+          "layer_km2": 201.9,
+          "min_domain_share": 0.9,
+          "modelling_domain_km2": 463.3,
+          "network_state": "flood",
+          "reason": "the layer was drawn for a smaller city: its modelling domain covers only 30.8% of this study area, leaving 1,008 km\u00b2 where a flood would be reported as dry",
+          "scenario": "flood25",
+          "sourced_for": "gcc",
+          "study_area_km2": 1455.7,
+          "study_area_outside_domain_km2": 1008.0,
+          "test": "modelling domain"
+        },
+        "flood5": {
+          "applicable": false,
+          "domain_covers_study_area": 0.3048,
+          "geometry": "zones",
+          "layer": "data/raw/chennai_flows_5yr.kml",
+          "layer_km2": 127.6,
+          "min_domain_share": 0.9,
+          "modelling_domain_km2": 459.3,
+          "network_state": "flood",
+          "reason": "the layer was drawn for a smaller city: its modelling domain covers only 30.5% of this study area, leaving 1,012 km\u00b2 where a flood would be reported as dry",
+          "scenario": "flood5",
+          "sourced_for": "gcc",
+          "study_area_km2": 1455.7,
+          "study_area_outside_domain_km2": 1012.0,
+          "test": "modelling domain"
+        },
+        "peak": {
+          "applicable": true,
+          "network_state": "dry",
+          "reason": "not a flood scenario",
+          "scenario": "peak"
+        }
+      },
+      "study_area_km2": 1455.7
+    },
+    "gcc": {
+      "applicable": [
+        "dry",
+        "f2015",
+        "flood100",
+        "flood25",
+        "flood5",
+        "peak"
+      ],
+      "refused": [],
+      "scenarios": {
+        "dry": {
+          "applicable": true,
+          "network_state": "dry",
+          "reason": "not a flood scenario",
+          "scenario": "dry"
+        },
+        "f2015": {
+          "applicable": true,
+          "domain_covers_study_area": 0.5138,
+          "geometry": "points",
+          "layer": "data/raw/chennai_inundation_points_depth.kml",
+          "layer_km2": 19.0,
+          "min_domain_share": 0.9,
+          "modelling_domain_km2": 234.5,
+          "network_state": "flood",
+          "reason": "observed points, produced for the 'gcc' study area",
+          "scenario": "f2015",
+          "sourced_for": "gcc",
+          "study_area_km2": 431.9,
+          "study_area_outside_domain_km2": 210.0,
+          "test": "declared source extent"
+        },
+        "flood100": {
+          "applicable": true,
+          "domain_covers_study_area": 0.9339,
+          "geometry": "zones",
+          "layer": "data/raw/chennai_flows_100yr.kml",
+          "layer_km2": 248.1,
+          "min_domain_share": 0.9,
+          "modelling_domain_km2": 468.6,
+          "network_state": "flood",
+          "reason": "the layer's modelling domain covers 93.4% of this study area",
+          "scenario": "flood100",
+          "sourced_for": "gcc",
+          "study_area_km2": 431.9,
+          "study_area_outside_domain_km2": 28.5,
+          "test": "modelling domain"
+        },
+        "flood25": {
+          "applicable": true,
+          "domain_covers_study_area": 0.9312,
+          "geometry": "zones",
+          "layer": "data/raw/chennai_flows_25yr.kml",
+          "layer_km2": 201.9,
+          "min_domain_share": 0.9,
+          "modelling_domain_km2": 463.3,
+          "network_state": "flood",
+          "reason": "the layer's modelling domain covers 93.1% of this study area",
+          "scenario": "flood25",
+          "sourced_for": "gcc",
+          "study_area_km2": 431.9,
+          "study_area_outside_domain_km2": 29.7,
+          "test": "modelling domain"
+        },
+        "flood5": {
+          "applicable": true,
+          "domain_covers_study_area": 0.9289,
+          "geometry": "zones",
+          "layer": "data/raw/chennai_flows_5yr.kml",
+          "layer_km2": 127.6,
+          "min_domain_share": 0.9,
+          "modelling_domain_km2": 459.3,
+          "network_state": "flood",
+          "reason": "the layer's modelling domain covers 92.9% of this study area",
+          "scenario": "flood5",
+          "sourced_for": "gcc",
+          "study_area_km2": 431.9,
+          "study_area_outside_domain_km2": 30.7,
+          "test": "modelling domain"
+        },
+        "peak": {
+          "applicable": true,
+          "network_state": "dry",
+          "reason": "not a flood scenario",
+          "scenario": "peak"
+        }
+      },
+      "study_area_km2": 431.9
+    },
+    "metro": {
+      "applicable": [
+        "dry",
+        "peak"
+      ],
+      "refused": [
+        "f2015",
+        "flood100",
+        "flood25",
+        "flood5"
+      ],
+      "scenarios": {
+        "dry": {
+          "applicable": true,
+          "network_state": "dry",
+          "reason": "not a flood scenario",
+          "scenario": "dry"
+        },
+        "f2015": {
+          "applicable": false,
+          "domain_covers_study_area": 0.1483,
+          "geometry": "points",
+          "layer": "data/raw/chennai_inundation_points_depth.kml",
+          "layer_km2": 19.0,
+          "min_domain_share": 0.9,
+          "modelling_domain_km2": 234.5,
+          "network_state": "flood",
+          "reason": "observed points produced for the 'gcc' study area, not for 'metro': outside the surveyed city an absent point means nobody looked, not that nothing flooded",
+          "scenario": "f2015",
+          "sourced_for": "gcc",
+          "study_area_km2": 1580.9,
+          "study_area_outside_domain_km2": 1346.4,
+          "test": "declared source extent"
+        },
+        "flood100": {
+          "applicable": false,
+          "domain_covers_study_area": 0.2887,
+          "geometry": "zones",
+          "layer": "data/raw/chennai_flows_100yr.kml",
+          "layer_km2": 248.1,
+          "min_domain_share": 0.9,
+          "modelling_domain_km2": 468.6,
+          "network_state": "flood",
+          "reason": "the layer was drawn for a smaller city: its modelling domain covers only 28.9% of this study area, leaving 1,125 km\u00b2 where a flood would be reported as dry",
+          "scenario": "flood100",
+          "sourced_for": "gcc",
+          "study_area_km2": 1580.9,
+          "study_area_outside_domain_km2": 1124.5,
+          "test": "modelling domain"
+        },
+        "flood25": {
+          "applicable": false,
+          "domain_covers_study_area": 0.2867,
+          "geometry": "zones",
+          "layer": "data/raw/chennai_flows_25yr.kml",
+          "layer_km2": 201.9,
+          "min_domain_share": 0.9,
+          "modelling_domain_km2": 463.3,
+          "network_state": "flood",
+          "reason": "the layer was drawn for a smaller city: its modelling domain covers only 28.7% of this study area, leaving 1,128 km\u00b2 where a flood would be reported as dry",
+          "scenario": "flood25",
+          "sourced_for": "gcc",
+          "study_area_km2": 1580.9,
+          "study_area_outside_domain_km2": 1127.6,
+          "test": "modelling domain"
+        },
+        "flood5": {
+          "applicable": false,
+          "domain_covers_study_area": 0.2841,
+          "geometry": "zones",
+          "layer": "data/raw/chennai_flows_5yr.kml",
+          "layer_km2": 127.6,
+          "min_domain_share": 0.9,
+          "modelling_domain_km2": 459.3,
+          "network_state": "flood",
+          "reason": "the layer was drawn for a smaller city: its modelling domain covers only 28.4% of this study area, leaving 1,132 km\u00b2 where a flood would be reported as dry",
+          "scenario": "flood5",
+          "sourced_for": "gcc",
+          "study_area_km2": 1580.9,
+          "study_area_outside_domain_km2": 1131.8,
+          "test": "modelling domain"
+        },
+        "peak": {
+          "applicable": true,
+          "network_state": "dry",
+          "reason": "not a flood scenario",
+          "scenario": "peak"
+        }
+      },
+      "study_area_km2": 1580.9
+    }
+  },
+  "provisional_reason": "station inventory not built",
+  "publication_basis": "blocked",
+  "seconds": 10.0
+}

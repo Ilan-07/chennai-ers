@@ -63,6 +63,39 @@ print(f"  structural bound: {LSCP['wards_zero_coverage']} of {LSCP['wards_with_d
       f"is {K_MIN_POSITIVE}.\n  Any k below that has a worst-ward floor of exactly 0, "
       f"provably.", flush=True)
 
+def _covered_by(sites) -> np.ndarray:
+    covered = precov.copy()
+    for j in sites:
+        covered |= (M[:, int(j)].toarray().ravel() > 0)
+    return covered
+
+
+def _worst_ward_of(sites) -> float:
+    """The worst ward's coverage share under an explicit siting.
+
+    The solver's `z` is NOT this number. HiGHS satisfies the maximin constraints
+    to its primal feasibility tolerance, so the z it reports sits about 1e-6
+    ABOVE what its own integer solution actually achieves -- measured at exactly
+    1.000e-06 for fire k=20. Re-imposing z as a hard floor is then infeasible
+    against the very siting that produced it, and an infeasible second stage used
+    to be published as a coverage figure. Score the siting instead of trusting
+    the objective.
+    """
+    covered = _covered_by(sites)
+    return min(float(demand[(ward == w) & covered].sum() / demand[ward == w].sum())
+               for w in np.unique(ward) if demand[ward == w].sum() > 0)
+
+
+def _share_of(sites) -> float:
+    """City coverage share for an explicit site set.
+
+    Needed because a maximin solve reports the worst-ward floor as its objective,
+    not city coverage, so when the lexicographic stage cannot be used its siting
+    still has to be scored somehow.
+    """
+    return float(demand[_covered_by(sites)].sum() / tot)
+
+
 rows = []
 for k in KS:
     p = SitingProblem(coverage=M, precovered=precov, demand=demand, k=k,
@@ -81,13 +114,30 @@ for k in KS:
     # Re-solve for maximum coverage SUBJECT TO the achieved floor, so the
     # "equity" column is the best equitable solution rather than a random one.
     # Floors below 1e-4 are solver noise, not policy. Treat them as zero.
-    lex = None
-    if beta > 1e-4:
+    lex, lex_failed = None, None
+    # Re-impose the floor the maximin siting ACHIEVES, not the one the solver
+    # reports. See _worst_ward_of: the two differ by the solver's feasibility
+    # tolerance, and the difference is the whole bug.
+    beta_achieved = _worst_ward_of(mm.selected) if mm is not None else beta
+    if beta_achieved > 1e-4:
         p_lex = SitingProblem(coverage=M, precovered=precov, demand=demand, k=k,
-                              ward_of=ward, land_feasible=feas, equity_floor=beta)
+                              ward_of=ward, land_feasible=feas,
+                              equity_floor=beta_achieved)
         lex = exact.solve(p_lex, time_limit_s=EFF_LIMIT_S)
-        mm_share = float((lex.baseline_covered + lex.objective) / tot)
-        mm_sites = lex.selected
+
+        # An infeasible or empty solve returns objective 0.0 and no sites, and
+        # `(baseline_covered + 0) / tot` is then EXACTLY the do-nothing baseline.
+        # That is what k=20 fire published: a 22.92-point "equity cost" measured
+        # against a solution the solver never found. A failed second stage is not
+        # a result -- fall back to the maximin siting itself, which is feasible by
+        # construction, and say that is what happened.
+        if not lex.selected or lex.status not in ("Optimal",):
+            lex_failed = lex.status
+            mm_sites = tuple(mm.selected) if mm is not None else eff.selected
+            mm_share = _share_of(mm_sites)
+        else:
+            mm_share = float((lex.baseline_covered + lex.objective) / tot)
+            mm_sites = lex.selected
     else:
         # Floor is 0: the equity constraint binds nothing, so the equitable
         # solution IS the efficient one. Reporting anything else is meaningless.
@@ -103,8 +153,10 @@ for k in KS:
                     f"needed to give every ward any coverage, so the floor is 0)")
     all_proven = maximin_proven and eff.proven_optimal and (
         lex is None or lex.proven_optimal)
-    rows.append({"k": k, "maximin_worst_ward": round(beta, 4),
-                 "maximin_degenerate": bool(beta <= 1e-4),
+    rows.append({"k": k, "maximin_worst_ward": round(beta_achieved, 4),
+                 "maximin_worst_ward_solver_z": round(beta, 6),
+                 "solver_z_overstates_by": round(beta - beta_achieved, 9),
+                 "maximin_degenerate": bool(beta_achieved <= 1e-4),
                  "sites": list(mm_sites),
                  "maximin_city_coverage": round(mm_share, 4),
                  "efficiency_city_coverage": round(float(eff_share), 4),
@@ -116,9 +168,14 @@ for k in KS:
                  "proven_optimal": bool(all_proven),
                  "maximin_optimality": maximin_note,
                  "efficiency_optimality": eff.optimality_note,
-                 "lexicographic_optimality": None if lex is None else lex.optimality_note})
+                 "lexicographic_optimality": None if lex is None else lex.optimality_note,
+                 "lexicographic_failed": lex_failed,
+                 "equity_coverage_from": ("maximin siting (lexicographic stage "
+                                          f"{lex_failed})" if lex_failed else
+                                          "lexicographic re-solve" if lex is not None
+                                          else "efficiency siting (floor is 0)")})
     r = rows[-1]
-    print(f"  k={k:3d}  worst-ward floor {beta:6.2%}  |  city coverage: "
+    print(f"  k={k:3d}  worst-ward floor {beta_achieved:6.2%}  |  city coverage: "
           f"efficiency {eff_share:6.2%}  equity {mm_share:6.2%}  "
           f"cost {r['equity_cost_points']:5.2f} pts  ({r['solve_s']:.0f}s)"
           f"{'  [floor 0 by structural bound]' if mm is None else ''}"
@@ -154,6 +211,24 @@ if bad:
     raise SystemExit(f"IMPOSSIBLE: {len(bad)} curve point(s) fall below the "
                      f"{ctx.baseline_share:.2%} do-nothing baseline: "
                      f"{[(r['k'], r['efficiency_city_coverage']) for r in bad]}")
+
+# A row that spends k stations and names none of them is not a solution, and the
+# baseline test above cannot catch it: an empty siting scores EXACTLY the
+# baseline, not below it. Fire k=20 shipped that way -- a 22.92-point equity cost
+# measured against a siting the solver never found.
+empty = [r for r in rows if r["k"] > 0 and not r["sites"]]
+if empty:
+    raise SystemExit(f"IMPOSSIBLE: {len(empty)} curve point(s) select no sites at "
+                     f"k>0: {[r['k'] for r in empty]}. An empty siting scores the "
+                     f"do-nothing baseline and reads as a huge equity cost.")
+
+# A lexicographic stage that fell back is a real result, but not the one the
+# column claims, so it is surfaced rather than left in the JSON.
+fell_back = [r for r in rows if r.get("lexicographic_failed")]
+if fell_back:
+    print(f"\n  NOTE: {len(fell_back)} point(s) fell back to the maximin siting "
+          f"because the lexicographic re-solve did not return one: "
+          f"{[(r['k'], r['lexicographic_failed']) for r in fell_back]}", flush=True)
 
 json.dump({**stamp(config=config_bundle(SVC), stations=ctx.stations, service=SVC),
            **publication_basis(), "service": SVC,

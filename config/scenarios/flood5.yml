@@ -13,6 +13,12 @@ flood:
     LOW: passable
   wading_speed_factor: 0.35
   bridges_exempt: true
+  # The study area this layer was PRODUCED for. Chennai Flows and the 2015
+  # NRSC/UNOSAT survey are both corporation products; neither was drawn for the
+  # built-up metro, let alone the full settlement. Declared rather than inferred,
+  # because a sample's convex hull is not its domain -- points cluster where
+  # flooding happened, not where the survey could have looked.
+  sourced_for: gcc
 # Weight 0.00 — REPORTED, NOT OPTIMISED AGAINST.
 # The design-basis weights (A-10) already sum to 1.0 over dry/peak/f25/f100 and
 # are not silently re-cut to admit a new scenario. This layer exists to give the

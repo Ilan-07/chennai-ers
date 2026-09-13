@@ -1,7 +1,7 @@
 """Baseline coverage on the current station network. Build step 09.
 
 Publication status is decided at run time by ers.publish, not asserted here:
-29 of 33 stations still carry geocoder positions rather
+34 of 39 stations still carry geocoder positions rather
 than surveyed ones, so the publish gate is closed and every figure here is
 stamped accordingly. The pipeline runs anyway so the whole chain is exercised.
 """

@@ -1,0 +1,282 @@
+{
+  "PROVISIONAL": true,
+  "all_runs_proven_optimal": true,
+  "baseline_share": 0.4288,
+  "bases": {
+    "bases": 43,
+    "by_service": {
+      "fire": 43
+    },
+    "proxy": null,
+    "source": "authoritative"
+  },
+  "candidates": 1487,
+  "candidates_land_feasible": 357,
+  "cells": 7921,
+  "code_commit": "unknown",
+  "config_hash": "81b56026364fb9375ec3a2cfe7dba6625506b379f9dc6736763864e00595d2b8",
+  "input_digests": [],
+  "matrix_nnz": 33945,
+  "precovered_cells": 1544,
+  "provisional_reason": "station inventory not built",
+  "publication_basis": "blocked",
+  "run_id": "8bf4a72555993c03",
+  "runs": [
+    {
+      "candidate_set": "land-feasible",
+      "exact_s": 1.652,
+      "exact_share": 0.4488,
+      "greedy_gap_vs_exact": 0.0,
+      "greedy_s": 0.0012,
+      "greedy_share": 0.4488,
+      "k": 1,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        326
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "land-feasible",
+      "exact_s": 0.291,
+      "exact_share": 0.4676,
+      "greedy_gap_vs_exact": 0.0,
+      "greedy_s": 0.0009,
+      "greedy_share": 0.4676,
+      "k": 2,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        265,
+        326
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "land-feasible",
+      "exact_s": 0.266,
+      "exact_share": 0.4846,
+      "greedy_gap_vs_exact": 0.0,
+      "greedy_s": 0.001,
+      "greedy_share": 0.4846,
+      "k": 3,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        265,
+        326,
+        652
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "land-feasible",
+      "exact_s": 0.273,
+      "exact_share": 0.5137,
+      "greedy_gap_vs_exact": -0.0,
+      "greedy_s": 0.0017,
+      "greedy_share": 0.5137,
+      "k": 5,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        265,
+        326,
+        432,
+        458,
+        652
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "land-feasible",
+      "exact_s": 0.297,
+      "exact_share": 0.5494,
+      "greedy_gap_vs_exact": -0.0,
+      "greedy_s": 0.0023,
+      "greedy_share": 0.5494,
+      "k": 8,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        38,
+        265,
+        326,
+        432,
+        458,
+        652,
+        756,
+        1057
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "land-feasible",
+      "exact_s": 0.276,
+      "exact_share": 0.5689,
+      "greedy_gap_vs_exact": -0.0,
+      "greedy_s": 0.0028,
+      "greedy_share": 0.5689,
+      "k": 10,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        20,
+        38,
+        84,
+        265,
+        326,
+        432,
+        458,
+        652,
+        756,
+        1057
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "unconstrained",
+      "exact_s": 1.944,
+      "exact_share": 0.4488,
+      "greedy_gap_vs_exact": 0.0,
+      "greedy_s": 0.0006,
+      "greedy_share": 0.4488,
+      "k": 1,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        326
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "unconstrained",
+      "exact_s": 0.53,
+      "exact_share": 0.4676,
+      "greedy_gap_vs_exact": 0.0,
+      "greedy_s": 0.0009,
+      "greedy_share": 0.4676,
+      "k": 2,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        265,
+        326
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "unconstrained",
+      "exact_s": 0.529,
+      "exact_share": 0.4846,
+      "greedy_gap_vs_exact": 0.0,
+      "greedy_s": 0.0013,
+      "greedy_share": 0.4846,
+      "k": 3,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        265,
+        326,
+        652
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "unconstrained",
+      "exact_s": 0.56,
+      "exact_share": 0.5137,
+      "greedy_gap_vs_exact": -0.0,
+      "greedy_s": 0.0017,
+      "greedy_share": 0.5137,
+      "k": 5,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        265,
+        326,
+        432,
+        458,
+        652
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "unconstrained",
+      "exact_s": 0.554,
+      "exact_share": 0.5494,
+      "greedy_gap_vs_exact": -0.0,
+      "greedy_s": 0.0027,
+      "greedy_share": 0.5494,
+      "k": 8,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        38,
+        265,
+        326,
+        432,
+        458,
+        652,
+        756,
+        1057
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "unconstrained",
+      "exact_s": 0.551,
+      "exact_share": 0.5689,
+      "greedy_gap_vs_exact": -0.0,
+      "greedy_s": 0.0026,
+      "greedy_share": 0.5689,
+      "k": 10,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        20,
+        38,
+        84,
+        265,
+        326,
+        432,
+        458,
+        652,
+        756,
+        1057
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    }
+  ],
+  "seconds": 14.3,
+  "seed": null,
+  "service": "fire",
+  "stations_signature": "e7afde47c072b369",
+  "travel_budget_s": 280,
+  "trip_overhead_s": 17.5
+}

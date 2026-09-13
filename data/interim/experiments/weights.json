@@ -1,65 +1,65 @@
 {
   "assumption": "A-10",
-  "code_commit": "04a7cdca8770f97963fadee3526628509663c6dd-dirty",
+  "code_commit": "099ca6bdbb2f7d352792f19b4582a562491ea684-dirty",
   "config_hash": "5f977eb68fac2ef082aab92476e53185bac79d0979c8598bf5cda868c6c72b0f",
   "experiment": "E-10 / A-10 design-basis weight sweep",
   "input_digests": [],
-  "run_id": "ba705328e64ec5ad",
-  "seconds": 41.2,
+  "run_id": "1c833926b5b091f8",
+  "seconds": 42.4,
   "seed": null,
   "shipped_dry_weight": 0.7,
-  "stations_signature": "087abc04e0179c24",
+  "stations_signature": "f98b313a5600a358",
   "summary": {
     "ems": {
-      "distinct_expected_site_sets": 2,
+      "distinct_expected_site_sets": 5,
       "distinct_maximin_site_sets": 1,
       "expected_set_stable_across_sweep": false,
       "shared_sites_range": [
         2,
         3
       ],
-      "shipped_weight_shared_sites": 2
+      "shipped_weight_shared_sites": 3
     },
     "fire": {
-      "distinct_expected_site_sets": 2,
+      "distinct_expected_site_sets": 4,
       "distinct_maximin_site_sets": 1,
       "expected_set_stable_across_sweep": false,
       "shared_sites_range": [
-        4,
-        4
+        1,
+        3
       ],
-      "shipped_weight_shared_sites": 4
+      "shipped_weight_shared_sites": 2
     }
   },
   "sweep": [
     {
       "both_proven_optimal": true,
       "dry_weight": 0.5,
-      "expected_objective": 0.6831,
+      "expected_objective": 0.736,
       "expected_sites": [
-        54,
-        62,
-        94,
-        118,
-        179,
-        275,
-        404,
-        480,
-        482,
-        528
-      ],
-      "maximin_objective": 0.4963,
-      "maximin_sites": [
-        25,
-        32,
-        63,
-        94,
-        127,
-        166,
+        56,
+        93,
+        116,
+        126,
         174,
+        275,
+        325,
         404,
         408,
-        480
+        482
+      ],
+      "maximin_objective": 0.5636,
+      "maximin_sites": [
+        25,
+        56,
+        86,
+        138,
+        161,
+        335,
+        404,
+        408,
+        480,
+        699
       ],
       "service": "ems",
       "shared_sites": 3
@@ -67,127 +67,127 @@
     {
       "both_proven_optimal": true,
       "dry_weight": 0.6,
-      "expected_objective": 0.7095,
+      "expected_objective": 0.7584,
       "expected_sites": [
-        54,
-        62,
-        94,
-        118,
-        179,
-        275,
-        404,
-        480,
-        482,
-        528
-      ],
-      "maximin_objective": 0.4963,
-      "maximin_sites": [
-        25,
-        32,
-        63,
-        94,
-        127,
-        166,
+        35,
+        93,
+        116,
+        126,
         174,
+        275,
+        325,
         404,
         408,
-        480
+        482
+      ],
+      "maximin_objective": 0.5636,
+      "maximin_sites": [
+        25,
+        56,
+        86,
+        138,
+        161,
+        335,
+        404,
+        408,
+        480,
+        699
+      ],
+      "service": "ems",
+      "shared_sites": 2
+    },
+    {
+      "both_proven_optimal": true,
+      "dry_weight": 0.7,
+      "expected_objective": 0.7816,
+      "expected_sites": [
+        54,
+        93,
+        116,
+        174,
+        275,
+        404,
+        408,
+        449,
+        480,
+        482
+      ],
+      "maximin_objective": 0.5636,
+      "maximin_sites": [
+        25,
+        56,
+        86,
+        138,
+        161,
+        335,
+        404,
+        408,
+        480,
+        699
       ],
       "service": "ems",
       "shared_sites": 3
     },
     {
       "both_proven_optimal": true,
-      "dry_weight": 0.7,
-      "expected_objective": 0.7367,
-      "expected_sites": [
-        54,
-        62,
-        94,
-        118,
-        175,
-        275,
-        421,
-        449,
-        480,
-        528
-      ],
-      "maximin_objective": 0.4963,
-      "maximin_sites": [
-        25,
-        32,
-        63,
-        94,
-        127,
-        166,
-        174,
-        404,
-        408,
-        480
-      ],
-      "service": "ems",
-      "shared_sites": 2
-    },
-    {
-      "both_proven_optimal": true,
       "dry_weight": 0.8,
-      "expected_objective": 0.7641,
+      "expected_objective": 0.8064,
       "expected_sites": [
         54,
-        62,
         94,
-        118,
-        175,
-        275,
-        421,
-        449,
-        480,
-        528
-      ],
-      "maximin_objective": 0.4963,
-      "maximin_sites": [
-        25,
-        32,
-        63,
-        94,
-        127,
-        166,
+        116,
         174,
+        275,
         404,
         408,
-        480
+        449,
+        480,
+        482
+      ],
+      "maximin_objective": 0.5636,
+      "maximin_sites": [
+        25,
+        56,
+        86,
+        138,
+        161,
+        335,
+        404,
+        408,
+        480,
+        699
       ],
       "service": "ems",
-      "shared_sites": 2
+      "shared_sites": 3
     },
     {
       "both_proven_optimal": true,
       "dry_weight": 0.9,
-      "expected_objective": 0.7916,
+      "expected_objective": 0.8314,
       "expected_sites": [
         54,
-        62,
         94,
-        118,
-        175,
+        116,
+        174,
         275,
-        421,
+        404,
         449,
         480,
-        528
+        482,
+        519
       ],
-      "maximin_objective": 0.4963,
+      "maximin_objective": 0.5636,
       "maximin_sites": [
         25,
-        32,
-        63,
-        94,
-        127,
-        166,
-        174,
+        56,
+        86,
+        138,
+        161,
+        335,
         404,
         408,
-        480
+        480,
+        699
       ],
       "service": "ems",
       "shared_sites": 2
@@ -195,162 +195,162 @@
     {
       "both_proven_optimal": true,
       "dry_weight": 0.5,
-      "expected_objective": 0.5287,
+      "expected_objective": 0.574,
       "expected_sites": [
-        4,
         25,
         32,
         54,
-        63,
         94,
         118,
         175,
         404,
+        408,
+        480,
         482
       ],
-      "maximin_objective": 0.3329,
+      "maximin_objective": 0.3828,
       "maximin_sites": [
-        15,
+        4,
         25,
         32,
-        51,
-        63,
         94,
-        138,
-        163,
-        195,
-        480
+        136,
+        146,
+        162,
+        174,
+        225,
+        325
       ],
       "service": "fire",
-      "shared_sites": 4
+      "shared_sites": 3
     },
     {
       "both_proven_optimal": true,
       "dry_weight": 0.6,
-      "expected_objective": 0.5536,
+      "expected_objective": 0.6,
       "expected_sites": [
-        4,
         25,
-        32,
-        54,
-        63,
+        35,
         94,
         118,
         175,
         404,
-        482
+        408,
+        421,
+        480,
+        575
       ],
-      "maximin_objective": 0.3329,
+      "maximin_objective": 0.3828,
       "maximin_sites": [
-        15,
+        4,
         25,
         32,
-        51,
-        63,
         94,
-        138,
-        163,
-        195,
-        480
+        136,
+        146,
+        162,
+        174,
+        225,
+        325
       ],
       "service": "fire",
-      "shared_sites": 4
+      "shared_sites": 2
     },
     {
       "both_proven_optimal": true,
       "dry_weight": 0.7,
-      "expected_objective": 0.5785,
+      "expected_objective": 0.6263,
       "expected_sites": [
+        25,
+        35,
+        94,
+        116,
+        175,
+        404,
+        408,
+        421,
+        480,
+        575
+      ],
+      "maximin_objective": 0.3828,
+      "maximin_sites": [
         4,
         25,
         32,
-        54,
-        63,
         94,
-        118,
-        175,
-        404,
-        482
-      ],
-      "maximin_objective": 0.3329,
-      "maximin_sites": [
-        15,
-        25,
-        32,
-        51,
-        63,
-        94,
-        138,
-        163,
-        195,
-        480
+        136,
+        146,
+        162,
+        174,
+        225,
+        325
       ],
       "service": "fire",
-      "shared_sites": 4
+      "shared_sites": 2
     },
     {
       "both_proven_optimal": true,
       "dry_weight": 0.8,
-      "expected_objective": 0.6036,
+      "expected_objective": 0.6527,
       "expected_sites": [
-        4,
         25,
-        32,
-        54,
-        63,
+        35,
         94,
         116,
         175,
+        404,
         408,
-        421
+        421,
+        480,
+        575
       ],
-      "maximin_objective": 0.3329,
+      "maximin_objective": 0.3828,
       "maximin_sites": [
-        15,
+        4,
         25,
         32,
-        51,
-        63,
         94,
-        138,
-        163,
-        195,
-        480
+        136,
+        146,
+        162,
+        174,
+        225,
+        325
       ],
       "service": "fire",
-      "shared_sites": 4
+      "shared_sites": 2
     },
     {
       "both_proven_optimal": true,
       "dry_weight": 0.9,
-      "expected_objective": 0.6289,
+      "expected_objective": 0.6793,
       "expected_sites": [
+        25,
+        35,
+        116,
+        175,
+        335,
+        404,
+        408,
+        421,
+        480,
+        575
+      ],
+      "maximin_objective": 0.3828,
+      "maximin_sites": [
         4,
         25,
         32,
-        54,
-        63,
         94,
-        116,
-        175,
-        408,
-        421
-      ],
-      "maximin_objective": 0.3329,
-      "maximin_sites": [
-        15,
-        25,
-        32,
-        51,
-        63,
-        94,
-        138,
-        163,
-        195,
-        480
+        136,
+        146,
+        162,
+        174,
+        225,
+        325
       ],
       "service": "fire",
-      "shared_sites": 4
+      "shared_sites": 1
     }
   ]
 }

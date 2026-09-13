@@ -22,23 +22,35 @@ reason: >
 # What the published figures actually rest on. This is the text that travels
 # with every number.
 rests_on: >
-  29 of 33 station positions are Google Maps business listings adopted in E-11c,
-  not surveyed coordinates. 14 of those 29 have a confirmed identity (an official
-  TNFRS landline or CUG mobile matching the listing, or an OSM fire feature
-  within 150 m). The remaining 15 are named and categorised as fire stations but
-  are corroborated by nothing independent. 3 are ambiguous between two candidate
-  listings and 1 (Athipattu) is contested.
+  34 of 39 station positions are Google Maps business listings adopted in E-11c,
+  not surveyed coordinates -- 29 from the GCC list plus the 5 map-listed stations
+  of the 6 the TNFRS directory adds (ADR-001a). 14 of those 34 have a confirmed
+  identity (an official TNFRS landline or CUG mobile matching the listing, or an
+  OSM fire feature within 150 m). The remaining 20 are named and categorised as
+  fire stations but are corroborated by nothing independent; 15 of them carry the
+  identity question the uncertainty draw is built on. 3 are ambiguous between two
+  candidate listings and 1 (Athipattu) is contested.
 
 # The interval that must be quoted alongside any coverage figure published under
 # this waiver. Both numbers are measured (E-11, E-11g), not assumed.
 uncertainty:
-  if_unconfirmed_listings_correct_points: 0.83
-  if_unconfirmed_listings_wrong_points: 7.63
+  if_unconfirmed_listings_correct_points: 1.10
+  if_unconfirmed_listings_wrong_points: 8.55
   note: >
-    At the wider figure every effect this project has measured -- the junction
-    term at 3.4 points, maximin siting at 4.7, the equity cost at k=20 at 5.0 --
-    sits inside the noise. A coverage figure published under this waiver may not
-    be quoted at the narrow interval alone.
+    Re-measured 2026-09-13 against the 39-station inventory (ADR-001a), which
+    widened both ends: 0.87 -> 1.10 and 8.05 -> 8.55. Six stations TNFRS
+    operates inside the corporation were added, five of them on map listings
+    rather than surveys, so there is more position uncertainty in the draw and
+    not less. The optimistic end also stopped charging those six a flat 60 m --
+    they are map listings, and are now drawn at the 50 m their own evidence
+    supports (F-32), which is why it reads 1.10 and not 1.11.
+    At the wider figure almost every effect this project has measured sits
+    inside the noise -- the emergency multiplier at 7.8 points, the junction
+    term at 6.2, the equity cost at k=10 at 6.3, the wading factor at 5.6,
+    maximin siting at 3.4, A-07's risk multipliers at 2.4, the flood closure
+    depth at 1.3, the candidate lattice at 0.8. Exactly one clears it: the
+    +/-20% class-speed band at 21.3 points. A coverage figure published under
+    this waiver may not be quoted at the narrow interval alone.
 
 # Not an expiry that stops anything working -- a date at which someone is
 # expected to look again and either survey the stations or restate the decision.

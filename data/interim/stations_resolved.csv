@@ -32,3 +32,9 @@ Manali,Chennai Suburban,fire,13.1624801,80.2635565,google_maps_poi,google_maps_p
 Thiruvottiyur,Chennai Suburban,fire,13.1564662,80.304847,google_maps_poi,google_maps_poi_lookup,Thiruvottiyur Fire station [Fire station] two POIs 35 m apart - same compound,50,True,,,named_fire_station,
 Poonamallee,Chennai Suburban,fire,13.0470935,80.11948,google_maps_poi,google_maps_poi_lookup,Poonamallee Fire And Rescue Station [Fire station] single unambiguous POI,50,True,,,identity_confirmed,tnfrs_landline
 Redhills,Chennai Suburban,fire,13.2033002,80.1943883,google_maps_poi,google_maps_poi_lookup,Fire & Rescue Station - Redhills [Fire station] single unambiguous POI,50,True,,,named_fire_station,
+Velachery,Chennai City South,fire,12.976853,80.227634,osm_fire_feature,tnfrs_region_northern,"OSM amenity=fire_station ""Fire service station;Fire Force Service center""",60,True,,,ok,
+Thuraipakkam,Chennai City South,fire,12.9486477,80.2409381,google_maps_poi,tnfrs_region_northern,"Thuraipakkam Fire Station, single unambiguous POI",50,True,,,ok,
+Medavakkam,Chennai City South,fire,12.9151802,80.1925262,google_maps_poi,tnfrs_region_northern,"Medavakkam Fire Station; 1.0 km outside the GCC boundary, covers into it",50,True,,,ok,
+Kolathur,Chennai Suburban,fire,13.1171493,80.219221,google_maps_poi,tnfrs_region_northern,"kolathur fire station, single unambiguous POI",50,True,,,ok,
+Maduravoyal,Chennai Suburban,fire,13.060276,80.162701,google_maps_poi,tnfrs_region_northern,"Fire and rescue station maduravoyal, single unambiguous POI",50,True,,,ok,
+Virugambakkam,Chennai City Central,fire,13.0350035,80.1730242,google_maps_poi,tnfrs_region_northern,"Virugambakkam Fire Station, single unambiguous POI",50,True,,,ok,

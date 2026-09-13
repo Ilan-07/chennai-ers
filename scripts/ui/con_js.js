@@ -715,6 +715,12 @@ cv.onmousemove=e=>{
   tip.classList.add("on");};
 cv.onmouseleave=()=>tip.classList.remove("on");
 window.addEventListener("resize",fit);
+// Counts come from the payload, never from the HTML: the header said "33
+// stations" for a day after the inventory became 39, and nothing caught it.
+$("cellCount").textContent=`${D.meta.cells.toLocaleString("en-IN")} cells`;
+$("subline").textContent=
+  `Travel time on the real road network · ${D.stations.length} stations · `+
+  `${D.meta.cells.toLocaleString("en-IN")} demand cells`;
 $("stamp").textContent=(D.meta.publication_basis==="waived" ? "Under waiver · "
   : D.meta.publication_basis==="surveyed" ? "Surveyed · " : "Provisional · ")
   +D.meta.stations_signature.slice(0,8);

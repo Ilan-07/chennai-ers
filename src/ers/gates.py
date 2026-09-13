@@ -53,8 +53,24 @@ class GateResult:
         return self.severity == BUILD and not self.passed
 
 
-def _load(root: Path, name: str) -> dict | None:
-    p = root / "data/interim" / name
+def _served_scenarios(root: Path, subdir: str = "") -> list[str]:
+    """Scenarios this build actually answers for, read from what it shipped.
+
+    Read from `ui_data.json` rather than from the scenario configs: the configs
+    say what exists, and the question here is what this study area SERVES. A
+    scenario present in config but absent from the build cannot mislead anyone.
+    """
+    ui = _load(root, "ui_data.json", subdir)
+    if not ui:
+        return []
+    out: set[str] = set()
+    for svc in (ui.get("services") or {}).values():
+        out.update((svc.get("scenarios") or {}).keys())
+    return sorted(out)
+
+
+def _load(root: Path, name: str, subdir: str = "") -> dict | None:
+    p = root / "data/interim" / subdir / name if subdir else root / "data/interim" / name
     if not p.exists():
         return None
     try:
@@ -63,14 +79,26 @@ def _load(root: Path, name: str) -> dict | None:
         return None
 
 
-def evaluate(root: str | Path = ".") -> list[GateResult]:
+def evaluate(root: str | Path = ".", subdir: str = "") -> list[GateResult]:
+    """Evaluate every gate against one build.
+
+    `subdir` selects a study-area profile's artefacts. A wider profile has no
+    flood scenarios and no routing validation of its own, so several gates have
+    nothing to read. Those are reported as NOT EVALUATED by `skipped()` rather
+    than quietly omitted: a gate that did not run is a different statement from
+    a gate that passed, and a console showing "10 of 10" for a build that only
+    tried four would be the most misleading number in the project.
+    """
     root = Path(root)
     out: list[GateResult] = []
 
-    qa = _load(root, "stations_qa.json")
-    baseline = _load(root, "baseline_report.json")
-    degr = _load(root, "degradation_report.json")
-    rv = _load(root, "routing_validation.json")
+    def _l(name):
+        return _load(root, name, subdir)
+
+    qa = _l("stations_qa.json")
+    baseline = _l("baseline_report.json")
+    degr = _l("degradation_report.json")
+    rv = _l("routing_validation.json")
 
     # ---- PUBLICATION -----------------------------------------------------
     from ers.publish import load_waiver
@@ -78,13 +106,14 @@ def evaluate(root: str | Path = ".") -> list[GateResult]:
     waiver = load_waiver(root)
     if qa is not None:
         n_open = len(qa.get("survey_required", []))
+        n_total = qa.get("total", n_open)
         surveyed = bool(qa.get("passes_publish_gate"))
         out.append(GateResult(
             "stations_surveyed", PUBLICATION, surveyed,
             f"{n_open} unsurveyed" + (" (WAIVED)" if waiver and not surveyed else ""),
             "0 unsurveyed",
-            "29 of 33 positions are Google Maps POIs, not surveyed. A better "
-            "geocode is not a verification (E-11c). "
+            f"{n_open} of {n_total} positions are map listings, not surveyed. "
+            "A better geocode is not a verification (E-11c). "
             + ("Publication proceeds under the waiver of "
                f"{waiver.get('date')}; this gate stays FAILED because it states "
                "a fact about the data, and a decision to publish does not make "
@@ -141,7 +170,7 @@ def evaluate(root: str | Path = ".") -> list[GateResult]:
             "routing and drifted apart by 21 points."))
 
     for svc in ("ems", "fire"):
-        opt = _load(root, f"optimise_{svc}.json")
+        opt = _l(f"optimise_{svc}.json")
         if opt is None:
             continue
         base = opt.get("baseline_share")
@@ -196,6 +225,24 @@ def evaluate(root: str | Path = ".") -> list[GateResult]:
             "F-19: replaces bias_pct, a ratio of sums whose bootstrap CI ran "
             "up to 25 points wide and could not support a 5% threshold."))
 
+    # A study area must not serve a flood scenario whose layer was drawn for a
+    # smaller city. Reporting unmodelled ground as dry reads as good news exactly
+    # where the study area was widened, which is the opposite of the truth.
+    fx = _load(root, "flood_extent.json")
+    if fx is not None:
+        prof = (fx.get("profiles") or {}).get(subdir or "gcc")
+        if prof is not None:
+            served = set(_served_scenarios(root, subdir))
+            refused = set(prof.get("refused", []))
+            leaked = sorted(served & refused)
+            out.append(GateResult(
+                "flood_layers_cover_their_study_area", BUILD, not leaked,
+                f"{len(leaked)} served beyond its layer" if leaked else "none served beyond its layer",
+                "no flood scenario outside its modelling domain",
+                "A flood layer produced for the corporation cannot speak for the "
+                "metro. Where it is asked anyway, ground nobody modelled is "
+                "returned as dry: " + (", ".join(leaked) if leaked else "n/a")))
+
     # ---- REPORTED --------------------------------------------------------
     emri = (degr or {}).get("emri_comparison") or (degr or {}).get("emri_gate")
     if emri is not None:
@@ -209,6 +256,15 @@ def evaluate(root: str | Path = ".") -> list[GateResult]:
             "which year) is undocumented in our sources, and it compares an "
             "operational mean against modelled scenarios."))
 
+    present = {r.id for r in out}
+    for gid, needs in (("stations_surveyed", "stations_qa.json"),
+                       ("baseline_agreement", "degradation_report.json"),
+                       ("routing_medape", "routing_validation.json"),
+                       ("routing_band_median_ratio", "routing_validation.json")):
+        if gid not in present:
+            out.append(GateResult(
+                gid, BUILD, False, "not evaluated", f"needs {needs}",
+                f"This build has no {needs}, so the gate could not run. Not a pass."))
     return out
 
 

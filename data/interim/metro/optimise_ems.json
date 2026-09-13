@@ -1,0 +1,284 @@
+{
+  "PROVISIONAL": true,
+  "all_runs_proven_optimal": true,
+  "baseline_share": 0.5799,
+  "bases": {
+    "bases": 43,
+    "by_service": {
+      "fire": 43
+    },
+    "note": "No EMS base inventory exists. Coverage is modelled from the 43 authoritative fire stations, using EMS turnout offsets, speed multipliers and response standard. The 108 ambulance standby points are not published and are absent from OSM.",
+    "proxy": "fire_stations",
+    "resolves_when": "EMRI supplies the 108 standby-point list",
+    "source": "none"
+  },
+  "candidates": 1487,
+  "candidates_land_feasible": 357,
+  "cells": 7921,
+  "code_commit": "unknown",
+  "config_hash": "931e1bdbf6a50cc44e242ee04a06abf67fba90522b554fde2cf80936e431c2bb",
+  "input_digests": [],
+  "matrix_nnz": 59951,
+  "precovered_cells": 2261,
+  "provisional_reason": "station inventory not built",
+  "publication_basis": "blocked",
+  "run_id": "66d61d6035f958f6",
+  "runs": [
+    {
+      "candidate_set": "land-feasible",
+      "exact_s": 1.805,
+      "exact_share": 0.6056,
+      "greedy_gap_vs_exact": 0.0,
+      "greedy_s": 0.0026,
+      "greedy_share": 0.6056,
+      "k": 1,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        652
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "land-feasible",
+      "exact_s": 0.299,
+      "exact_share": 0.6296,
+      "greedy_gap_vs_exact": 0.0,
+      "greedy_s": 0.0011,
+      "greedy_share": 0.6296,
+      "k": 2,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        38,
+        652
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "land-feasible",
+      "exact_s": 0.271,
+      "exact_share": 0.6471,
+      "greedy_gap_vs_exact": -0.0,
+      "greedy_s": 0.0013,
+      "greedy_share": 0.6471,
+      "k": 3,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        38,
+        432,
+        652
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "land-feasible",
+      "exact_s": 0.277,
+      "exact_share": 0.6729,
+      "greedy_gap_vs_exact": -0.0,
+      "greedy_s": 0.0019,
+      "greedy_share": 0.6729,
+      "k": 5,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        38,
+        194,
+        320,
+        432,
+        652
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "land-feasible",
+      "exact_s": 0.296,
+      "exact_share": 0.7071,
+      "greedy_gap_vs_exact": -0.0,
+      "greedy_s": 0.0026,
+      "greedy_share": 0.7071,
+      "k": 8,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        38,
+        194,
+        320,
+        432,
+        458,
+        652,
+        981,
+        1061
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "land-feasible",
+      "exact_s": 0.274,
+      "exact_share": 0.7276,
+      "greedy_gap_vs_exact": 0.01786,
+      "greedy_s": 0.0033,
+      "greedy_share": 0.725,
+      "k": 10,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        20,
+        89,
+        119,
+        194,
+        320,
+        432,
+        458,
+        652,
+        981,
+        1061
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "unconstrained",
+      "exact_s": 2.165,
+      "exact_share": 0.6056,
+      "greedy_gap_vs_exact": 0.0,
+      "greedy_s": 0.0007,
+      "greedy_share": 0.6056,
+      "k": 1,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        652
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "unconstrained",
+      "exact_s": 0.676,
+      "exact_share": 0.6296,
+      "greedy_gap_vs_exact": 0.0,
+      "greedy_s": 0.0014,
+      "greedy_share": 0.6296,
+      "k": 2,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        38,
+        652
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "unconstrained",
+      "exact_s": 0.643,
+      "exact_share": 0.6471,
+      "greedy_gap_vs_exact": -0.0,
+      "greedy_s": 0.0015,
+      "greedy_share": 0.6471,
+      "k": 3,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        38,
+        432,
+        652
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "unconstrained",
+      "exact_s": 0.675,
+      "exact_share": 0.6729,
+      "greedy_gap_vs_exact": -0.0,
+      "greedy_s": 0.002,
+      "greedy_share": 0.6729,
+      "k": 5,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        38,
+        194,
+        320,
+        432,
+        652
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "unconstrained",
+      "exact_s": 0.703,
+      "exact_share": 0.7071,
+      "greedy_gap_vs_exact": -0.0,
+      "greedy_s": 0.0028,
+      "greedy_share": 0.7071,
+      "k": 8,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        38,
+        194,
+        320,
+        432,
+        458,
+        652,
+        981,
+        1061
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    },
+    {
+      "candidate_set": "unconstrained",
+      "exact_s": 0.705,
+      "exact_share": 0.7276,
+      "greedy_gap_vs_exact": 0.01419,
+      "greedy_s": 0.004,
+      "greedy_share": 0.7255,
+      "k": 10,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "sites": [
+        20,
+        89,
+        119,
+        194,
+        320,
+        432,
+        458,
+        652,
+        981,
+        1061
+      ],
+      "solution_status": "Optimal Solution Found",
+      "status": "Optimal"
+    }
+  ],
+  "seconds": 18.2,
+  "seed": null,
+  "service": "ems",
+  "stations_signature": "e7afde47c072b369",
+  "travel_budget_s": 300,
+  "trip_overhead_s": 17.5
+}

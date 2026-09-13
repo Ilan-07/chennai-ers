@@ -63,6 +63,10 @@
     }
   },
   "seconds": 1.6,
+  "service_configs": {
+    "ems": "config/services/ems.yml",
+    "fire": "config/services/fire.yml"
+  },
   "signalised_nodes": 193,
   "speeds_config": "config/speeds/base.yml"
 }

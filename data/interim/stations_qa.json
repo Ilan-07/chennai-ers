@@ -1,19 +1,20 @@
 {
   "by_confidence": {
-    "google_maps_poi": 29,
-    "osm": 4
+    "google_maps_poi": 34,
+    "osm": 4,
+    "osm_fire_feature": 1
   },
-  "code_commit": "04a7cdca8770f97963fadee3526628509663c6dd-dirty",
+  "code_commit": "099ca6bdbb2f7d352792f19b4582a562491ea684-dirty",
   "config_hash": "634257b134efc8d104b1b57e67485aad52db8c47f5cf97fc2ada728b6d09aa4b",
   "input_digests": [
     "ca2820117c35878685e95b1f685cf84d03a12b40ce72fd3ac5baade61da216d7",
     "f9edfd6ec360086aa91f068e2f0b0f835a038a535f1389025c08a8cab02c57ab"
   ],
   "passes_publish_gate": false,
-  "run_id": "9e46d966c2cb8a6c",
+  "run_id": "7d4ae67ed6928392",
   "runnable": true,
   "seed": null,
-  "stations_signature": "087abc04e0179c24",
+  "stations_signature": "f98b313a5600a358",
   "survey_required": [
     "Korukkupet",
     "Royapuram",
@@ -43,9 +44,14 @@
     "Manali",
     "Thiruvottiyur",
     "Poonamallee",
-    "Redhills"
+    "Redhills",
+    "Thuraipakkam",
+    "Medavakkam",
+    "Kolathur",
+    "Maduravoyal",
+    "Virugambakkam"
   ],
-  "total": 33,
+  "total": 39,
   "unresolved": [],
-  "with_coordinates": 33
+  "with_coordinates": 39
 }

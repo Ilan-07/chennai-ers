@@ -1,10 +1,10 @@
 <div id="boot"><div><b>Chennai Emergency Response Coverage</b>
-  Loading 3,838 demand cells, 14,845 road segments and six network states…<br>
+  Loading the demand surface, the road network and six network states…<br>
   <span style="font-size:11.5px">about 2 MB of model output, embedded so the map needs no server</span></div></div>
 <header>
   <div>
     <h1>Chennai Emergency Response Coverage</h1>
-    <div class="sub">Travel time on the real road network · 33 stations · 3,838 demand cells</div>
+    <div class="sub" id="subline">Travel time on the real road network</div>
   </div>
   <div style="display:flex;gap:9px;align-items:center">
     <span class="stamp" id="stamp">Provisional</span>
@@ -61,7 +61,7 @@
         <button class="opt" id="tgBase" aria-pressed="true">Street map <small>OpenStreetMap</small></button>
         <button class="opt" id="tgZones" aria-pressed="true">Zone boundaries <small>15</small></button>
         <button class="opt" id="tgFlood" aria-pressed="true">Flood extent <small>when wet</small></button>
-        <button class="opt" id="tgCov" aria-pressed="true">Coverage <small>3,838 cells</small></button>
+        <button class="opt" id="tgCov" aria-pressed="true">Coverage <small id="cellCount"></small></button>
       </div>
     </div>
 

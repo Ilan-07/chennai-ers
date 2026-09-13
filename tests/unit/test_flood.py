@@ -97,3 +97,59 @@ def test_no_flooded_zones_leaves_every_arc_passable():
                                   link_state=LINK_STATE)
     assert set(states) == {PASSABLE}
     assert stats["closed"] == 0 and stats["wading"] == 0
+
+
+# ------------------------------------------------------- layer extent (item 3)
+
+from shapely.geometry import box as _box          # noqa: E402
+
+from ers.flood import scenario_extent_coverage    # noqa: E402
+
+
+def _scn(layer, **flood):
+    return {"id": "test", "flood": {"layer": layer, **flood}}
+
+
+def test_a_dry_scenario_needs_no_layer():
+    r = scenario_extent_coverage({"id": "dry"}, _box(0, 0, 1, 1), "EPSG:32644")
+    assert r["applicable"] is True
+    assert r["network_state"] == "dry"
+
+
+def test_a_layer_drawn_for_a_smaller_city_is_refused(tmp_path, monkeypatch):
+    """The defect: a corporation flood model asked about the whole metro."""
+    import ers.flood as fl
+
+    small = gpd.GeoDataFrame(
+        {"CATEGORY": ["HIGH"]}, geometry=[_box(0, 0, 1000, 1000)],
+        crs="EPSG:32644")
+    monkeypatch.setattr(fl, "load_flood_zones", lambda *a, **k: (small, {}))
+
+    inside = scenario_extent_coverage(_scn("x.kml"), _box(0, 0, 1000, 1000),
+                                      "EPSG:32644")
+    assert inside["applicable"] is True
+
+    # Same layer, a study area four times the size.
+    wider = scenario_extent_coverage(_scn("x.kml"), _box(0, 0, 2000, 2000),
+                                     "EPSG:32644")
+    assert wider["applicable"] is False
+    assert wider["domain_covers_study_area"] == pytest.approx(0.25, abs=1e-6)
+    assert "smaller city" in wider["reason"]
+
+
+def test_an_observed_point_layer_is_judged_by_its_declared_source(monkeypatch):
+    """A sample's hull is not its domain, so it must not be used as one."""
+    import ers.flood as fl
+
+    pts = gpd.GeoDataFrame(
+        {"state": ["closed"]}, geometry=[_box(0, 0, 100, 100)], crs="EPSG:32644")
+    monkeypatch.setattr(fl, "load_flood_points", lambda *a, **k: (pts, {}))
+    scn = _scn("p.kml", geometry="points", point_buffer_m=250, sourced_for="gcc")
+
+    # Tiny hull, but it is the declared source that decides.
+    assert scenario_extent_coverage(scn, _box(0, 0, 5000, 5000), "EPSG:32644",
+                                    profile="gcc")["applicable"] is True
+    out = scenario_extent_coverage(scn, _box(0, 0, 5000, 5000), "EPSG:32644",
+                                   profile="metro")
+    assert out["applicable"] is False
+    assert "nobody looked" in out["reason"]

@@ -277,5 +277,365 @@
     "source": "demand_cells",
     "uri": "derived://ers.geo.demand",
     "version_label": "2026-09-09"
+  },
+  {
+    "bytes": 473252,
+    "fetched_at": "2026-09-12T04:04:31+00:00",
+    "id": 19,
+    "licence": "Public Domain (OpenCity; transcribed from Census of India 2011 PCA)",
+    "local_path": "data/raw/census2011_chennai_ward_eb.csv",
+    "notes": {
+      "caveat": "third-party transcription, not a censusindia.gov.in download; the sum is 0.6% below the published town total of 4,646,732",
+      "enumeration_blocks": 8802,
+      "geography": "Chennai (M Corp.) 155 pre-expansion wards, 174 km2",
+      "location_code": "803339",
+      "population": 4621135,
+      "purpose": "A-04 ward-total reconciliation (build step 08b)",
+      "wards": 155
+    },
+    "sha256": "276ac62aaa34a2426b4653bfd04e5f1bef390088b8fe92dae7eb264414031087",
+    "source": "census2011_chennai_ward_eb",
+    "uri": "https://data.opencity.in/dataset/db288d43-56e3-48f4-9932-710d80872155/resource/14e58af6-7ed9-4445-bb47-acc931364c12/download/af83d302-a504-479a-8be9-b3208eb5b6e7.csv",
+    "version_label": "2026-09-12"
+  },
+  {
+    "bytes": 172525,
+    "fetched_at": "2026-09-12T04:04:31+00:00",
+    "id": 20,
+    "licence": "CC BY-SA 2.5 IN (Transparent Chennai via DataMeet)",
+    "local_path": "data/raw/chennai_wards_2008.geojson",
+    "notes": {
+      "area_km2": 173.5,
+      "caveat": "digitised from a CMDA master-plan sheet, not a survey product; boundary error is absorbed by the dasymetric weighting",
+      "geography": "Chennai Corporation electoral wards, 2008 delimitation",
+      "purpose": "carrier geography for the Census 2011 ward totals (build step 08b)",
+      "wards": 155
+    },
+    "sha256": "b1d67e566b73e093afeb71d5e778c8d210608e1142bd79eb3fc46b8ffc3dc23f",
+    "source": "chennai_wards_2008",
+    "uri": "https://raw.githubusercontent.com/datameet/Municipal_Spatial_Data/master/Chennai/Wards-2008.geojson",
+    "version_label": "2026-09-12"
+  },
+  {
+    "bytes": 421778,
+    "fetched_at": "2026-09-12T04:05:16+00:00",
+    "id": 21,
+    "licence": "derived",
+    "local_path": "data/interim/demand_cells.parquet",
+    "notes": {},
+    "sha256": "01acfd168a40e6474210c70877d63f0be8f5bfafd98235126dc3d812443721c5",
+    "source": "demand_cells",
+    "uri": "derived://ers.geo.demand",
+    "version_label": "2026-09-12"
+  },
+  {
+    "bytes": 421770,
+    "fetched_at": "2026-09-12T04:47:28+00:00",
+    "id": 22,
+    "licence": "derived",
+    "local_path": "data/interim/demand_cells.parquet",
+    "notes": {},
+    "sha256": "3570e1381d06a6edfcc2d76ebacb5355da517697ca3ff500a3aca3f3a5402776",
+    "source": "demand_cells",
+    "uri": "derived://ers.geo.demand",
+    "version_label": "2026-09-12+3570e138"
+  },
+  {
+    "bytes": 421778,
+    "fetched_at": "2026-09-12T04:47:35+00:00",
+    "id": 23,
+    "licence": "derived",
+    "local_path": "data/interim/demand_cells.parquet",
+    "notes": {},
+    "sha256": "de496f4fa661bc8ce4be14086f12ffc03a635685d477824c34e3ab60784c85c0",
+    "source": "demand_cells",
+    "uri": "derived://ers.geo.demand",
+    "version_label": "2026-09-12+de496f4f"
+  },
+  {
+    "bytes": 421778,
+    "fetched_at": "2026-09-12T04:47:49+00:00",
+    "id": 24,
+    "licence": "derived",
+    "local_path": "data/interim/demand_cells.parquet",
+    "notes": {},
+    "sha256": "5abcd062468055820399ae5d761ac435b0915ebb882aa0edc0d92fef46fc5fdf",
+    "source": "demand_cells",
+    "uri": "derived://ers.geo.demand",
+    "version_label": "2026-09-12+5abcd062"
+  },
+  {
+    "bytes": 6429,
+    "fetched_at": "2026-09-12T05:37:37+00:00",
+    "id": 25,
+    "licence": "Government of Tamil Nadu (public directory)",
+    "local_path": "data/raw/tnfrs_region_northern.json",
+    "notes": {
+      "caveat": "scraped from an HTML table; no coordinates are published, so every position still needs resolution and survey",
+      "fields": "station, tab number, landline, CUG mobile, email",
+      "purpose": "authoritative station inventory beyond the GCC list",
+      "region": "northern",
+      "region_id": 411,
+      "stations": 43
+    },
+    "sha256": "8ba9ebee06f4e78368c5fec64425ecfab49689cf1760f6d6615a94f4983bb216",
+    "source": "tnfrs_region_northern",
+    "uri": "https://www.tnfrs.tn.gov.in/subsubmenu_page_content.php?menu_id=NDM2&submenu_id=ODk5&thirdlvl_id=NDEx&dept_id=443&lang=MQ==",
+    "version_label": "2026-09-12"
+  },
+  {
+    "bytes": 8401,
+    "fetched_at": "2026-09-12T05:37:39+00:00",
+    "id": 26,
+    "licence": "Government of Tamil Nadu (public directory)",
+    "local_path": "data/raw/tnfrs_region_north_western.json",
+    "notes": {
+      "caveat": "scraped from an HTML table; no coordinates are published, so every position still needs resolution and survey",
+      "fields": "station, tab number, landline, CUG mobile, email",
+      "purpose": "authoritative station inventory beyond the GCC list",
+      "region": "north_western",
+      "region_id": 412,
+      "stations": 58
+    },
+    "sha256": "a6044a002314864328b8532caab32899a66c70d7d8cbeeb5f45e3fb32de17836",
+    "source": "tnfrs_region_north_western",
+    "uri": "https://www.tnfrs.tn.gov.in/subsubmenu_page_content.php?menu_id=NDM2&submenu_id=ODk5&thirdlvl_id=NDEy&dept_id=443&lang=MQ==",
+    "version_label": "2026-09-12"
+  },
+  {
+    "bytes": 16739,
+    "fetched_at": "2026-09-12T05:37:46+00:00",
+    "id": 27,
+    "licence": "derived",
+    "local_path": "data/interim/metro_area.parquet",
+    "notes": {
+      "density_threshold_per_km2": 1500.0,
+      "km2": 931.7,
+      "method": "EU/OECD Degree of Urbanisation, urban-centre class"
+    },
+    "sha256": "bdab786f86f31b2b045f7411eea13ba989cd04c7ec69d769232137ce2183d279",
+    "source": "metro_study_area",
+    "uri": "derived://ers.geo.urban",
+    "version_label": "2026-09-12"
+  },
+  {
+    "bytes": 5558,
+    "fetched_at": "2026-09-12T11:20:53+00:00",
+    "id": 28,
+    "licence": "derived",
+    "local_path": "data/interim/stations_metro.csv",
+    "notes": {
+      "by_position_source": {
+        "resolved": 31
+      },
+      "stations": 31,
+      "survey_debt": 31
+    },
+    "sha256": "9e99775619fa2bc7f37a6c687cbce64f5db7ada933c236190ce87ce7b08ec375",
+    "source": "stations_metro",
+    "uri": "derived://resolve_metro_stations",
+    "version_label": "2026-09-12"
+  },
+  {
+    "bytes": 11452,
+    "fetched_at": "2026-09-12T11:23:28+00:00",
+    "id": 29,
+    "licence": "derived",
+    "local_path": "data/interim/stations_metro.csv",
+    "notes": {
+      "by_position_source": {
+        "osm_feature": 6,
+        "resolved": 31,
+        "town_centroid": 17
+      },
+      "stations": 54,
+      "survey_debt": 54
+    },
+    "sha256": "fa9ae2d26dd6c8b90e38c82c3bbadd2d6d648720ba3d388d04e6c19e5b9957fa",
+    "source": "stations_metro",
+    "uri": "derived://resolve_metro_stations",
+    "version_label": "2026-09-12+fa9ae2d2"
+  },
+  {
+    "bytes": 8389,
+    "fetched_at": "2026-09-12T11:25:48+00:00",
+    "id": 30,
+    "licence": "derived",
+    "local_path": "data/interim/stations_metro.csv",
+    "notes": {
+      "by_position_source": {
+        "osm_feature": 2,
+        "resolved": 31,
+        "town_centroid": 9
+      },
+      "stations": 42,
+      "survey_debt": 42
+    },
+    "sha256": "b22b1966e0aab2ba3f1c61805441d2b599d53ba5eaaefc374ab14af9d33579f1",
+    "source": "stations_metro",
+    "uri": "derived://resolve_metro_stations",
+    "version_label": "2026-09-12+b22b1966"
+  },
+  {
+    "bytes": 8126,
+    "fetched_at": "2026-09-12T11:27:28+00:00",
+    "id": 31,
+    "licence": "derived",
+    "local_path": "data/interim/stations_metro.csv",
+    "notes": {
+      "by_position_source": {
+        "osm_feature": 2,
+        "resolved": 31,
+        "town_centroid": 8
+      },
+      "stations": 41,
+      "survey_debt": 41
+    },
+    "sha256": "e134a6d41484a507b6e7b96ab9c9b99fc2ba76758cde41fefb78d26fa9bfe842",
+    "source": "stations_metro",
+    "uri": "derived://resolve_metro_stations",
+    "version_label": "2026-09-12+e134a6d4"
+  },
+  {
+    "bytes": 8455,
+    "fetched_at": "2026-09-12T11:28:58+00:00",
+    "id": 32,
+    "licence": "derived",
+    "local_path": "data/interim/stations_metro.csv",
+    "notes": {
+      "by_position_source": {
+        "osm_feature": 2,
+        "resolved": 33,
+        "town_centroid": 8
+      },
+      "stations": 43,
+      "survey_debt": 43
+    },
+    "sha256": "439af51d07180710ebd16d2082f88124700d69c136cdceb4c181dcdb89a52b06",
+    "source": "stations_metro",
+    "uri": "derived://resolve_metro_stations",
+    "version_label": "2026-09-12+439af51d"
+  },
+  {
+    "bytes": 26818,
+    "fetched_at": "2026-09-12T12:19:09+00:00",
+    "id": 33,
+    "licence": "derived",
+    "local_path": "data/interim/full_area.parquet",
+    "notes": {
+      "density_threshold_per_km2": 300.0,
+      "km2": 3463.5,
+      "method": "EU/OECD Degree of Urbanisation, urban-centre class"
+    },
+    "sha256": "9e2a6a7220695d586e569943fcfc56c44f0bd418a13450509131aa49fcc182fe",
+    "source": "metro_study_area",
+    "uri": "derived://ers.geo.urban",
+    "version_label": "2026-09-12+9e2a6a72"
+  },
+  {
+    "bytes": 17914,
+    "fetched_at": "2026-09-12T13:26:02+00:00",
+    "id": 34,
+    "licence": "derived",
+    "local_path": "data/interim/full_area.parquet",
+    "notes": {
+      "density_threshold_per_km2": 500.0,
+      "km2": 1580.9,
+      "method": "EU/OECD Degree of Urbanisation, urban-centre class"
+    },
+    "sha256": "5db2e4de34b9fff546c36f9e9847cc022e837958477e513e909893aa591bd1a3",
+    "source": "metro_study_area",
+    "uri": "derived://ers.geo.urban",
+    "version_label": "2026-09-12+5db2e4de"
+  },
+  {
+    "bytes": 8481,
+    "fetched_at": "2026-09-12T17:01:09+00:00",
+    "id": 35,
+    "licence": "derived",
+    "local_path": "data/interim/stations_resolved.csv",
+    "notes": {
+      "adopted_google_maps_poi": 29,
+      "identity_confirmed": 14,
+      "stations": 39
+    },
+    "sha256": "0fabf7cedbdac0036f7d5ece5ead48478c70ceaaf4c368c6e986fbcd9f6b2484",
+    "source": "stations_resolved",
+    "uri": "derived://scripts/resolve_stations.py",
+    "version_label": "2026-09-12"
+  },
+  {
+    "bytes": 7875,
+    "fetched_at": "2026-09-12T18:28:11+00:00",
+    "id": 36,
+    "licence": "derived",
+    "local_path": "data/interim/stations_metro.csv",
+    "notes": {
+      "by_position_source": {
+        "osm_feature": 1,
+        "resolved": 39,
+        "town_centroid": 3
+      },
+      "stations": 43,
+      "survey_debt": 43
+    },
+    "sha256": "fe5d594fb0f52b03f2b0c75dbfaed78b0fbf7407d23fff9013f816445de87960",
+    "source": "stations_metro",
+    "uri": "derived://resolve_metro_stations",
+    "version_label": "2026-09-12+fe5d594f"
+  },
+  {
+    "bytes": 7905,
+    "fetched_at": "2026-09-12T18:30:02+00:00",
+    "id": 37,
+    "licence": "derived",
+    "local_path": "data/interim/stations_metro.csv",
+    "notes": {
+      "by_position_source": {
+        "google_maps_poi": 1,
+        "osm_feature": 1,
+        "resolved": 39,
+        "town_centroid": 2
+      },
+      "stations": 43,
+      "survey_debt": 43
+    },
+    "sha256": "c76eb632eca35a37de81098f5862b25a143bf088ad1704aefe198319292b41d8",
+    "source": "stations_metro",
+    "uri": "derived://resolve_metro_stations",
+    "version_label": "2026-09-12+c76eb632"
+  },
+  {
+    "bytes": 421778,
+    "fetched_at": "2026-09-12T18:34:27+00:00",
+    "id": 38,
+    "licence": "derived",
+    "local_path": "data/interim/demand_cells.parquet",
+    "notes": {},
+    "sha256": "419f95f07a4767b3c5c7bab30d550ba35b88096fc00b1d2420618aecbdec643a",
+    "source": "demand_cells",
+    "uri": "derived://ers.geo.demand",
+    "version_label": "2026-09-12+419f95f0"
+  },
+  {
+    "bytes": 19218,
+    "fetched_at": "2026-09-13T05:01:30+00:00",
+    "id": 39,
+    "licence": "derived",
+    "local_path": "data/interim/stations_metro.csv",
+    "notes": {
+      "by_position_source": {
+        "google_maps_poi": 1,
+        "osm_feature": 1,
+        "resolved": 39,
+        "town_centroid": 2
+      },
+      "stations": 86,
+      "survey_debt": 43
+    },
+    "sha256": "4a33f4a5963931fea9b15a3c85c394d865927095140911e5cbc4b0dda97db8cc",
+    "source": "stations_metro",
+    "uri": "derived://resolve_metro_stations",
+    "version_label": "2026-09-13"
   }
 ]

@@ -1,0 +1,82 @@
+{
+  "PROVISIONAL": true,
+  "coverage": {
+    "bias_vs_point_estimate_points": 0.52,
+    "max": 0.6026,
+    "mean": 0.5852,
+    "min": 0.5708,
+    "p5": 0.5767,
+    "p5_p95_spread_points": 1.67,
+    "p95": 0.5935,
+    "sd": 0.0051
+  },
+  "decision": {
+    "distinct_sites_ever_selected": 16,
+    "draws_reproducing_the_point_estimate_set": 212,
+    "mean_jaccard_vs_point_estimate": 0.947,
+    "point_estimate_sites": [
+      20,
+      89,
+      119,
+      194,
+      320,
+      432,
+      458,
+      652,
+      981,
+      1061
+    ],
+    "site_selection_frequency": {
+      "1061": 1.0,
+      "107": 0.003,
+      "119": 1.0,
+      "194": 0.707,
+      "20": 1.0,
+      "299": 0.003,
+      "320": 1.0,
+      "432": 1.0,
+      "458": 1.0,
+      "641": 0.017,
+      "652": 1.0,
+      "742": 0.09,
+      "756": 0.177,
+      "836": 0.003,
+      "89": 1.0,
+      "981": 1.0
+    },
+    "sites_selected_in_95pct_of_draws": [
+      20,
+      89,
+      119,
+      320,
+      432,
+      458,
+      652,
+      981,
+      1061
+    ]
+  },
+  "draws": 300,
+  "effects_vs_noise": {},
+  "error_model": "gmaps",
+  "experiment": "E-11",
+  "k": 10,
+  "max_snap_m": 1000.0,
+  "noise_floor_points": 1.67,
+  "point_estimate_coverage": 0.5799,
+  "provisional_reason": "station inventory not built",
+  "publication_basis": "blocked",
+  "rejected_station_draws": 0,
+  "rejection_rate_per_station_draw": 0.0,
+  "seconds": 152.7,
+  "seed": 20260904,
+  "service": "ems",
+  "stations_signature": "e7afde47c072b369",
+  "uncertainty_m": {
+    "150.0": 1,
+    "2000.0": 2,
+    "300.0": 1,
+    "50.0": 34,
+    "60.0": 5
+  }
+}

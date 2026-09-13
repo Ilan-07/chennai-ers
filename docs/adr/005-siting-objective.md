@@ -75,15 +75,17 @@ that it is included.
 
 **The expected recommendation moves, but barely.** It takes two values across the
 whole range, switching between dry ≤ 0.60 and dry ≥ 0.70, and differing in 3 of
-10 slots.
+10 slots. *(Superseded 2026-09-12: on the census-reconciled surface it takes four
+values for EMS and five for fire. See the corroborations at the end of this
+record — the conclusion below is unaffected, its "or only weakly" qualifier is.)*
 
 **The register's worry was aimed at the wrong parameter.** ASSUMPTIONS.md
 promoted this sweep to load-bearing on the grounds that "the siting
-recommendation depends on them". It does not, or only weakly. What the
-recommendation depends on is **which objective you choose** — the two agree on
-only 2–4 of 10 sites at *every* weight in the range, and no value of A-10 brings
-them together. Resolving A-10 to a measured frequency would therefore not settle
-the siting question; it would leave it exactly where it is.
+recommendation depends on them". What the recommendation depends on *first* is
+**which objective you choose** — the two agree on only 0–4 of 10 sites at *every*
+weight in the range, and no value of A-10 brings them together. Resolving A-10 to
+a measured frequency would therefore not settle the siting question; it would
+leave it exactly where it is.
 
 That strengthens the decision below rather than weakening it: the fork is a
 genuine choice about risk posture, not an artefact of an unmeasured input.
@@ -99,3 +101,21 @@ genuine choice about risk posture, not an artefact of an unmeasured input.
   and both services. Congestion rather than inundation binds a robust plan —
   which is worth stating regardless of which objective wins, and does not depend
   on A-10 for its direction.
+
+**2026-09-12 — two further corroborations, from directions unrelated to station
+positions.** Both came out of experiment arms that had never been run.
+
+- **The weights are load-bearing after all.** Re-run on the census-reconciled
+  demand surface (ADR-007), the expected-objective site set takes four distinct
+  values across dry weights 0.50–0.90 for EMS and five for fire, and at the
+  shipped 0.70 the expected and maximin objectives share **no sites at all**.
+  The 2026-09-10 run of the same sweep found the expected set stable at two
+  values; that reading is withdrawn. The maximin set remains invariant.
+- **The candidate lattice moves the site list without moving the number.**
+  Rebuilding the lattice at 400 m instead of the shipped 800 m raises k=10
+  coverage by 0.19 points and keeps only 6 of 10 EMS sites (3 of 10 fire) near
+  where the shipped lattice put them (E-09 / A-12).
+
+Neither involves a station coordinate. The site list is therefore under-determined
+by at least three independent things — the unsurveyed positions, the objective,
+and the lattice — and the decision-frame output stands.

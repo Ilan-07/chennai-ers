@@ -1,0 +1,16 @@
+station_name,lat,lon,place_name,google_place_id,result_kind,uncertainty_m,looked_up
+Medavakkam,12.9151802,80.1925262,Medavakkam Fire Station,0x3a525d0e2f4315e1:0x266fdc621b75d053,single_unambiguous_poi,50,2026-09-12
+Thuraipakkam,12.9486477,80.2409381,Thuraipakkam Fire Station,0x3a525d567e82c74f:0xb2bb9f25bd2da81d,single_unambiguous_poi,50,2026-09-12
+Kolathur,13.1171493,80.2192210,kolathur fire station,0x3a52650063c41c4b:0x46153267e7bdd08e,single_unambiguous_poi,50,2026-09-12
+Virugambakkam,13.0350035,80.1730242,Virugambakkam Fire Station,0x3a526127a7bf228f:0x649627a162095f78,single_unambiguous_poi,50,2026-09-12
+Maraimalai Nagar,12.7900230,80.0296719,Maraimalai Nagar Fire Station,0x3a52f9e7ee7e19fb:0x9e1edcb0c48e9402,single_unambiguous_poi,50,2026-09-12
+Maduravoyal,,,,,no_place_result_search_page_only,,2026-09-12
+Tambaram STC,,,,,no_place_result_search_page_only,,2026-09-12
+Chengalpattu,12.6731457,79.9767254,Chengalpattu Fire Station,0x3a52fc45602c3019:0x2dc6f64498a93ed0,single_unambiguous_poi,50,2026-09-12
+Kanchipuram,12.8334725,79.7021676,Fire Station (Kanchipuram),0x3a52c2563d500001:0xb58d85bff11ea3df,single_unambiguous_poi,50,2026-09-12
+Ponneri,13.3470455,80.1977060,Fire & Rescue Service Station (Ponneri),0x3a5279c5d6d30f1b:0xf656e1bf54f42df0,single_unambiguous_poi,50,2026-09-12
+Kalavakkam,12.7389805,80.1929473,Kalavakkam Fire Station,0x3a525113f28e1f79:0x1520201e6f4f67cd,single_unambiguous_poi,50,2026-09-12
+Padappai,12.8921410,80.0221270,Padappai Fire and Rescue Station,0x3a52f500401aa5b9:0x560c2e9851239f92,single_unambiguous_poi,50,2026-09-12
+Maduravoyal,13.0602760,80.1627010,Fire and rescue station maduravoyal,0x3a526112cbef880f:0x263ea7bfa7313632,single_unambiguous_poi,50,2026-09-12
+Sriperumbudur,,,,,no_place_result_search_page_only,,2026-09-12
+Irungattukottai Sipcot,,,,,no_place_result_search_page_only,,2026-09-12

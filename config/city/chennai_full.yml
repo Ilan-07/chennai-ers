@@ -1,0 +1,87 @@
+# City profile — the full Chennai settlement, wider than the built-up city.
+#
+# Three profiles, three questions. chennai.yml models the 426 km2 the
+# corporation administers. chennai_metro.yml models the contiguous built-up city
+# at the urban-CENTRE threshold. This one drops to the urban-CLUSTER threshold
+# and takes in the ribbon development along the Bengaluru and Tiruchi highways:
+# Sriperumbudur, Oragadam, Maraimalai Nagar, Kelambakkam, Gummidipoondi.
+#
+# WHY IT EXISTS: gaps are this project's product. The optimiser is pointed at
+# ground no station reaches, and the metro boundary still cuts off settlement
+# that is continuous on the map. This profile is where that argument runs out of
+# city rather than out of boundary.
+#
+# WHY IT STOPS AT 1,456 km2: not a judgement, a machine. The 300/km2 cluster
+# threshold returns 3,463 km2, whose road graph (657k edges) was OOM-killed on
+# an 8 GB machine; it also swallows Kanchipuram, which is a different city.
+# 500/km2 is the largest extent that builds. That is a compute limit, and it is
+# recorded as one rather than dressed up as a definition.
+#
+# The boundary is MEASURED, not drawn — see ers.geo.urban and ADR-011.
+name: Chennai full settlement
+authority: Greater Chennai Corporation + Chengalpattu, Kanchipuram and Tiruvallur local bodies
+
+# Derived artefacts live apart from the GCC build so neither can overwrite the
+# other's numbers.
+interim_subdir: full
+
+# MEASURED: EU/OECD Degree of Urbanisation urban CLUSTER at a raised density
+# floor (>= 500/km2, contiguous, gap-filled, >= 50,000 people) unioned with the
+# GCC boundary. Rebuild with:
+#
+#   python scripts/build_metro_area.py --density 500 \
+#       --out data/interim/full_area.parquet
+#
+# The density floor is the ONLY parameter that separates this profile from the
+# metro one.
+# CORRECTED 2026-09-13 (F-33). The 1,581 km2 previously recorded here was
+# measured on a run whose "authority" boundary was the profile's own 413 reporting
+# units (1,577 km2) rather than the corporation (432 km2), so the study area was
+# unioned with a version of itself. Rebuilt against the authority snapshot it is
+# 1,456 km2 -- and because the urban cluster at this density already contains all
+# but 4 km2 of the corporation, the union barely adds anything, which is the
+# giveaway that the old figure could not have been right.
+area_km2: 1456
+urban_cluster_km2: 1452
+authority_km2: 432
+authority_outside_cluster_km2: 4
+density_floor_per_km2: 500
+study_area: data/interim/full_area.parquet
+
+# The urban centre holds 10.83 M people at the 2020 GHS-POP epoch. There is NO
+# census ward reconciliation outside the GCC: the 155-ward Census 2011 table
+# ADR-007 uses covers the pre-expansion corporation only, and no ward-level
+# table exists for Tambaram, Avadi or Chengalpattu district. Population outside
+# the GCC is therefore GHS-POP as modelled, unreconciled, and reported as such.
+census_2011_population: 6748026      # GCC limits only; used for the GCC wards
+urban_centre_population_2020: 10830802
+growth_factor: 1.13
+growth_factor_status: ASSM
+
+# Wards exist inside the GCC and nowhere else in this study area. Outside it the
+# equity unit is an H3 r7 cell (~5.2 km2, about 2.4 GCC wards), labelled by its
+# nearest named settlement. ADR-011.
+wards: 200
+zones: 15
+outer_unit: h3
+outer_unit_resolution: 7
+
+crs:
+  storage: EPSG:4326
+  metric:  EPSG:32644
+
+graph_buffer_km: 5
+
+# Wider than the GCC bbox: the study area reaches Guduvanchery in the south-west
+# and Navalur/Siruseri in the south-east.
+bbox: [12.70, 79.95, 13.35, 80.40]
+
+demand:
+  tessellation: h3
+  resolution: 9
+  sensitivity_resolution: 10
+
+# The metro inventory: 43 stations, against the GCC list's 33. Ten come from the
+# TNFRS regional directories and TWO of those have a position better than a town
+# centroid. See stations_metro_qa.json before quoting any coverage figure.
+stations: data/interim/stations_metro.csv

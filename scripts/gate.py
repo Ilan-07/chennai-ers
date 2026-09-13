@@ -1,7 +1,8 @@
 """Evaluate every publish gate and exit non-zero on a build failure.
 
-    python scripts/gate.py          # table + exit status
-    python scripts/gate.py --json   # machine-readable, for CI
+    python scripts/gate.py                   # table + exit status
+    python scripts/gate.py --json            # machine-readable, for CI
+    python scripts/gate.py --profile metro   # a wider study area
 
 Exit status is driven by BUILD gates only. A PUBLICATION gate failing means the
 station survey is still outstanding -- true today, true until the fieldwork is
@@ -23,9 +24,14 @@ from ers.gates import BUILD, PUBLICATION, evaluate, summarise  # noqa: E402
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--json", action="store_true")
+ap.add_argument("--profile", default="gcc",
+                help="study-area profile to evaluate (gcc, metro, full)")
 args = ap.parse_args()
 
-results = evaluate(".")
+# The wider profiles keep their artefacts in a subdirectory. Gates that have
+# nothing to read there are reported as NOT EVALUATED, never as passing.
+SUBDIR = "" if args.profile == "gcc" else args.profile
+results = evaluate(".", SUBDIR)
 summary = summarise(results)
 
 if args.json:

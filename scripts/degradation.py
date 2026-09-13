@@ -12,7 +12,7 @@ produce it.
 
   python scripts/degradation.py [ems,fire] [--junction-scale X] [--tag NAME]
 
-OUTPUT IS PROVISIONAL: 29 of 33 stations still carry geocoder positions.
+OUTPUT IS PROVISIONAL: 34 of 39 stations still carry geocoder positions.
 """
 import argparse, json, sys, time
 from pathlib import Path
@@ -168,7 +168,6 @@ def run(junction_scale=None, overhead_s=None, closure_depth_m=None,
         "cell_snap_max_m": round(float(c_dist.max()), 1),
         "cutoff": "none (exhaustive sweep)",
         **publication_basis(),
-        "provisional_reason": "29 of 33 stations are geocoder positions, not surveyed",
         "services": out,
         "seconds": round(time.time() - t0, 1),
     }

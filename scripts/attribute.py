@@ -4,6 +4,10 @@
 the shipped config. The deck publishes that sweep's result as an established
 fact; until 2026-09 the sweep had never been run, and could not be run without
 hand-editing config between passes.
+
+`--service-config svc=path` is the same idea for A-03, the emergency speed
+multiplier: E-10's arm rescales it inside the RSCH envelope and needs the arc
+times rebuilt per arm. Sweeping an assumption must never require an editor.
 """
 import argparse, json, sys, time
 sys.path.insert(0, "src")
@@ -13,9 +17,20 @@ from ers.geo.attrs import attribute_edges, junction_delay, primary_highway
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--speeds", default="config/speeds/base.yml")
+ap.add_argument("--service-config", action="append", default=[], metavar="SVC=PATH",
+                help="override one service's config, e.g. ems=/tmp/ems.yml")
 ap.add_argument("--arc-out", default="data/interim/arc_times.parquet")
 ap.add_argument("--out", default="data/interim/attribution_report.json")
 args = ap.parse_args()
+
+SERVICE_CFG = {"ems": "config/services/ems.yml", "fire": "config/services/fire.yml"}
+for override in args.service_config:
+    if "=" not in override:
+        raise SystemExit(f"--service-config wants SVC=PATH, got {override!r}")
+    name, path = override.split("=", 1)
+    if name not in SERVICE_CFG:
+        raise SystemExit(f"--service-config: unknown service {name!r}")
+    SERVICE_CFG[name] = path
 
 t0 = time.time()
 speeds = yaml.safe_load(open(args.speeds))
@@ -35,7 +50,7 @@ print(f"signalised nodes: {int(sig.sum()):,} ({100*sig.mean():.1f}%) | "
 
 out = {}
 for svc_name in ("ems", "fire"):
-    svc = yaml.safe_load(open(f"config/services/{svc_name}.yml"))
+    svc = yaml.safe_load(open(SERVICE_CFG[svc_name]))
     for scen, peak in (("dry", False), ("peak", True)):
         r = attribute_edges(edges, head_delay, speeds=speeds, service=svc, peak=peak)
         out[f"{svc_name}/{scen}"] = r.stats
@@ -60,6 +75,7 @@ report = {
     "seconds": round(time.time()-t0, 1),
 }
 report["speeds_config"] = args.speeds
+report["service_configs"] = SERVICE_CFG
 json.dump(report, open(args.out, "w"), indent=2, sort_keys=True)
 edges[["u", "v", "key", "tau_ds_ems", "tau_ds_fire", "length"]].to_parquet(args.arc_out)
 print(f"\nwrote {args.arc_out} ({time.time()-t0:.1f}s)")

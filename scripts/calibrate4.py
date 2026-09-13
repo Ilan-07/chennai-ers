@@ -40,6 +40,12 @@ args = ap.parse_args()
 
 JS_GRID = [0.0, 0.05, 0.10, 0.15, 0.20, 0.30]
 OH_GRID = list(np.arange(0, 61, 2.5))
+
+# The stage-3 point, kept as the fixed reference this stage was written to beat.
+# It is NOT what the project ships -- that is read from the config below, because
+# a constant transcribed here goes stale the moment the config is retuned, and
+# this file called the stage-3 point "shipped" for two revisions after it wasn't.
+STAGE3_JS, STAGE3_OH = 0.10, 45.0
 BAND_TARGET = 0.05
 
 t0 = time.time()
@@ -103,20 +109,20 @@ for _ in range(args.splits):
     p = rng.permutation(len(oracle)); tr, te = p[:len(p)//2], p[len(p)//2:]
     js, oh = best_on(tr)
     w_new, me_new, _ = stats(TAU[js][te] + oh, oracle[te], band[te])
-    w_old, me_old, _ = stats(TAU[0.10][te] + 45.0, oracle[te], band[te])
+    w_old, me_old, _ = stats(TAU[STAGE3_JS][te] + STAGE3_OH, oracle[te], band[te])
     cv.append((js, oh, w_new, me_new, w_old, me_old))
 cv = np.array(cv)
 print(f"\n{args.splits}x half-sample CV, evaluated on held-out pairs:")
 print(f"  refit picks js median {np.median(cv[:,0]):.3f}, overhead median {np.median(cv[:,1]):.1f}s")
-print(f"  worst |median ratio-1|   refit {np.median(cv[:,2]):.2%}  vs shipped {np.median(cv[:,4]):.2%}")
-print(f"  MedAPE                   refit {np.median(cv[:,3]):.2%}  vs shipped {np.median(cv[:,5]):.2%}")
-print(f"  refit wins worst-band in {(cv[:,2]<cv[:,4]).mean():.0%} of splits, "
+print(f"  worst |median ratio-1|   refit {np.median(cv[:,2]):.2%}  vs stage-3 {np.median(cv[:,4]):.2%}")
+print(f"  MedAPE                   refit {np.median(cv[:,3]):.2%}  vs stage-3 {np.median(cv[:,5]):.2%}")
+print(f"  refit beats stage-3 on worst-band in {(cv[:,2]<cv[:,4]).mean():.0%} of splits, "
       f"MedAPE in {(cv[:,3]<cv[:,5]).mean():.0%}")
 
 # ---- full-sample fit, with bootstrap CIs on the band statistic
 js, oh = best_on(np.arange(len(oracle)))
 w, me, per = stats(TAU[js] + oh, oracle, band)
-w0, me0, per0 = stats(TAU[0.10] + 45.0, oracle, band)
+w0, me0, per0 = stats(TAU[STAGE3_JS] + STAGE3_OH, oracle, band)
 boot = {}
 for x in np.unique(band):
     sel = np.flatnonzero(band == x)
@@ -124,15 +130,34 @@ for x in np.unique(band):
     bs = [np.median(r[rng.integers(0, len(sel), len(sel))]) - 1 for _ in range(4000)]
     boot[x] = [round(float(np.percentile(bs, 2.5)), 4), round(float(np.percentile(bs, 97.5)), 4)]
 
+# What the project actually ships, scored on the same statistic. If the refit
+# has moved away from it the question is not "which is lower" -- the objective is
+# flat enough that it moves with the inventory -- but "does the shipped point
+# still clear the gates".
+SHIP_JS = float(speeds["junction_delay_scale"])
+SHIP_OH = float(speeds["trip_overhead_s"])
+if SHIP_JS in TAU:
+    w_s, me_s, per_s = stats(TAU[SHIP_JS] + SHIP_OH, oracle, band)
+else:                                   # off-grid config: score it directly
+    w_s, me_s, per_s = stats(model_times(SHIP_JS) + SHIP_OH, oracle, band)
+ship_gate = bool(me_s <= 0.15 and w_s <= BAND_TARGET)
+
 print(f"\nselected: junction x{js:.3f} + {oh:.1f}s overhead   "
-      f"(shipped: x0.10 + 45s)")
-print(f"  worst band |median ratio-1|  {w:.2%}   (shipped {w0:.2%})")
-print(f"  MedAPE                       {me:.2%}   (shipped {me0:.2%})")
+      f"(stage-3 reference: x{STAGE3_JS:.2f} + {STAGE3_OH:.0f}s)")
+print(f"  worst band |median ratio-1|  {w:.2%}   (stage-3 {w0:.2%})")
+print(f"  MedAPE                       {me:.2%}   (stage-3 {me0:.2%})")
+print(f"\nshipped config (config/speeds/base.yml): "
+      f"junction x{SHIP_JS:.3f} + {SHIP_OH:.1f}s")
+print(f"  worst band |median ratio-1|  {w_s:.2%}")
+print(f"  MedAPE                       {me_s:.2%}")
+print(f"  clears both gates: {ship_gate}"
+      + ("" if (SHIP_JS, SHIP_OH) == (js, oh) else
+         "   -- the refit selects a DIFFERENT point; see A-02 in ASSUMPTIONS.md"))
 print("\n  per band, median ratio - 1, with bootstrap 95% CI:")
 for x in sorted(per):
     lo, hi = boot[x]
     flag = "" if abs(per[x]) <= BAND_TARGET else "   OVER TARGET"
-    print(f"    {x:9s} refit {per[x]:+7.2%} [{lo:+.1%},{hi:+.1%}]   shipped {per0[x]:+7.2%}{flag}")
+    print(f"    {x:9s} refit {per[x]:+7.2%} [{lo:+.1%},{hi:+.1%}]   stage-3 {per0[x]:+7.2%}{flag}")
 
 gate = {"medape_le_15pct": me <= 0.15,
         "band_median_ratio_le_5pct": bool(w <= BAND_TARGET),
@@ -142,15 +167,19 @@ print(f"\n  GATE  MedAPE<=15%: {gate['medape_le_15pct']}   "
 
 json.dump({"stage": 4, "statistic": "median ratio per band (sum-ratio bias retired)",
            "selected_junction_scale": js, "selected_trip_overhead_s": oh,
-           "shipped_junction_scale": 0.10, "shipped_trip_overhead_s": 45.0,
-           "worst_band": round(w, 4), "worst_band_shipped": round(w0, 4),
-           "medape": round(me, 4), "medape_shipped": round(me0, 4),
+           "stage3_junction_scale": STAGE3_JS, "stage3_trip_overhead_s": STAGE3_OH,
+           "shipped_junction_scale": SHIP_JS, "shipped_trip_overhead_s": SHIP_OH,
+           "shipped_worst_band": round(w_s, 4), "shipped_medape": round(me_s, 4),
+           "shipped_clears_both_gates": ship_gate,
+           "refit_equals_shipped": (SHIP_JS, SHIP_OH) == (js, oh),
+           "worst_band": round(w, 4), "worst_band_stage3": round(w0, 4),
+           "medape": round(me, 4), "medape_stage3": round(me0, 4),
            "per_band": {k: round(v, 4) for k, v in per.items()},
            "per_band_bootstrap_ci": boot, "gate": gate,
            "cv_splits": args.splits,
            "cv_refit_worst_band_median": round(float(np.median(cv[:, 2])), 4),
-           "cv_shipped_worst_band_median": round(float(np.median(cv[:, 4])), 4),
-           "cv_refit_wins_worst_band_share": round(float((cv[:, 2] < cv[:, 4]).mean()), 3),
+           "cv_stage3_worst_band_median": round(float(np.median(cv[:, 4])), 4),
+           "cv_refit_beats_stage3_worst_band_share": round(float((cv[:, 2] < cv[:, 4]).mean()), 3),
            "two_part_overhead_tested_and_rejected": True,
            "stations_signature": station_signature(st),
            **publication_basis(), "seconds": round(time.time()-t0, 1)},

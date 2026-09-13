@@ -21,7 +21,8 @@ comma := ,
 space := $(empty) $(empty)
 
 .DEFAULT_GOAL := help
-.PHONY: help all test gate verify accept-manifest clean-derived console experiments
+.PHONY: help all test gate verify accept-manifest clean-derived console experiments \
+        api ui ui-dev
 
 help:
 	@echo "targets:"
@@ -29,7 +30,9 @@ help:
 	@echo "  make test         pytest"
 	@echo "  make gate         evaluate every publish gate; non-zero on failure"
 	@echo "  make verify       registry hashes + artefact freshness"
-	@echo "  make console      rebuild the coverage console"
+	@echo "  make console      rebuild the static (offline) coverage console"
+	@echo "  make ui           build the React console (needs node)"
+	@echo "  make api          serve the API + React console on :8000"
 	@echo "  make experiments  E-09 / E-10 sweeps (~1.5 h)"
 	@echo "  make accept-manifest  record the current artefacts as the verify baseline"
 	@echo "  make -n all       show what is stale without running it"
@@ -45,7 +48,19 @@ $(I)/stations_resolved.csv: scripts/resolve_stations.py \
                             $(I)/stations_gmaps_lookup.csv
 	$(PY) scripts/resolve_stations.py
 
-$(I)/demand_cells.parquet: scripts/build_demand.py $(RAW)/ghspop_chennai_2020_100m.tif $(I)/wards.parquet
+# Build step 08a. Needs network on a cold cache; registered and cached after the
+# first run. The geojson hangs off the csv so one fetch satisfies both targets --
+# GNU make 3.81 reads a two-target rule as two independent ones.
+$(RAW)/census2011_chennai_ward_eb.csv:
+	$(PY) scripts/fetch_census_wards.py
+
+$(RAW)/chennai_wards_2008.geojson: $(RAW)/census2011_chennai_ward_eb.csv
+	@test -f $@ || $(PY) scripts/fetch_census_wards.py
+
+$(I)/demand_cells.parquet: scripts/build_demand.py src/ers/geo/census.py \
+                           $(RAW)/ghspop_chennai_2020_100m.tif $(I)/wards.parquet \
+                           $(RAW)/census2011_chennai_ward_eb.csv \
+                           $(RAW)/chennai_wards_2008.geojson
 	$(PY) scripts/build_demand.py
 
 # 17 min, needs network on a cold OSM cache.
@@ -60,6 +75,23 @@ $(I)/arc_times.parquet: scripts/attribute.py $(I)/graph_edges.parquet \
 
 $(I)/routing_validation.json: scripts/validate_routing.py $(I)/arc_times.parquet $(I)/stations_resolved.csv
 	$(PY) scripts/validate_routing.py 200 --reuse-oracle
+
+# Stage 4 fits the trip overhead and junction scale on station-to-cell pairs, so
+# it is station-dependent and goes stale when the inventory changes -- which it
+# did at ADR-001a, silently, because this target did not exist and only the
+# freshness test noticed. The fit does NOT write the config: it reports which
+# point it selects and whether the point the config ships still clears the
+# gates. Adopting a move is a human decision, recorded in ASSUMPTIONS.md.
+$(I)/calibration_stage4.json: scripts/calibrate4.py $(I)/arc_times.parquet \
+                              $(I)/demand_cells.parquet $(I)/stations_resolved.csv \
+                              config/speeds/base.yml
+	$(PY) scripts/calibrate4.py
+
+# Which flood scenarios each study area may honestly be asked. Cheap, and it
+# governs what the console offers, so it runs with the build rather than by hand.
+$(I)/flood_extent.json: scripts/flood_extent_report.py src/ers/flood.py \
+                        $(I)/wards.parquet $(wildcard config/scenarios/*.yml)
+	$(PY) scripts/flood_extent_report.py
 
 # ------------------------------------------------------------- coverage
 
@@ -125,8 +157,16 @@ $(I)/degradation_report.json: scripts/degradation.py $(I)/baseline_report.json \
 $(I)/frontier_%.json: scripts/frontier.py $(I)/optimise_%.json
 	$(PY) scripts/frontier.py $* 10
 
+# The k ladder lives here, not in the script's default, because equity_curve.py
+# MERGES a subset run into the existing curve and refuses to mix rows computed
+# against different baselines. An ems curve that had picked up k=12 and 15 from a
+# manual run therefore broke `make all` after the census re-cut moved the
+# baseline: the default ladder no longer covered every k in the file. One
+# declared ladder, recomputed whole, cannot drift that way.
+EQUITY_KS := 5,10,12,15,20,30,45,60
+
 $(I)/equity_curve_%.json: scripts/equity_curve.py $(I)/optimise_%.json
-	$(PY) scripts/equity_curve.py $*
+	$(PY) scripts/equity_curve.py $* $(EQUITY_KS)
 
 $(I)/robust_%_k10.json: scripts/optimise_robust.py $(I)/candidates.parquet $(I)/degradation_report.json
 	$(PY) scripts/optimise_robust.py $* 10
@@ -150,9 +190,34 @@ console $(I)/console.html: $(I)/ui_data.json $(I)/ui_basemap.json scripts/ui/con
                            scripts/ui/con_head.html scripts/ui/con_body.html
 	sh scripts/ui/build_console.sh
 
+# ------------------------------------------------------- service (step 19)
+#
+# The React console and the FastAPI service the DA-1 deck specified. They are
+# NOT part of `all`: the analysis pipeline must stay runnable on a machine with
+# no node and no web stack, and a coverage number must never wait on a front end
+# to build. `make console` still produces the single-file offline console from
+# the same exported data.
+
+ui/node_modules: ui/package.json ui/package-lock.json
+	cd ui && npm ci
+
+ui/dist/index.html: ui/node_modules ui/index.html ui/vite.config.js $(wildcard ui/src/*) \
+                    $(wildcard ui/src/components/*)
+	cd ui && npm run build
+
+ui: ui/dist/index.html
+
+# Vite on :5173, proxying /api to uvicorn -- run `make api` alongside it.
+ui-dev: ui/node_modules
+	cd ui && npm run dev
+
+api: $(I)/ui_data.json
+	PYTHONPATH=src $(PY) -m uvicorn ers.api.app:app --host 127.0.0.1 --port 8000
+
 # ------------------------------------------------------------- aggregate
 
 all: coverage $(I)/degradation_report.json $(I)/routing_validation.json \
+     $(I)/calibration_stage4.json $(I)/flood_extent.json \
      $(foreach s,$(SERVICES),$(I)/frontier_$(s).json) \
      $(foreach s,$(SERVICES),$(I)/equity_curve_$(s).json) \
      $(foreach s,$(SERVICES),$(I)/robust_$(s)_k10.json) \

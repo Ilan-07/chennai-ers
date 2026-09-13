@@ -149,3 +149,97 @@ def load_flood_points(path: str, metric_crs: str, *, buffer_m: float,
         "categories": g["_state"].value_counts().to_dict(),
         "area_km2": round(float(g.area.sum()) / 1e6, 1),
     }
+
+
+# --------------------------------------------------------------- layer extent
+#
+# A flood layer drawn for one city does not become a flood layer for a bigger one
+# by being asked. The Chennai Flows return-period layers and the 2015 inundation
+# points were both produced for the corporation, and running them over a study
+# area twice that size returns a number that looks like a finding -- "the suburbs
+# flood less" -- when what it actually reports is where the modelling stopped.
+#
+# This is the check that turns that into a measurement rather than a footnote.
+
+def scenario_extent_coverage(scenario: dict, area, metric_crs: str,
+                             profile: str | None = None,
+                             min_domain_share: float = 0.90) -> dict:
+    """Whether a flood scenario's layer was drawn for `area`, and by how much.
+
+    The naive test -- how much of the layer falls inside the study area -- is
+    useless, because a layer is always almost entirely inside its own study area
+    whatever that area is. The question is the other way round: does the layer's
+    MODELLING DOMAIN span the ground being asked about?
+
+    The domain is approximated by the convex hull of the layer. A flood model
+    legitimately leaves high ground dry, so absence of a polygon inside the
+    domain means "modelled, does not flood"; absence outside it means "nobody
+    modelled this", and those two must not be reported as the same thing.
+
+    Observed-point layers cannot be tested this way at all: 192 surveyed points
+    are a sample, not a domain, and their hull says nothing about where the
+    survey could have looked -- points cluster where flooding happened. Those
+    layers declare `sourced_for` in their config instead, and are applicable only
+    to the study area they were produced for. Declared, not inferred: guessing a
+    survey's reach from where it found something is how a sample becomes a map.
+    """
+    fl = scenario.get("flood")
+    if not fl:
+        return {"scenario": scenario.get("id"), "network_state": "dry",
+                "applicable": True, "reason": "not a flood scenario"}
+
+    points = fl.get("geometry") == "points"
+    if points:
+        zones, _ = load_flood_points(
+            fl["layer"], metric_crs, buffer_m=float(fl.get("point_buffer_m", 250)),
+            depth_field=fl.get("depth_field", "DEPTH"),
+            depth_units=fl.get("depth_units", "inches"),
+            closure_depth_m=float(fl.get("closure_depth_m", 0.30)))
+    else:
+        zones, _ = load_flood_zones(fl["layer"], metric_crs,
+                                    category_field=fl.get("category_field", "CATEGORY"))
+
+    layer = zones.geometry.union_all()
+    domain = layer.convex_hull
+    area_km2 = area.area / 1e6
+    domain_share = domain.intersection(area).area / area.area if area.area else 0.0
+    outside_km2 = area_km2 * (1.0 - domain_share)
+
+    out = {
+        "scenario": scenario.get("id"),
+        "network_state": "flood",
+        "layer": fl.get("layer"),
+        "geometry": "points" if points else "zones",
+        "layer_km2": round(layer.area / 1e6, 1),
+        "modelling_domain_km2": round(domain.area / 1e6, 1),
+        "study_area_km2": round(area_km2, 1),
+        "domain_covers_study_area": round(domain_share, 4),
+        "study_area_outside_domain_km2": round(outside_km2, 1),
+        "min_domain_share": min_domain_share,
+    }
+
+    sourced_for = fl.get("sourced_for")
+    out["sourced_for"] = sourced_for
+
+    if points:
+        out["test"] = "declared source extent"
+        out["applicable"] = bool(sourced_for is None or sourced_for == profile)
+        out["reason"] = (
+            f"observed points, produced for the '{sourced_for}' study area"
+            if out["applicable"] else
+            f"observed points produced for the '{sourced_for}' study area, not "
+            f"for '{profile}': outside the surveyed city an absent point means "
+            f"nobody looked, not that nothing flooded")
+        return out
+
+    out["test"] = "modelling domain"
+
+    out["applicable"] = bool(domain_share >= min_domain_share)
+    out["reason"] = (
+        f"the layer's modelling domain covers {100 * domain_share:.1f}% of this "
+        f"study area"
+        if out["applicable"] else
+        f"the layer was drawn for a smaller city: its modelling domain covers only "
+        f"{100 * domain_share:.1f}% of this study area, leaving "
+        f"{outside_km2:,.0f} km² where a flood would be reported as dry")
+    return out

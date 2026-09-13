@@ -35,8 +35,9 @@
   },
   "gate": {
     "by_confidence": {
-      "google_maps_poi": 29,
-      "osm": 4
+      "google_maps_poi": 34,
+      "osm": 4,
+      "osm_fire_feature": 1
     },
     "passes_publish_gate": false,
     "runnable": true,
@@ -69,17 +70,22 @@
       "Manali",
       "Thiruvottiyur",
       "Poonamallee",
-      "Redhills"
+      "Redhills",
+      "Thuraipakkam",
+      "Medavakkam",
+      "Kolathur",
+      "Maduravoyal",
+      "Virugambakkam"
     ],
-    "total": 33,
+    "total": 39,
     "unresolved": [],
-    "with_coordinates": 33
+    "with_coordinates": 39
   },
   "inputs": {
     "gcc_fire_stations": 1,
     "osm_stations_overpass": 2
   },
-  "output_registry_id": 16,
-  "run_id": "5e5588e3067c80f7",
+  "output_registry_id": 35,
+  "run_id": "5ca6b83688248e9f",
   "seconds": 0.7
 }

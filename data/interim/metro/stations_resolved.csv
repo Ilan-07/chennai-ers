@@ -1,0 +1,44 @@
+station_name,division,service,lat,lon,geocode_confidence,match_source,match_detail,uncertainty_m,survey_required,osm_class,osm_type,plausibility,identity_confirmed_by
+Ambattur,Chennai Suburban,fire,13.0953765,80.1643334,google_maps_poi,resolved,,50.0,True,,,ok,tnfrs_landline
+Ashok Nagar,Chennai City South,fire,13.0351043,80.2113866,google_maps_poi,resolved,,50.0,True,,,ok,
+Athipattu,Chennai Suburban,fire,13.251301,80.3272164,google_maps_poi,resolved,,50.0,True,,,ok,contested_unresolved
+Avadi,Chennai Suburban,fire,13.1113085,80.1064146,google_maps_poi,resolved,,300.0,True,,,ok,tnfrs_landline
+Egmore,Chennai City Central,fire,13.0686327,80.2613334,osm,resolved,,60.0,True,,,ok,
+Ennore,Chennai Suburban,fire,13.1968231,80.3116094,google_maps_poi,resolved,,50.0,True,,,ok,tnfrs_landline
+Esplanade,Chennai City North,fire,13.0864782,80.2860635,osm,resolved,,60.0,True,,,ok,
+Guindy,Chennai City South,fire,13.0125852,80.2128616,google_maps_poi,resolved,,50.0,True,,,ok,tnfrs_cug_mobile
+Irungattukottai Sipcot,north_western,fire,12.9953611,79.9904202,town_centroid,town_centroid,"centroid of Irungattukottai: Irungattukottai, Sriperumbudur, Kanchipuram, Tamil Nadu, 602117, India",2000.0,True,,,ok,
+J.J. Nagar,Chennai City Central,fire,13.0854873,80.187297,google_maps_poi,resolved,,50.0,True,,,ok,tnfrs_landline
+Kilpauk,Chennai City Central,fire,13.0780247,80.2436456,google_maps_poi,resolved,,50.0,True,,,ok,
+Kolathur,Chennai Suburban,fire,13.1171493,80.219221,google_maps_poi,resolved,,50.0,True,,,ok,
+Korukkupet,Chennai City North,fire,13.1262108,80.2723274,google_maps_poi,resolved,,50.0,True,,,ok,tnfrs_landline
+Koyambedu,Chennai City Central,fire,13.0695008,80.1951434,google_maps_poi,resolved,,50.0,True,,,ok,tnfrs_cug_mobile
+Maduravoyal,Chennai Suburban,fire,13.060276,80.162701,google_maps_poi,resolved,,50.0,True,,,ok,
+Manali,Chennai Suburban,fire,13.1624801,80.2635565,google_maps_poi,resolved,,50.0,True,,,ok,tnfrs_cug_mobile
+Maraimalai Nagar,north_western,fire,12.790023,80.0296719,google_maps_poi,google_maps_poi,"map listing 'Maraimalai Nagar Fire Station' (single_unambiguous_poi), place id 0x3a52f9e7ee7e19fb:0x9e1edcb0c48e9402",50.0,True,,,ok,
+Medavakkam,Chennai City South,fire,12.9151802,80.1925262,google_maps_poi,resolved,,50.0,True,,,ok,
+Mylapore,Chennai City South,fire,13.043142,80.2777689,google_maps_poi,resolved,,50.0,True,,,ok,tnfrs_cug_mobile
+Poonamallee,Chennai Suburban,fire,13.0470935,80.11948,google_maps_poi,resolved,,50.0,True,,,ok,tnfrs_landline
+Raj Bhavan,Chennai City South,fire,13.0066515,80.2244659,google_maps_poi,resolved,,50.0,True,,,ok,
+Redhills,Chennai Suburban,fire,13.2033002,80.1943883,google_maps_poi,resolved,,50.0,True,,,ok,
+Royapuram,Chennai City North,fire,13.1133601,80.2963471,google_maps_poi,resolved,,50.0,True,,,ok,osm_proximity
+Saidapet,Chennai City South,fire,13.0294279,80.2375618,google_maps_poi,resolved,,50.0,True,,,ok,
+Secretariat,Chennai City North,fire,13.0812151,80.2836996,google_maps_poi,resolved,in the GCC inventory; no TNFRS directory row matched its name,50.0,True,,,ok,
+Sembium,Chennai City North,fire,13.1207466,80.2383534,google_maps_poi,resolved,,50.0,True,,,ok,
+Siruseri Sipcot,north_western,fire,12.8310173,80.2224311,osm_feature,osm_feature,OSM (unnamed) at 1411 m from the geocode,150.0,True,,,ok,
+T Nagar,Chennai City South,fire,13.0415662,80.2342758,google_maps_poi,resolved,,50.0,True,,,ok,
+Tambaram,Chennai City South,fire,12.9439935,80.1336773,google_maps_poi,resolved,,50.0,True,,,ok,osm_proximity
+Tambaram STC,northern,fire,12.9245279,80.1150525,town_centroid,town_centroid,"centroid of Tambaram: Tambaram, Chengalpattu, Tamil Nadu, 600045, India",2000.0,True,,,ok,
+Teynampet,Chennai City South,fire,13.0474469,80.249119,osm,resolved,,60.0,True,,,ok,
+Thiruvanmiyur,Chennai City South,fire,12.9853432,80.2598047,google_maps_poi,resolved,,50.0,True,,,ok,tnfrs_landline
+Thiruvottiyur,Chennai Suburban,fire,13.1564662,80.304847,google_maps_poi,resolved,,50.0,True,,,ok,
+Thuraipakkam,Chennai City South,fire,12.9486477,80.2409381,google_maps_poi,resolved,,50.0,True,,,ok,
+Tondiarpet,Chennai City North,fire,13.1223727,80.2873906,google_maps_poi,resolved,,50.0,True,,,ok,
+Triplicane,Chennai City Central,fire,13.067446,80.2731076,google_maps_poi,resolved,,50.0,True,,,ok,
+V.O.C Nagar,Chennai City North,fire,13.1228833,80.2657498,google_maps_poi,resolved,,50.0,True,,,ok,
+Velachery,Chennai City South,fire,12.976853,80.227634,osm_fire_feature,resolved,,60.0,True,,,ok,
+Vepery,Chennai City Central,fire,13.0858246,80.2627689,google_maps_poi,resolved,,50.0,True,,,ok,
+Villivakkam,Chennai City Central,fire,13.1061214,80.201176,google_maps_poi,resolved,,50.0,True,,,ok,tnfrs_landline
+Virugambakkam,Chennai City Central,fire,13.0350035,80.1730242,google_maps_poi,resolved,,50.0,True,,,ok,
+Vyasarpadi,Chennai City North,fire,13.1137787,80.2553979,google_maps_poi,resolved,,50.0,True,,,ok,
+Washermanpet,Chennai City North,fire,13.1024404,80.2744007,osm,resolved,in the GCC inventory; no TNFRS directory row matched its name,60.0,True,,,ok,

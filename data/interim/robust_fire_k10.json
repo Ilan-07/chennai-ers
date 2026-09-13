@@ -2,15 +2,15 @@
   "PROVISIONAL": false,
   "all_proven_optimal": true,
   "bases": {
-    "bases": 33,
+    "bases": 39,
     "by_service": {
-      "fire": 33
+      "fire": 39
     },
     "proxy": null,
     "source": "authoritative"
   },
   "basis_note": "Published under a recorded waiver, NOT on surveyed positions. See config/publish_waiver.yml.",
-  "code_commit": "80f03cfde70562ec7561b33d042f660535c87623-dirty",
+  "code_commit": "099ca6bdbb2f7d352792f19b4582a562491ea684-dirty",
   "config_hash": "e7b5ca71761cfd45a69400683e0d30e73c042072874e1a5beb7df8dd9b5c0d3c",
   "design_basis_weights": {
     "dry": 0.7,
@@ -28,24 +28,23 @@
     "service": "fire",
     "trip_overhead_s": 17.5
   },
-  "provisional_reason": "29 of 33 stations are geocoder positions, not surveyed",
   "publication_basis": "waived",
   "report_only": [
     "flood5",
     "f2015"
   ],
-  "run_id": "a639c2ca96a35fbd",
+  "run_id": "36960f83b01ce52a",
   "scenario_stats": {
     "dry": {
       "arcs_usable": 250781,
-      "baseline_share": 0.4702,
+      "baseline_share": 0.5443,
       "cells_no_candidate_reaches": 762,
       "flood": {},
       "matrix_nnz": 20580
     },
     "f2015": {
       "arcs_usable": 247975,
-      "baseline_share": 0.4126,
+      "baseline_share": 0.4783,
       "cells_no_candidate_reaches": 891,
       "flood": {
         "arcs": 250803,
@@ -62,7 +61,7 @@
     },
     "flood100": {
       "arcs_usable": 236900,
-      "baseline_share": 0.3055,
+      "baseline_share": 0.3691,
       "cells_no_candidate_reaches": 1316,
       "flood": {
         "arcs": 250803,
@@ -79,7 +78,7 @@
     },
     "flood25": {
       "arcs_usable": 244016,
-      "baseline_share": 0.3602,
+      "baseline_share": 0.4371,
       "cells_no_candidate_reaches": 1102,
       "flood": {
         "arcs": 250803,
@@ -96,7 +95,7 @@
     },
     "flood5": {
       "arcs_usable": 248847,
-      "baseline_share": 0.4147,
+      "baseline_share": 0.4945,
       "cells_no_candidate_reaches": 874,
       "flood": {
         "arcs": 250803,
@@ -113,32 +112,61 @@
     },
     "peak": {
       "arcs_usable": 250781,
-      "baseline_share": 0.2196,
+      "baseline_share": 0.2646,
       "cells_no_candidate_reaches": 1071,
       "flood": {},
       "matrix_nnz": 6317
     }
   },
-  "seconds": 33.9,
+  "seconds": 32.3,
   "seed": null,
   "service": "fire",
-  "stations_signature": "087abc04e0179c24",
+  "stations_signature": "f98b313a5600a358",
   "strategies": [
     {
       "coverage_by_scenario": {
-        "dry": 0.6547,
-        "f2015": 0.5668,
-        "flood100": 0.4397,
-        "flood25": 0.507,
-        "flood5": 0.5791,
-        "peak": 0.298
+        "dry": 0.7063,
+        "f2015": 0.6209,
+        "flood100": 0.4786,
+        "flood25": 0.5642,
+        "flood5": 0.641,
+        "peak": 0.3364
       },
-      "expected_coverage": 0.5757,
+      "expected_coverage": 0.6252,
       "optimality": "proven optimal",
       "proven_optimal": true,
       "sites": [
+        25,
         54,
-        63,
+        116,
+        175,
+        335,
+        404,
+        408,
+        421,
+        480,
+        575
+      ],
+      "solve_s": 0.201,
+      "strategy": "dry-only",
+      "worst_coverage": 0.3364,
+      "worst_design_basis": "peak"
+    },
+    {
+      "coverage_by_scenario": {
+        "dry": 0.7056,
+        "f2015": 0.6208,
+        "flood100": 0.4802,
+        "flood25": 0.5677,
+        "flood5": 0.6439,
+        "peak": 0.3449
+      },
+      "expected_coverage": 0.6264,
+      "optimality": "proven optimal",
+      "proven_optimal": true,
+      "sites": [
+        25,
+        35,
         94,
         116,
         175,
@@ -148,67 +176,38 @@
         480,
         575
       ],
-      "solve_s": 0.217,
-      "strategy": "dry-only",
-      "worst_coverage": 0.298,
+      "solve_s": 0.632,
+      "strategy": "expected",
+      "worst_coverage": 0.3449,
       "worst_design_basis": "peak"
     },
     {
       "coverage_by_scenario": {
-        "dry": 0.6531,
-        "f2015": 0.5695,
-        "flood100": 0.4512,
-        "flood25": 0.5122,
-        "flood5": 0.5866,
-        "peak": 0.3168
+        "dry": 0.6542,
+        "f2015": 0.6037,
+        "flood100": 0.4464,
+        "flood25": 0.5239,
+        "flood5": 0.6084,
+        "peak": 0.3829
       },
-      "expected_coverage": 0.5785,
+      "expected_coverage": 0.5901,
       "optimality": "proven optimal",
       "proven_optimal": true,
       "sites": [
         4,
         25,
         32,
-        54,
-        63,
         94,
-        118,
-        175,
-        404,
-        482
+        136,
+        146,
+        162,
+        174,
+        225,
+        325
       ],
-      "solve_s": 0.705,
-      "strategy": "expected",
-      "worst_coverage": 0.3168,
-      "worst_design_basis": "peak"
-    },
-    {
-      "coverage_by_scenario": {
-        "dry": 0.607,
-        "f2015": 0.5424,
-        "flood100": 0.3971,
-        "flood25": 0.4701,
-        "flood5": 0.5573,
-        "peak": 0.3329
-      },
-      "expected_coverage": 0.5417,
-      "optimality": "proven optimal",
-      "proven_optimal": true,
-      "sites": [
-        15,
-        25,
-        32,
-        51,
-        63,
-        94,
-        138,
-        163,
-        195,
-        480
-      ],
-      "solve_s": 1.251,
+      "solve_s": 0.614,
       "strategy": "maximin",
-      "worst_coverage": 0.3329,
+      "worst_coverage": 0.3829,
       "worst_design_basis": "peak"
     }
   ],
@@ -217,14 +216,14 @@
     "closes_when": "The 15 identity-confirmation emails are answered, or the stations are visited. Addresses are in data/interim/station_survey_worklist.csv; the procedure is in docs/station-survey.md. Either route replaces this waiver with evidence.",
     "date": "2026-09-10",
     "reason": "Coursework submission timeline. The station survey is outstanding and is not expected to complete before the report is due, so results are published on the positions currently held rather than withheld entirely.",
-    "rests_on": "29 of 33 station positions are Google Maps business listings adopted in E-11c, not surveyed coordinates. 14 of those 29 have a confirmed identity (an official TNFRS landline or CUG mobile matching the listing, or an OSM fire feature within 150 m). The remaining 15 are named and categorised as fire stations but are corroborated by nothing independent. 3 are ambiguous between two candidate listings and 1 (Athipattu) is contested.",
+    "rests_on": "34 of 39 station positions are Google Maps business listings adopted in E-11c, not surveyed coordinates -- 29 from the GCC list plus the 5 map-listed stations of the 6 the TNFRS directory adds (ADR-001a). 14 of those 34 have a confirmed identity (an official TNFRS landline or CUG mobile matching the listing, or an OSM fire feature within 150 m). The remaining 20 are named and categorised as fire stations but are corroborated by nothing independent; 15 of them carry the identity question the uncertainty draw is built on. 3 are ambiguous between two candidate listings and 1 (Athipattu) is contested.",
     "review_by": "2026-12-01",
-    "stations_total": 33,
-    "stations_unsurveyed": 29,
+    "stations_total": 39,
+    "stations_unsurveyed": 34,
     "uncertainty": {
-      "if_unconfirmed_listings_correct_points": 0.83,
-      "if_unconfirmed_listings_wrong_points": 7.63,
-      "note": "At the wider figure every effect this project has measured -- the junction term at 3.4 points, maximin siting at 4.7, the equity cost at k=20 at 5.0 -- sits inside the noise. A coverage figure published under this waiver may not be quoted at the narrow interval alone.\n"
+      "if_unconfirmed_listings_correct_points": 1.1,
+      "if_unconfirmed_listings_wrong_points": 8.55,
+      "note": "Re-measured 2026-09-13 against the 39-station inventory (ADR-001a), which widened both ends: 0.87 -> 1.10 and 8.05 -> 8.55. Six stations TNFRS operates inside the corporation were added, five of them on map listings rather than surveys, so there is more position uncertainty in the draw and not less. The optimistic end also stopped charging those six a flat 60 m -- they are map listings, and are now drawn at the 50 m their own evidence supports (F-32), which is why it reads 1.10 and not 1.11. At the wider figure almost every effect this project has measured sits inside the noise -- the emergency multiplier at 7.8 points, the junction term at 6.2, the equity cost at k=10 at 6.3, the wading factor at 5.6, maximin siting at 3.4, A-07's risk multipliers at 2.4, the flood closure depth at 1.3, the candidate lattice at 0.8. Exactly one clears it: the +/-20% class-speed band at 21.3 points. A coverage figure published under this waiver may not be quoted at the narrow interval alone.\n"
     }
   }
 }

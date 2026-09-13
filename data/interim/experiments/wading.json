@@ -1,30 +1,30 @@
 {
   "arms": [
     {
-      "ems_f100": 0.4007,
-      "ems_f25": 0.4747,
+      "ems_f100": 0.4893,
+      "ems_f25": 0.564,
       "wading_speed_factor": 0.2
     },
     {
-      "ems_f100": 0.4332,
-      "ems_f25": 0.4976,
+      "ems_f100": 0.5242,
+      "ems_f25": 0.5874,
       "wading_speed_factor": 0.35
     },
     {
-      "ems_f100": 0.4542,
-      "ems_f25": 0.5194,
+      "ems_f100": 0.5448,
+      "ems_f25": 0.6079,
       "wading_speed_factor": 0.5
     }
   ],
   "assumption": "A-09",
-  "code_commit": "04a7cdca8770f97963fadee3526628509663c6dd-dirty",
+  "code_commit": "099ca6bdbb2f7d352792f19b4582a562491ea684-dirty",
   "config_hash": "5f977eb68fac2ef082aab92476e53185bac79d0979c8598bf5cda868c6c72b0f",
-  "ems_f100_span_points": 5.35,
+  "ems_f100_span_points": 5.55,
   "experiment": "E-10 / A-09 wading speed factor",
   "input_digests": [],
-  "run_id": "ba705328e64ec5ad",
-  "seconds": 165.2,
+  "run_id": "1c833926b5b091f8",
+  "seconds": 53.3,
   "seed": null,
-  "stations_signature": "087abc04e0179c24",
-  "verdict_vs_noise_floor": "BELOW the pessimistic noise floor (7.6 pts) -- above the optimistic one (0.8 pts)"
+  "stations_signature": "f98b313a5600a358",
+  "verdict_vs_noise_floor": "BELOW the pessimistic noise floor (8.6 pts) -- above the optimistic one (1.1 pts)"
 }

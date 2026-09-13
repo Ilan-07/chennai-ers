@@ -212,8 +212,67 @@ def load_landuse(path: str, metric_crs: str) -> tuple[gpd.GeoDataFrame, dict]:
     return g, report
 
 
+def disjoint_risk_classes(parcels: gpd.GeoDataFrame, priority: list[str],
+                          ) -> tuple[gpd.GeoDataFrame, dict]:
+    """Resolve overlapping land-use parcels into one class per piece of ground.
+
+    OSM land-use polygons overlap: a retail way drawn inside a commercial
+    relation describes the same ground twice, and an industrial estate can carry
+    a hazardous sub-parcel. Summing intersection areas over them counts that
+    ground more than once (F-29), which is how a weighted MEAN came to exceed
+    every multiplier that went into it.
+
+    Two different problems live in that overlap and only one of them needs a
+    decision:
+
+    WITHIN a class, an overlap is pure double counting. Two polygons both
+    tagged commercial describe commercial ground, and dissolving them is
+    arithmetic, not modelling.
+
+    ACROSS classes, the ground is described twice in ways that disagree, and
+    something has to win. `priority` decides: earlier classes claim ground from
+    later ones. The default is risk-descending -- if a hazardous polygon and a
+    residential one cover the same ground, the ground has a hazardous facility
+    on it, and the coarser description should not dilute the finer one.
+
+    This is NOT the cell-level maximum the A-07 docstring rejects. A mis-tagged
+    tank still claims only its own footprint; the cell multiplier stays an
+    area-weighted mean over a partition. What changes is that the partition is
+    now a partition.
+    """
+    out, report = [], {"within_class_overlap_m2": {}, "claimed_from_lower_m2": {}}
+    claimed = None
+    for cls in priority:
+        sub = parcels[parcels["risk_class"] == cls]
+        if sub.empty:
+            continue
+        # Within-class dissolve: no decision, just stop counting ground twice.
+        merged = sub.geometry.union_all()
+        report["within_class_overlap_m2"][cls] = round(
+            float(sub.area.sum() - merged.area), 1)
+        geom = merged if claimed is None else merged.difference(claimed)
+        report["claimed_from_lower_m2"][cls] = round(
+            float(merged.area - geom.area), 1)
+        claimed = merged if claimed is None else claimed.union(merged)
+        if not geom.is_empty:
+            out.append({"risk_class": cls, "geometry": geom})
+
+    g = gpd.GeoDataFrame(out, geometry="geometry", crs=parcels.crs)
+    report["priority"] = list(priority)
+    report["area_m2_before"] = round(float(parcels.area.sum()), 1)
+    report["area_m2_after"] = round(float(g.area.sum()), 1)
+    return g, report
+
+
+# Risk-descending. The order is a modelling decision (ADR-009), so it is named
+# here rather than implied by a sort, and it is a parameter so the alternative
+# can be measured rather than argued about.
+RISK_PRIORITY = ["hazardous", "industrial", "commercial", "residential"]
+
+
 def landuse_risk_weights(cells: gpd.GeoDataFrame, parcels: gpd.GeoDataFrame,
                          multipliers: dict, metric_crs: str,
+                         priority: list[str] | None = None,
                          ) -> tuple[pd.Series, dict]:
     """Fire demand weight. ASSM A-07; swept in E-06.
 
@@ -222,10 +281,25 @@ def landuse_risk_weights(cells: gpd.GeoDataFrame, parcels: gpd.GeoDataFrame,
     maximum: a single mis-tagged storage tank should not multiply a whole
     residential cell by five, and OSM land-use tagging in Chennai is patchy
     enough that one bad polygon is a realistic input, not a hypothetical one.
+
+    The mean is taken over a PARTITION of the cell -- overlapping parcels are
+    resolved into disjoint ground by `disjoint_risk_classes` first (F-29).
+    Without that step the sum of intersection areas can exceed the cell, and the
+    "mean" is then not bounded by its inputs. It is bounded now, and the
+    assertion below is what says so: setting every multiplier to 1.0 returns
+    exactly 1.0 for every cell, which is the control E-06 runs.
     """
     cm = cells.to_crs(metric_crs)
     pm = parcels.to_crs(metric_crs)
     base = float(multipliers.get("residential", 1.0))
+
+    known = [c for c in (priority or RISK_PRIORITY)]
+    # Any class the priority list does not name still has to land somewhere, or
+    # it would silently vanish from the surface. Unnamed classes rank last, in a
+    # stable order, and the report says which they were.
+    extra = sorted(set(pm["risk_class"]) - set(known))
+    pm, disjoint_report = disjoint_risk_classes(pm, known + extra)
+    disjoint_report["classes_not_in_priority"] = extra
 
     inter = gpd.overlay(cm[["cell_id", "geometry"]],
                         pm[["risk_class", "geometry"]],
@@ -243,6 +317,19 @@ def landuse_risk_weights(cells: gpd.GeoDataFrame, parcels: gpd.GeoDataFrame,
     # absence of an OSM polygon means nobody drew one, not that nothing is there.
     mult = (weighted + base * (cell_area - covered).clip(lower=0)) / cell_area
 
+    # The property the docstring promises, enforced rather than described. An
+    # area-weighted mean cannot leave the range of its inputs; if it does, the
+    # partition is not a partition and the surface is wrong in a way that looks
+    # perfectly plausible downstream.
+    lo = min([base, *(float(v) for v in multipliers.values())])
+    hi = max([base, *(float(v) for v in multipliers.values())])
+    over = float(np.nanmax(mult)) - hi
+    under = lo - float(np.nanmin(mult))
+    assert over <= 1e-6 and under <= 1e-6, (
+        f"cell multiplier left [{lo}, {hi}]: max {np.nanmax(mult):.4f}, "
+        f"min {np.nanmin(mult):.4f}. Overlapping parcels are being counted "
+        f"more than once (F-29).")
+
     mult = mult.reindex(cells["cell_id"]).to_numpy()
     out = cells["population"].to_numpy() * mult
     report = {
@@ -251,9 +338,11 @@ def landuse_risk_weights(cells: gpd.GeoDataFrame, parcels: gpd.GeoDataFrame,
         "cell_multiplier_min": round(float(np.nanmin(mult)), 4),
         "cell_multiplier_median": round(float(np.nanmedian(mult)), 4),
         "cell_multiplier_max": round(float(np.nanmax(mult)), 4),
+        "cell_multiplier_bounds": [lo, hi],
         "cells_above_residential": int((mult > base + 1e-9).sum()),
         "weighted_total": round(float(np.nansum(out)), 1),
         "raw_total": round(float(cells["population"].sum()), 1),
+        "overlap_resolution": disjoint_report,
     }
     return pd.Series(out, index=cells.index), report
 

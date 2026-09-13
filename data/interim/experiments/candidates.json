@@ -1,0 +1,101 @@
+{
+  "arms": [
+    {
+      "candidates": 2354,
+      "candidates_land_feasible": 986,
+      "coverage_share_k10": 0.8596,
+      "min_separation_m": 400.0,
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "service": "ems",
+      "sites_within_800m_of_shipped": 7
+    },
+    {
+      "candidates": 2354,
+      "candidates_land_feasible": 986,
+      "coverage_share_k10": 0.7108,
+      "min_separation_m": 400.0,
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "service": "fire",
+      "sites_within_800m_of_shipped": 3
+    },
+    {
+      "candidates": 1395,
+      "candidates_land_feasible": 539,
+      "coverage_share_k10": 0.8576,
+      "min_separation_m": 600.0,
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "service": "ems",
+      "sites_within_800m_of_shipped": 7
+    },
+    {
+      "candidates": 1395,
+      "candidates_land_feasible": 539,
+      "coverage_share_k10": 0.7064,
+      "min_separation_m": 600.0,
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "service": "fire",
+      "sites_within_800m_of_shipped": 6
+    },
+    {
+      "candidates": 948,
+      "candidates_land_feasible": 352,
+      "coverage_share_k10": 0.8573,
+      "min_separation_m": 800.0,
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "service": "ems",
+      "sites_within_800m_of_shipped": 10
+    },
+    {
+      "candidates": 948,
+      "candidates_land_feasible": 352,
+      "coverage_share_k10": 0.7062,
+      "min_separation_m": 800.0,
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "service": "fire",
+      "sites_within_800m_of_shipped": 10
+    },
+    {
+      "candidates": 519,
+      "candidates_land_feasible": 174,
+      "coverage_share_k10": 0.8518,
+      "min_separation_m": 1200.0,
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "service": "ems",
+      "sites_within_800m_of_shipped": 5
+    },
+    {
+      "candidates": 519,
+      "candidates_land_feasible": 174,
+      "coverage_share_k10": 0.7094,
+      "min_separation_m": 1200.0,
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "service": "fire",
+      "sites_within_800m_of_shipped": 7
+    }
+  ],
+  "assumption": "A-12",
+  "code_commit": "099ca6bdbb2f7d352792f19b4582a562491ea684-dirty",
+  "config_hash": "5f977eb68fac2ef082aab92476e53185bac79d0979c8598bf5cda868c6c72b0f",
+  "coverage_span_points": {
+    "ems": 0.78,
+    "fire": 0.46
+  },
+  "ems_span_points": 0.78,
+  "experiment": "E-09 / A-12 candidate minimum separation",
+  "input_digests": [],
+  "run_id": "1c833926b5b091f8",
+  "seconds": 25.1,
+  "seed": null,
+  "shipped_min_separation_m": 800.0,
+  "stability_note": "sites_within_800m_of_shipped counts how many of the ten sites an arm chooses have a counterpart within 800 m in the shipped lattice; candidate indices are not comparable across arms",
+  "stations_signature": "f98b313a5600a358",
+  "verdict_vs_noise_floor": "BELOW the pessimistic noise floor (8.6 pts) -- below the optimistic one (1.1 pts)"
+}

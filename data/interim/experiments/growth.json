@@ -17,15 +17,15 @@
     }
   ],
   "assumption": "A-05",
-  "baseline_share_unchanged": 0.6175,
-  "code_commit": "04a7cdca8770f97963fadee3526628509663c6dd-dirty",
+  "baseline_share_unchanged": 0.7177,
+  "code_commit": "099ca6bdbb2f7d352792f19b4582a562491ea684-dirty",
   "config_hash": "5f977eb68fac2ef082aab92476e53185bac79d0979c8598bf5cda868c6c72b0f",
   "coverage_share_sensitivity": 0.0,
   "experiment": "E-10 / A-05 growth factor",
   "finding": "A-05 is a uniform multiplier on every cell, so it moves absolute population counts proportionally and leaves every coverage SHARE exactly unchanged. It is load-bearing for 'N million residents beyond 8 minutes' and inert for the percentages this project reports.",
   "input_digests": [],
-  "run_id": "ba705328e64ec5ad",
-  "seconds": 1.9,
+  "run_id": "1c833926b5b091f8",
+  "seconds": 1.4,
   "seed": null,
-  "stations_signature": "087abc04e0179c24"
+  "stations_signature": "f98b313a5600a358"
 }

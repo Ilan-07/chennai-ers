@@ -9,7 +9,8 @@ resolution-9 cells over an area this size are near-identical in shape, so the
 mean vertex offset reproduces them to well under a pixel and costs ~40x less
 than storing every polygon.
 """
-import json, sys, time, warnings
+import json
+import pathlib, sys, time, warnings
 sys.path.insert(0, "src")
 import geopandas as gpd, numpy as np, pandas as pd, yaml
 from scipy import sparse
@@ -18,7 +19,41 @@ from ers.pipeline import build_scenario_coverage, load_service, station_signatur
 from ers.publish import publication_basis
 from ers.routing.csr import snap
 
-SCEN = ["dry", "peak", "flood5", "flood25", "flood100", "f2015"]
+_ALL_SCEN = ["dry", "peak", "flood5", "flood25", "flood100", "f2015"]
+
+
+def _servable_scenarios() -> list[str]:
+    """The scenarios this study area may honestly be asked (A-17, ADR-010).
+
+    `flood_extent_report.py` measures which flood layers were drawn for this
+    boundary and refuses the rest. That refusal was ADVISORY until this function
+    existed: the export computed all six regardless, so the metro shipped flood
+    coverage for 486 km2 of ground no layer covers -- reported as dry, which
+    reads as resilience exactly where the study area was widened.
+
+    The BUILD gate `flood_layers_cover_their_study_area` catches it; this is what
+    stops it happening.
+    """
+    import json as _json
+    import yaml as _yaml
+    try:
+        cfg = _yaml.safe_load(open("config/city/chennai.yml"))
+        profile = cfg.get("interim_subdir") or "gcc"
+        rep = _json.loads(pathlib.Path("data/interim/flood_extent.json").read_text())
+        prof = rep["profiles"][profile]
+    except (OSError, KeyError, ValueError):
+        print("  no flood-extent verdict on disk; exporting every scenario",
+              flush=True)
+        return list(_ALL_SCEN)
+    refused = set(prof.get("refused", []))
+    keep = [s for s in _ALL_SCEN if s not in refused]
+    if refused:
+        print(f"  profile '{profile}': not exporting {sorted(refused)} -- "
+              f"their layers were not drawn for this study area (A-17)", flush=True)
+    return keep
+
+
+SCEN = _servable_scenarios()
 t0 = time.time()
 def _basis_line() -> str:
     """How the console should describe what these numbers rest on."""
@@ -116,7 +151,12 @@ print("station identity states:", dict(Counter(x["state"] for x in out["stations
 
 # Ward labels, so the worst-served list names real wards.
 wards = gpd.read_parquet("data/interim/wards.parquet")
-out["wards"] = {int(r.ward_id): {"no": int(r.ward_no), "zone": str(r.zone_name)}
+# `name` carries the metro profile's outer units, which are H3 cells labelled by
+# their nearest settlement. A list that called Pallavaram "Ward 10023" would be
+# naming the reporting grid instead of the place the reader cares about.
+_has_name = "unit_name" in wards.columns
+out["wards"] = {int(r.ward_id): {"no": int(r.ward_no), "zone": str(r.zone_name),
+                                 **({"name": str(r.unit_name)} if _has_name else {})}
                 for r in wards.itertuples()}
 
 for svc in ("ems", "fire"):

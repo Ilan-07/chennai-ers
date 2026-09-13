@@ -2,7 +2,7 @@
   "PROVISIONAL": false,
   "basis_note": "Published under a recorded waiver, NOT on surveyed positions. See config/publish_waiver.yml.",
   "cells": 3838,
-  "code_commit": "80f03cfde70562ec7561b33d042f660535c87623-dirty",
+  "code_commit": "099ca6bdbb2f7d352792f19b4582a562491ea684-dirty",
   "config_hash": "5f977eb68fac2ef082aab92476e53185bac79d0979c8598bf5cda868c6c72b0f",
   "connectivity": {
     "largest_strong_nodes": 88096,
@@ -18,7 +18,7 @@
   "demand_total": 7625269,
   "emri_comparison_dry_context_only": {
     "is_gate": false,
-    "modelled_response_s": 421.2,
+    "modelled_response_s": 379.1,
     "published_max_s": 450,
     "published_min_s": 426,
     "source": "108 / EMRI published Chennai metro mean response",
@@ -32,56 +32,56 @@
   "results": {
     "ems": {
       "bases": {
-        "bases": 33,
+        "bases": 39,
         "by_service": {
-          "fire": 33
+          "fire": 39
         },
-        "note": "No EMS base inventory exists. Coverage is modelled from the 33 authoritative fire stations, using EMS turnout offsets, speed multipliers and response standard. The 108 ambulance standby points are not published and are absent from OSM.",
+        "note": "No EMS base inventory exists. Coverage is modelled from the 39 authoritative fire stations, using EMS turnout offsets, speed multipliers and response standard. The 108 ambulance standby points are not published and are absent from OSM.",
         "proxy": "fire_stations",
         "resolves_when": "EMRI supplies the 108 standby-point list",
         "source": "none"
       },
       "cell_snap_max_m": 1208.2,
       "cells_snap_over_300m": 488,
-      "coverage_share": 0.6175,
+      "coverage_share": 0.7177,
       "graded": {
         "bands": [
           {
-            "population": 4708346,
-            "population_share": 0.6175,
+            "population": 5472683,
+            "population_share": 0.7177,
             "t_s": 300.0,
             "u": 1.0
           },
           {
-            "population": 1512944,
-            "population_share": 0.1984,
+            "population": 1340766,
+            "population_share": 0.1758,
             "t_s": 420.0,
             "u": 0.7
           },
           {
-            "population": 856297,
-            "population_share": 0.1123,
+            "population": 575597,
+            "population_share": 0.0755,
             "t_s": 600.0,
             "u": 0.3
           }
         ],
         "definition": "sum(pop * u(band)) / sum(pop); a cell is credited at the utility of the first band it falls inside",
-        "graded_share": 0.79,
-        "population_beyond_last_band": 547682
+        "graded_share": 0.8634,
+        "population_beyond_last_band": 236223
       },
-      "max_travel_s": 1744.6,
-      "mean_travel_s": 301.2,
-      "p50_travel_s": 255.5,
-      "p90_travel_s": 523.1,
-      "population_covered": 4708346,
-      "population_outside": 2916923,
+      "max_travel_s": 1715.1,
+      "mean_travel_s": 259.1,
+      "p50_travel_s": 229.7,
+      "p90_travel_s": 428.8,
+      "population_covered": 5472683,
+      "population_outside": 2152586,
       "position_uncertainty": {
-        "coverage_p5": 0.6131,
-        "coverage_p95": 0.6215,
-        "coverage_sd_points": 0.27,
+        "coverage_p5": 0.715,
+        "coverage_p95": 0.7261,
+        "coverage_sd_points": 0.33,
         "draws": 300,
-        "mean_bias_points": -0.01,
-        "p5_p95_spread_points": 0.83,
+        "mean_bias_points": 0.27,
+        "p5_p95_spread_points": 1.1,
         "seed": 20260904,
         "source": "data/interim/sensitivity_stations_ems.json"
       },
@@ -92,19 +92,19 @@
       "t_turnout_s": 60,
       "threshold_ladder": {
         "NFPA-travel-4min": {
-          "coverage_share": 0.4515,
+          "coverage_share": 0.5345,
           "travel_budget_s": 240
         },
         "SFAC-5": {
-          "coverage_share": 0.2518,
+          "coverage_share": 0.3045,
           "travel_budget_s": 180
         },
         "SFAC-7": {
-          "coverage_share": 0.6175,
+          "coverage_share": 0.7177,
           "travel_budget_s": 300
         },
         "deck-8min": {
-          "coverage_share": 0.7332,
+          "coverage_share": 0.8318,
           "travel_budget_s": 360
         }
       },
@@ -115,54 +115,54 @@
     },
     "fire": {
       "bases": {
-        "bases": 33,
+        "bases": 39,
         "by_service": {
-          "fire": 33
+          "fire": 39
         },
         "proxy": null,
         "source": "authoritative"
       },
       "cell_snap_max_m": 1208.2,
       "cells_snap_over_300m": 488,
-      "coverage_share": 0.4702,
+      "coverage_share": 0.5443,
       "graded": {
         "bands": [
           {
-            "population": 3250130,
-            "population_share": 0.3593,
+            "population": 3765152,
+            "population_share": 0.4213,
             "t_s": 240.0,
             "u": 1.0
           },
           {
-            "population": 3444426,
-            "population_share": 0.3807,
+            "population": 3635875,
+            "population_share": 0.4069,
             "t_s": 420.0,
             "u": 0.7
           },
           {
-            "population": 1437583,
-            "population_share": 0.1589,
+            "population": 1023339,
+            "population_share": 0.1145,
             "t_s": 600.0,
             "u": 0.3
           }
         ],
         "definition": "sum(pop * u(band)) / sum(pop); a cell is credited at the utility of the first band it falls inside",
-        "graded_share": 0.6734,
-        "population_beyond_last_band": 914842
+        "graded_share": 0.7405,
+        "population_beyond_last_band": 511582
       },
-      "max_travel_s": 1954.5,
-      "mean_travel_s": 342.7,
-      "p50_travel_s": 289.5,
-      "p90_travel_s": 604.2,
-      "population_covered": 4254071,
-      "population_outside": 4792911,
+      "max_travel_s": 1838.1,
+      "mean_travel_s": 299.0,
+      "p50_travel_s": 263.0,
+      "p90_travel_s": 502.8,
+      "population_covered": 4863451,
+      "population_outside": 4072497,
       "position_uncertainty": {
-        "coverage_p5": 0.461,
-        "coverage_p95": 0.4733,
+        "coverage_p5": 0.5377,
+        "coverage_p95": 0.5501,
         "coverage_sd_points": 0.37,
         "draws": 300,
-        "mean_bias_points": -0.29,
-        "p5_p95_spread_points": 1.23,
+        "mean_bias_points": -0.03,
+        "p5_p95_spread_points": 1.24,
         "seed": 20260904,
         "source": "data/interim/sensitivity_stations_fire.json"
       },
@@ -173,19 +173,19 @@
       "t_turnout_s": 80,
       "threshold_ladder": {
         "NFPA-travel-4min": {
-          "coverage_share": 0.3593,
+          "coverage_share": 0.4213,
           "travel_budget_s": 240
         },
         "SFAC-5": {
-          "coverage_share": 0.1444,
+          "coverage_share": 0.1687,
           "travel_budget_s": 160
         },
         "SFAC-7": {
-          "coverage_share": 0.4702,
+          "coverage_share": 0.5443,
           "travel_budget_s": 280
         },
         "deck-8min": {
-          "coverage_share": 0.6076,
+          "coverage_share": 0.6967,
           "travel_budget_s": 340
         }
       },
@@ -195,35 +195,36 @@
       "unreachable_share": 0.0
     }
   },
-  "run_id": "5c205e0b523ff3ae",
-  "seconds": 3.3,
+  "run_id": "1c833926b5b091f8",
+  "seconds": 3.5,
   "seed": null,
   "stale_intervals_ignored": {},
   "station_gate": {
     "by_confidence": {
-      "google_maps_poi": 29,
-      "osm": 4
+      "google_maps_poi": 34,
+      "osm": 4,
+      "osm_fire_feature": 1
     },
     "passes_publish_gate": false,
     "runnable": true,
-    "total": 33,
+    "total": 39,
     "unresolved": [],
-    "with_coordinates": 33
+    "with_coordinates": 39
   },
-  "stations_signature": "087abc04e0179c24",
+  "stations_signature": "f98b313a5600a358",
   "waiver": {
     "accepted_by": "Ilangkumaran Yogamani / Kalyan Ram",
     "closes_when": "The 15 identity-confirmation emails are answered, or the stations are visited. Addresses are in data/interim/station_survey_worklist.csv; the procedure is in docs/station-survey.md. Either route replaces this waiver with evidence.",
     "date": "2026-09-10",
     "reason": "Coursework submission timeline. The station survey is outstanding and is not expected to complete before the report is due, so results are published on the positions currently held rather than withheld entirely.",
-    "rests_on": "29 of 33 station positions are Google Maps business listings adopted in E-11c, not surveyed coordinates. 14 of those 29 have a confirmed identity (an official TNFRS landline or CUG mobile matching the listing, or an OSM fire feature within 150 m). The remaining 15 are named and categorised as fire stations but are corroborated by nothing independent. 3 are ambiguous between two candidate listings and 1 (Athipattu) is contested.",
+    "rests_on": "34 of 39 station positions are Google Maps business listings adopted in E-11c, not surveyed coordinates -- 29 from the GCC list plus the 5 map-listed stations of the 6 the TNFRS directory adds (ADR-001a). 14 of those 34 have a confirmed identity (an official TNFRS landline or CUG mobile matching the listing, or an OSM fire feature within 150 m). The remaining 20 are named and categorised as fire stations but are corroborated by nothing independent; 15 of them carry the identity question the uncertainty draw is built on. 3 are ambiguous between two candidate listings and 1 (Athipattu) is contested.",
     "review_by": "2026-12-01",
-    "stations_total": 33,
-    "stations_unsurveyed": 29,
+    "stations_total": 39,
+    "stations_unsurveyed": 34,
     "uncertainty": {
-      "if_unconfirmed_listings_correct_points": 0.83,
-      "if_unconfirmed_listings_wrong_points": 7.63,
-      "note": "At the wider figure every effect this project has measured -- the junction term at 3.4 points, maximin siting at 4.7, the equity cost at k=20 at 5.0 -- sits inside the noise. A coverage figure published under this waiver may not be quoted at the narrow interval alone.\n"
+      "if_unconfirmed_listings_correct_points": 1.1,
+      "if_unconfirmed_listings_wrong_points": 8.55,
+      "note": "Re-measured 2026-09-13 against the 39-station inventory (ADR-001a), which widened both ends: 0.87 -> 1.10 and 8.05 -> 8.55. Six stations TNFRS operates inside the corporation were added, five of them on map listings rather than surveys, so there is more position uncertainty in the draw and not less. The optimistic end also stopped charging those six a flat 60 m -- they are map listings, and are now drawn at the 50 m their own evidence supports (F-32), which is why it reads 1.10 and not 1.11. At the wider figure almost every effect this project has measured sits inside the noise -- the emergency multiplier at 7.8 points, the junction term at 6.2, the equity cost at k=10 at 6.3, the wading factor at 5.6, maximin siting at 3.4, A-07's risk multipliers at 2.4, the flood closure depth at 1.3, the candidate lattice at 0.8. Exactly one clears it: the +/-20% class-speed band at 21.3 points. A coverage figure published under this waiver may not be quoted at the narrow interval alone.\n"
     }
   }
 }

@@ -1,33 +1,40 @@
 # Station position survey — procedure
 
-**Why this exists.** 29 of the 33 GCC fire stations have no verified coordinate.
+**Why this exists.** 34 of the 39 stations in the inventory have no verified
+coordinate — the 29 unresolved of the 33 on the GCC list, plus 5 of the 6 the
+TNFRS directory adds (ADR-001a).
 Until they are verified, the publish gate (`passes_publish_gate: false`) marks
 every coverage figure the project produces as PROVISIONAL.
 
 **What has changed since this document was first written.** The original version
 told you to search Google Maps and then confirm from satellite imagery. Step 1
-has since been done for all 29 stations (E-11c), and step 2 **failed its own
+has since been done for all of them (E-11c), and step 2 **failed its own
 control** (E-11e) — see below. The procedure now leads with the method that
 actually worked.
 
 ---
 
-## Where the 29 stand today
+## Where the 34 stand today
 
 | state | n | what it means |
 |---|---|---|
 | `identity_confirmed` | 14 | a published TNFRS phone number matches the listing, or an OSM fire feature sits within 150 m |
+| `directory_listed` | 5 | added from the TNFRS regional directory (ADR-001a); the landline is official, the position is a map listing |
 | `named_fire_station` | 12 | the listing is named and categorised as a fire station, but nothing independent corroborates it |
 | `ambiguous_candidates` | 3 | two candidate listings, no evidence separating them (Avadi, Secretariat, Tondiarpet) |
 | `contested` | 1 | Athipattu — see below |
 
 **This is why the work still matters.** E-11g measured what the 15 unconfirmed
 positions are worth: if their Google listing names the right station, the noise
-floor on EMS coverage is **±0.8 points**; if they are no better than the
-geocoder positions they replaced, it is **±7.6 points**. At ±7.6 every effect
-this project has measured — the junction term (3.4), maximin siting (4.7), the
-equity cost at k=20 (5.0) — sits below the noise. The truth is between those two
-numbers and cannot be located without checking.
+floor on EMS coverage is **±1.10 points**; if they are no better than the
+geocoder positions they replaced, it is **±8.55 points** (re-measured 2026-09-12
+against the 39-station inventory, ADR-001a). At ±8.55 almost everything this
+project has measured — the emergency multiplier (7.8), the junction term (6.2),
+the equity cost at k=10 (6.3), the wading factor (5.6), maximin siting (3.4),
+A-07's multipliers (2.4), closure depth (1.3), the candidate lattice (0.8) —
+sits below the noise. Exactly one effect clears it: the ±20% speed band, at
+21.3 points. The truth is between those two numbers and cannot be located
+without checking.
 
 ---
 
@@ -60,7 +67,7 @@ one-line email below to the address already in the `email` column.
 Record the reply in `verified_lat` / `verified_lon` / `verified_by`.
 
 **This is the highest-value remaining action in the project.** Fifteen emails
-move the headline interval from ±7.6 to ±0.8, and no amount of further modelling
+move the headline interval from ±8.55 to ±1.10, and no amount of further modelling
 substitutes for it.
 
 ---
@@ -68,7 +75,7 @@ substitutes for it.
 ## Method 2 — OSM corroboration. Already exhausted.
 
 Recorded so nobody repeats it. A widened Overpass query returns **17 fire
-features** against 33 authoritative stations — roughly 48% complete — and four
+features** against 39 authoritative stations — roughly 41% complete — and four
 match a station position within 150 m (Royapuram 4 m, Mylapore 23 m, Tambaram
 41 m, and the Athipattu candidate that turned out to be the power station's own
 fire post). Wikidata returns **zero** fire stations for Chennai. Nominatim is
@@ -181,7 +188,7 @@ fail the build until it has been.
 
 ## Worth doing while you're in there
 
-**Contribute the fixes upstream.** OSM is missing most of Chennai's 33 fire
+**Contribute the fixes upstream.** OSM is missing most of Chennai's 39 fire
 stations. Adding them (`amenity=fire_station`, `operator=Tamil Nadu Fire and
 Rescue Services`, `name=<station> Fire Station`) takes a minute per station in
 the OSM iD editor, is a genuine public-good contribution the report can cite,

@@ -1,6 +1,6 @@
 """Coverage matrix + siting optimisation. Build steps 09b/11.
 
-PROVISIONAL: 29 of 33 station positions are geocoder output, not surveyed.
+PROVISIONAL: 34 of 39 station positions are geocoder output, not surveyed.
 """
 import json, sys, time
 sys.path.insert(0, "src")

@@ -32,6 +32,11 @@ DIFFERENT = "DIFFERENT QUANTITY"
 OK = "SUPPORTED"
 
 
+def _api_built() -> bool:
+    """The architecture claim is settled by code on disk, not by a promise."""
+    return Path("src/ers/api/app.py").exists() and Path("ui/package.json").exists()
+
+
 def _load(name: str) -> dict:
     p = I / name
     return json.loads(p.read_text()) if p.exists() else {}
@@ -82,9 +87,12 @@ def rows() -> list[dict]:
         {"claim": "the five existing stations sit close together",
          "status": SUPERSEDED,
          "pipeline": f"{base.get('station_gate', {}).get('total', '?')} stations",
-         "note": "Finding F-01. The GCC publishes 33 (9 North, 9 South, "
-                 "7 Central, 8 Suburban). The five-station premise underlies the "
-                 "deck's root-cause analysis and its coverage arithmetic.",
+         "note": "Finding F-01. The GCC page publishes 33 (9 North, 9 South, "
+                 "7 Central, 8 Suburban); the TNFRS regional directories name "
+                 "six more inside the same boundary, and the operator's own "
+                 "directory governs (ADR-001a). The five-station premise "
+                 "underlies the deck's root-cause analysis and its coverage "
+                 "arithmetic.",
          "run": _load("stations_qa.json").get("run_id")},
 
         {"claim": "mean response falls 9.6 min to 6.1 min",
@@ -115,13 +123,17 @@ def rows() -> list[dict]:
          "run": _load("demand_report.json").get("run_id")},
 
         {"claim": "FastAPI service + React/Leaflet console, REST between them",
-         "status": UNBUILT,
-         "pipeline": "a single static HTML file",
-         "note": "scripts/ui/build_console.sh assembles ~3 MB of precomputed "
-                 "JSON into one page. No server, no API, no React. The console "
-                 "is real and works; the architecture slide describes something "
-                 "that was not built.",
-         "run": None},
+         "status": OK if _api_built() else UNBUILT,
+         "pipeline": ("src/ers/api (FastAPI) + ui/ (React 18 + Leaflet 1.9, Vite)"
+                      if _api_built() else "a single static HTML file"),
+         "note": "Built 2026-09, ADR-008. The service serves build artefacts and "
+                 "solves siting LIVE with the real optimiser -- greedy plus the "
+                 "exact MIP -- replacing the console's own JavaScript greedy, "
+                 "which could show a site list the project could not bound. "
+                 "`make api` runs it; `make console` still builds the offline "
+                 "single-file view from the same export. The deck's HOSTED half "
+                 "-- 'cloud, cached spatial data store' -- is still not built.",
+         "run": _load("baseline_report.json").get("run_id")},
 
         {"claim": "manual placement: click to test a candidate site",
          "status": OK, "pipeline": "implemented 2026-09 (console: Place a site by hand)",

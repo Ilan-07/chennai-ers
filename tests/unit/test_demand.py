@@ -7,8 +7,10 @@ import rasterio
 from rasterio.transform import from_origin
 from shapely.geometry import Polygon, box
 
-from ers.geo.demand import (assign_wards, cells_for_area, population_to_cells,
-                            reconcile_to_wards, service_weights)
+from ers.geo.demand import (RISK_PRIORITY, assign_wards, cells_for_area,
+                            disjoint_risk_classes, landuse_risk_weights,
+                            population_to_cells, reconcile_to_wards,
+                            service_weights)
 
 RES = 9
 
@@ -125,3 +127,99 @@ def test_ems_weight_is_monotone_in_age_share():
         v = float(service_weights(cells, w0=0.6, w1=1.6, share_60plus=pd.Series({1: s})).iloc[0])
         assert v > prev
         prev = v
+
+
+# -------------------------------------------------- A-07 land-use risk (F-29)
+#
+# The defect these exist for: OSM land-use polygons overlap, the weighting summed
+# intersection areas over them, and the "area-weighted mean" it documented could
+# then exceed every multiplier that went into it. 15 cells came back above 1.0
+# when every multiplier was 1.0. Nothing failed; the surface just got quietly
+# heavier in the commercial core.
+
+MULT = {"residential": 1.0, "commercial": 1.8, "industrial": 3.0, "hazardous": 5.0}
+METRIC = "EPSG:32644"
+
+
+def _lu_cells(*boxes):
+    g = gpd.GeoDataFrame(
+        {"cell_id": [f"c{i}" for i in range(len(boxes))],
+         "population": [100.0] * len(boxes)},
+        geometry=list(boxes), crs="EPSG:4326")
+    return g
+
+
+def _parcels(*pairs):
+    return gpd.GeoDataFrame({"risk_class": [c for c, _ in pairs]},
+                            geometry=[g for _, g in pairs], crs="EPSG:4326")
+
+
+def test_identity_multipliers_return_exactly_one_everywhere():
+    """The E-06 control. A mean cannot escape the range of its inputs."""
+    cell = box(80.26, 13.07, 80.27, 13.08)
+    # Two commercial parcels describing the SAME ground, as OSM routinely does.
+    p = _parcels(("commercial", box(80.262, 13.072, 80.268, 13.078)),
+                 ("commercial", box(80.263, 13.073, 80.267, 13.077)))
+    w, rep = landuse_risk_weights(_lu_cells(cell), p, {k: 1.0 for k in MULT}, METRIC)
+    assert rep["cell_multiplier_max"] == pytest.approx(1.0, abs=1e-9)
+    assert rep["cell_multiplier_min"] == pytest.approx(1.0, abs=1e-9)
+    assert float(w.iloc[0]) == pytest.approx(100.0, abs=1e-6)
+
+
+def test_a_parcel_drawn_twice_is_not_charged_twice():
+    """A duplicate polygon must not change the surface at all."""
+    cell = box(80.26, 13.07, 80.27, 13.08)
+    one = _parcels(("industrial", box(80.262, 13.072, 80.268, 13.078)))
+    twice = _parcels(("industrial", box(80.262, 13.072, 80.268, 13.078)),
+                     ("industrial", box(80.262, 13.072, 80.268, 13.078)))
+    a, _ = landuse_risk_weights(_lu_cells(cell), one, MULT, METRIC)
+    b, _ = landuse_risk_weights(_lu_cells(cell), twice, MULT, METRIC)
+    assert float(a.iloc[0]) == pytest.approx(float(b.iloc[0]), rel=1e-9)
+
+
+def test_the_cell_multiplier_stays_inside_the_multiplier_range():
+    """Heavily overlapped ground was where the old code went out of range."""
+    cell = box(80.26, 13.07, 80.27, 13.08)
+    stack = _parcels(*[("commercial", box(80.261 + 0.0002 * i, 13.071,
+                                          80.269 - 0.0002 * i, 13.079))
+                       for i in range(6)])
+    _, rep = landuse_risk_weights(_lu_cells(cell), stack, MULT, METRIC)
+    assert 1.0 - 1e-9 <= rep["cell_multiplier_min"]
+    assert rep["cell_multiplier_max"] <= 5.0 + 1e-9
+
+
+def test_priority_decides_which_class_holds_shared_ground():
+    """The modelling decision, made explicit: hazardous outranks residential."""
+    cell = box(80.26, 13.07, 80.27, 13.08)
+    shared = box(80.262, 13.072, 80.268, 13.078)
+    p = _parcels(("residential", shared), ("hazardous", shared))
+    hi, _ = landuse_risk_weights(_lu_cells(cell), p, MULT, METRIC)
+    lo, _ = landuse_risk_weights(_lu_cells(cell), p, MULT, METRIC,
+                                 priority=["residential", "commercial",
+                                           "industrial", "hazardous"])
+    assert float(hi.iloc[0]) > float(lo.iloc[0])
+    # Risk-ascending hands the ground to residential, which is the base rate,
+    # so the cell is then indistinguishable from unmapped ground.
+    assert float(lo.iloc[0]) == pytest.approx(100.0, abs=1e-6)
+
+
+def test_a_class_missing_from_the_priority_list_is_not_dropped():
+    """An unnamed class must rank last, not vanish from the surface."""
+    cell = box(80.26, 13.07, 80.27, 13.08)
+    p = _parcels(("industrial", box(80.262, 13.072, 80.268, 13.078)))
+    w, rep = landuse_risk_weights(_lu_cells(cell), p, MULT, METRIC,
+                                  priority=["hazardous", "commercial"])
+    assert rep["overlap_resolution"]["classes_not_in_priority"] == ["industrial"]
+    assert float(w.iloc[0]) > 100.0
+
+
+def test_resolved_parcels_cover_no_more_ground_than_they_started_with():
+    p = _parcels(("commercial", box(80.262, 13.072, 80.268, 13.078)),
+                 ("industrial", box(80.264, 13.074, 80.270, 13.080)),
+                 ("industrial", box(80.264, 13.074, 80.270, 13.080)))
+    g, rep = disjoint_risk_classes(p.to_crs(METRIC), RISK_PRIORITY)
+    assert rep["area_m2_after"] < rep["area_m2_before"]
+    assert g.geometry.union_all().area == pytest.approx(rep["area_m2_after"], abs=0.05)
+    # Disjoint means disjoint: the pieces must not overlap each other.
+    assert float(g.area.sum()) == pytest.approx(
+        g.geometry.union_all().area, rel=1e-9)

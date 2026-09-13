@@ -1,19 +1,19 @@
 """E-11: how much does station POSITION UNCERTAINTY move the answers?
 
-The publish gate has been closed since step 09 because 29 of 33 stations carry
+The publish gate has been closed since step 09 because 34 of 39 stations carry
 geocoder positions, not surveyed ones, at a stated uncertainty of 900 m. Every
 figure in this project is stamped PROVISIONAL for that reason — but "provisional"
 is a word, and the assumptions register demands a number.
 
 This is the experiment that produces the number, and it is a prerequisite for
-believing any of the others. The effects measured so far are:
-
-    E-10 junction term                     3.4 points of coverage
-    maximin vs dry-only siting (step 15)   4.7 points
-    equity cost at k=20 (step 14)          5.0 points
+believing any of the others. The effects it is judged against -- the junction
+term (E-10), maximin siting (step 15) and the equity cost at k=20 (step 14) --
+are READ FROM THEIR OWN ARTEFACTS at the bottom of this script rather than
+transcribed here, because they were transcribed here once and were wrong by a
+factor of two within three input revisions.
 
 If perturbing the stations inside their own stated uncertainty moves coverage by
-more than that, those effects are noise and the correct next action is the survey,
+more than those effects, they are noise and the correct next action is the survey,
 not more optimisation. If it moves coverage by much less, they are real. Either
 answer changes what the project does next, which is what makes this worth running
 before anything else.
@@ -124,7 +124,16 @@ if args.error_model != "disc":
         XY_ALT = np.where(has_alt[:, None],
                           _project(j["alt_lat"].fillna(0).to_numpy(),
                                    j["alt_lon"].fillna(0).to_numpy()), np.nan)
-        unc = j["residual_m"].fillna(60.0).to_numpy(dtype="float64")
+        # Radius per station: the lookup's measured residual where there is one,
+        # otherwise the station's OWN recorded uncertainty, and only then a flat
+        # 60 m. The bare fillna(60.0) was right for the GCC -- every station is in
+        # the lookup -- and wrong for every wider profile, where it drew a station
+        # placed on a 2,000 m town centroid as though it were known to 60 m. That
+        # understates the spread by a factor of 33, which is the one direction
+        # `draw_positions` below says this experiment must not err in.
+        unc = (j["residual_m"]
+               .fillna(pd.Series(st["uncertainty_m"].to_numpy(), index=j.index))
+               .fillna(60.0).to_numpy(dtype="float64"))
         print(f"  gmaps model: {int(has_alt.sum())} stations sample between two "
               f"candidate POIs; residual radius {np.unique(unc)} m")
 
@@ -290,8 +299,35 @@ if M is not None:
     print(f"  draws reproducing it exactly      {d['draws_reproducing_the_point_estimate_set']}/{N}")
 
 # The verdict this experiment exists to deliver.
-EFFECTS = {"E-10 junction term": 3.4, "maximin vs dry-only siting": 4.7,
-           "equity cost at k=20": 5.0}
+#
+# Each effect is read from the artefact that measured it. A number copied in by
+# hand is a number that goes stale silently: this table said 3.4 / 4.7 / 5.0
+# long after the runs behind it said 6.2 / 3.4 / 0.8, and nothing failed.
+def _effects() -> dict[str, float]:
+    """Effect sizes in coverage points, from the runs that produced them."""
+    out: dict[str, float] = {}
+
+    def _read(path):
+        try:
+            return json.load(open(f"data/interim/{path}"))
+        except (OSError, json.JSONDecodeError):
+            return None
+
+    if (ab := _read("ablation_e10.json")):
+        out["E-10 junction term"] = float(ab["decision"]["max_abs_delta_points"])
+    if (rb := _read(f"robust_{SVC}_k10.json")):
+        by = {st["strategy"]: st for st in rb["strategies"]}
+        if {"expected", "maximin"} <= set(by):
+            out["maximin vs dry-only siting"] = round(
+                100 * (by["expected"]["expected_coverage"]
+                       - by["maximin"]["expected_coverage"]), 2)
+    if (eq := _read(f"equity_curve_{SVC}.json")):
+        row = next((r for r in eq["curve"] if r["k"] == 20), None)
+        if row is not None:
+            out["equity cost at k=20"] = float(row["equity_cost_points"])
+    return out
+
+EFFECTS = _effects()
 print(f"\n=== IS THE MODELLING WORK ABOVE THE NOISE FLOOR? ===")
 print(f"  noise floor (P5-P95 coverage spread): {spread_pts:.2f} points")
 verdict = {}
@@ -299,6 +335,8 @@ for name, size in EFFECTS.items():
     ok = size > spread_pts
     verdict[name] = {"effect_points": size, "above_noise": bool(ok)}
     print(f"    {name:32s} {size:4.1f} pts  {'ABOVE' if ok else 'BELOW'} the noise floor")
+if not EFFECTS:
+    print("    (no downstream effect artefacts on disk yet -- nothing to judge)")
 report["noise_floor_points"] = round(spread_pts, 2)
 report["effects_vs_noise"] = verdict
 report["seconds"] = round(time.time() - t0, 1)

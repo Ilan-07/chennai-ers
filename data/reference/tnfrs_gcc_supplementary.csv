@@ -1,0 +1,7 @@
+station_name,division,service,lat,lon,source,evidence,note
+Velachery,Chennai City South,fire,12.976853,80.227634,tnfrs_region_northern,osm_fire_feature,"OSM amenity=fire_station ""Fire service station;Fire Force Service center"""
+Thuraipakkam,Chennai City South,fire,12.9486477,80.2409381,tnfrs_region_northern,google_maps_poi,"Thuraipakkam Fire Station, single unambiguous POI"
+Medavakkam,Chennai City South,fire,12.9151802,80.1925262,tnfrs_region_northern,google_maps_poi,"Medavakkam Fire Station; 1.0 km outside the GCC boundary, covers into it"
+Kolathur,Chennai Suburban,fire,13.1171493,80.2192210,tnfrs_region_northern,google_maps_poi,"kolathur fire station, single unambiguous POI"
+Maduravoyal,Chennai Suburban,fire,13.0602760,80.1627010,tnfrs_region_northern,google_maps_poi,"Fire and rescue station maduravoyal, single unambiguous POI"
+Virugambakkam,Chennai City Central,fire,13.0350035,80.1730242,tnfrs_region_northern,google_maps_poi,"Virugambakkam Fire Station, single unambiguous POI"

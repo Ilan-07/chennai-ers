@@ -2,6 +2,8 @@
 
 **Status:** accepted · **Date:** 2026-09-10 · **Affects:** A-15, the publish gate, every coverage figure
 
+> **Amended 2026-09-12 (ADR-001a).** The inventory is now 39 stations, 34 of them unsurveyed, and the interval was re-measured against it: **±1.10 points if the 15 unconfirmed listings name the right stations, ±8.55 if they do not** (was ±0.87 / ±8.05). The counts in the Context section below are the ones that applied when the decision was taken and are left as written; the live terms are in `config/publish_waiver.yml`, and the decision itself is unchanged.
+
 ## Context
 
 The publish gate has been shut since step 09. It is a single predicate —
