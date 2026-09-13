@@ -1,10 +1,21 @@
 # Chennai Emergency Response — coverage and station siting
 
-Which parts of Greater Chennai cannot be reached by a fire engine or an
-ambulance within the mandated response time, and where would the next stations
-go? Travel time on the real directed road network, population-weighted coverage,
-an MCLP optimiser with a proven optimality gap, and flood and peak-hour network
-states.
+**Which parts of Chennai cannot be reached by a fire engine or an ambulance
+within the mandated response time, and where would the next stations go?**
+
+Chennai's fire service runs 39 stations over a corporation of 432 km² and
+7.6 million people. Whether a crew arrives in time is a question about roads and
+clocks, not about distance: a station 2 km away across the Cooum at peak hour is
+further than one 5 km away on a trunk road. So this project measures travel time
+on the **real directed road network** — one-ways, turn penalties, class speeds
+calibrated against an independent routing oracle — and asks who is inside the
+standard and who is not.
+
+Where the network falls short, a **maximal covering location problem** (MCLP) is
+solved to place new stations, with an exact mixed-integer program giving a
+*proven* optimality gap rather than a plausible-looking guess. The same network
+is then re-run under peak-hour congestion and four flood states, because a plan
+that only works on a dry Tuesday is not a plan.
 
 > **Results are published under a recorded waiver, not on surveyed positions.**
 > 34 of the 39 station positions are third-party map listings. Any coverage
@@ -16,21 +27,96 @@ states.
 
 ---
 
-## Quick start
+## What it found
 
-```bash
-uv venv && uv pip install -r requirements.txt   # or: pip install -r requirements.txt
-make test                                       # ~330 tests, ~15 s
-make -n all                                     # what is stale, without running it
-make all                                        # full pipeline from cached raw data, ~40 min
-make gate                                       # every publish gate, non-zero on a build failure
+Greater Chennai Corporation, 39 stations, 3,838 demand cells, 7,625,269 residents.
 
-make ui && make api                             # the console on http://127.0.0.1:8000
-```
+| | ambulance (SFAC-7) | fire engine |
+|---|---|---|
+| standard | 7 min call-to-arrival | 7 min call-to-arrival |
+| answering + turnout | 120 s | 140 s |
+| **leaving to drive** | **5 min** | **4 min 40 s** |
+| **reached in time, dry day** | **71.77%** | **54.43%** |
+| people outside it | **2,152,586** | 45.6% of risk-weighted demand |
+| unreachable at any budget | 0 cells | 0 cells |
 
-`make all` needs the OSM graph tables, which are gitignored because they are
-24 MB and reproducible. Rebuild them with `make graph` (~17 min, needs network)
-before the first run.
+**Peak hour is worse than a 100-year flood.** Congestion takes ambulance coverage
+to **39.57%**; the 100-year flood takes it to 52.42%. Every robust-siting strategy
+agrees: the binding design-basis scenario is `peak`, not inundation.
+
+| scenario | ambulance | fire |
+|---|---|---|
+| dry | 71.77% | 54.43% |
+| 5-year flood | 66.47% | 49.45% |
+| 25-year flood | 58.74% | 43.71% |
+| 2015 flood (observed) | 63.22% | 47.83% |
+| 100-year flood | 52.42% | 36.91% |
+| **peak hour** | **39.57%** | **26.46%** |
+
+**Three well-placed stations buy more than six points.** Solved exactly on the
+land-feasible candidate set, every run proven optimal:
+
+| new stations | ambulance coverage |
+|---|---|
+| 0 (today) | 71.77% |
+| 3 | 78.08% |
+| 5 | 80.98% |
+| 10 | 85.73% |
+
+**Equity costs something, and the amount is measurable.** No siting of fewer than
+**7** stations can give every ward non-zero coverage — that is a proven
+structural bound, not an estimate. At k=10, maximising the worst ward instead of
+the city total costs **6.29 points** of overall coverage.
+
+**The site list is not identified, and that is the honest headline.** Under the
+pessimistic position-error model, 85 distinct sites competed for 10 slots and
+none was chosen in 95% of draws. The project therefore publishes a decision frame
+— what each objective would buy, and what it would cost — rather than a ranked
+list of addresses it cannot support.
+
+## How it works
+
+Six steps, each a script, each producing a hashed artefact.
+
+**1. Who is where.** Population comes from **GHS-POP R2023A**, a 100 m global
+raster, aggregated into **H3 resolution-9 hexagons** (~0.1 km²). Raster cells
+carry a *count*, not a density, so each populated pixel is assigned whole to one
+hexagon — mass-conserving by construction. Ward totals are then reconciled to
+**Census 2011**, dasymetrically re-cut from the 155 wards the census was counted
+on to the 200 wards that exist today, weighted by modelled population within each
+intersection ([ADR-007](docs/adr/007-census-ward-reconciliation.md)).
+
+**2. What the roads do.** The OSM drive network becomes a directed graph with a
+speed per highway class, a junction-delay term, and a flat per-trip overhead.
+Those parameters are **fitted**, not assumed: a grid search against an OSRM
+oracle on real origin–destination pairs, scored on the median travel-time ratio
+per distance band. The shipped configuration lands at **6.92% median absolute
+percentage error**, worst distance band within **3.07%**.
+
+**3. Who can be reached.** A Dijkstra sweep from every station gives each cell its
+fastest arrival time. A cell is covered when that time fits inside the service's
+*driving* budget — the standard minus call-answering and turnout, which is why
+the ambulance gets 5 minutes out of 7.
+
+**4. Where a station could go.** Candidate sites are generated on the road network
+with an 800 m minimum separation, then flagged for land feasibility against OSM
+parcels. A station can only be proposed where one could actually be built.
+
+**5. Where they should go.** The MCLP is solved twice — a greedy pass carrying the
+classical 1−1/e guarantee, and an exact MIP via HiGHS. Every published siting
+states whether it was **proven optimal** or merely the best found before a time
+limit. Three objectives are reported: maximise city coverage, maximise the worst
+ward (maximin), and lexicographic (best coverage *subject to* the achievable ward
+floor).
+
+**6. What breaks it.** Peak hour rescales class speeds. Floods remove links
+outright rather than slowing them, because the planner's question is not "is this
+street wet" but "is this neighbourhood now cut off". Flood state comes from
+Chennai Flows return-period layers and the observed 2015 inundation points.
+
+Everything above is then **swept**: ±20% class speeds, the junction term, wading
+speed, closure depth, growth, risk multipliers, candidate spacing, scenario
+weights, and station position uncertainty over 300 draws.
 
 ## The pipeline
 
@@ -82,6 +168,63 @@ widened to reach the places that flood worst
 Build step 19 is not part of `make all`: the analysis pipeline stays runnable on
 a machine with no node and no web stack, and a coverage figure never waits on a
 front end to compile. [ADR-008](docs/adr/008-service-and-react-console.md).
+
+## Quick start
+
+```bash
+uv venv && uv pip install -r requirements.txt   # or: pip install -r requirements.txt
+make test                                       # ~390 tests, ~60 s
+make -n all                                     # what is stale, without running it
+make all                                        # full pipeline from cached raw data, ~40 min
+make gate                                       # every publish gate, non-zero on a build failure
+make verify                                     # every ingested file against its recorded hash
+
+make ui && make api                             # the console on http://127.0.0.1:8000
+```
+
+**Requirements.** Python 3.12, and Node only for the console. The pipeline runs
+on 8 GB; the widest study area was constrained by that, not by judgement
+([ADR-011](docs/adr/011-study-area-boundaries.md)). `make all` needs the OSM
+graph tables, gitignored because they are 24 MB and reproducible — build them
+once with `make graph` (~17 min, needs network).
+
+## The console
+
+`make ui && make api` serves a React + Leaflet console on the FastAPI service.
+Every number it draws comes from the API; there is no client-side model and no
+cached fixture, so the console cannot disagree with the pipeline.
+
+- **Coverage by band** — in time, 2 min late, 5 min late, further, no route.
+  "Not covered" and "unreachable" are different facts and are coloured
+  differently.
+- **A clock you can move.** Re-reads the same routes against a different
+  threshold; siting always solves at the service's own budget, and says so.
+- **Six network states** on the corporation; the wider profiles are offered only
+  the two their flood layers can speak for.
+- **Place a station by hand.** Clicks snap to the candidate lattice — which is
+  drawn while placing, so you aim at a site rather than a street — and the snap
+  distance is reported. *Show what they reach* gives each placed station everyone
+  it reaches and, separately, everyone it reaches **who is not already covered**.
+- **Click any cell** for its time today, who reaches it first, and — if a
+  proposed station would cover it — what changes.
+- **Export** the current view as CSV, carrying the run id, the publication basis
+  and the interval.
+
+## Data
+
+Every file is hashed, licensed and versioned in `data/registry.json`.
+
+| source | what it gives | licence |
+|---|---|---|
+| TNFRS station directories | the authoritative station inventory | Government of Tamil Nadu, public directory |
+| GCC fire-station listing | the corporation's own list (39 after [ADR-001a](docs/adr/001-authoritative-station-inventory-amendment.md)) | GoTN / GCC public listing |
+| GHS-POP R2023A | 100 m population raster | CC-BY 4.0 (EC JRC) |
+| Census of India 2011 ward PCA | ward totals to reconcile to | Public domain, via OpenCity |
+| GCC ward & zone maps 2022 | 200 wards, 15 zones | GCC / OpenCity mirror |
+| Transparent Chennai 2008 wards | the geography the census was counted on | CC BY-SA 2.5 IN, via DataMeet |
+| OpenStreetMap | roads, land use, parcels, water, station cross-checks | ODbL |
+| Chennai Flows | 5/25/100-year return periods and 2015 inundation points | Chennai Flows public release |
+| OSRM public demo | the routing oracle the speed model is fitted against | cross-check only |
 
 ## What you can and cannot claim
 
@@ -181,6 +324,22 @@ published.
 [`ASSUMPTIONS.md`](ASSUMPTIONS.md) classifies every value as FACT, RSCH, ASSM or
 RECO, and records the experiment that tests each assumption.
 
+## Where the results are
+
+Every figure in this README comes from a file you can open.
+
+| file | holds |
+|---|---|
+| `data/interim/baseline_report.json` | coverage of the existing network, per service |
+| `data/interim/degradation_report.json` | every scenario, plus the EMRI cross-check |
+| `data/interim/optimise_{ems,fire}.json` | siting at each k, with the proven gap |
+| `data/interim/equity_curve_{ems,fire}.json` | efficiency vs worst-ward, and the cost between |
+| `data/interim/robust_{svc}_k10.json` | siting against the scenario distribution |
+| `data/interim/sensitivity_stations_*.json` | the position-uncertainty noise floor |
+| `data/interim/experiments/` | one JSON per swept assumption |
+| `data/interim/flood_extent.json` | which flood layers may speak for which study area |
+| `docs/deck-figures.md` | every slide claim, reconciled against a run id |
+
 ## Layout
 
 ```
@@ -200,3 +359,20 @@ hospital capacity, signal pre-emption. Also no machine learning: there is no
 learning problem here that the data supports. The one defensible candidate —
 imputing link speeds from vehicle GPS traces — is data-gated and listed as
 future work rather than fabricated.
+
+## Context
+
+Coursework for **Design of Smart Cities**, VIT Chennai — Ilangkumaran Yogamani
+(24BCE5537) and Kalyan Ram (24BCE5195).
+
+The project began as a slide deck. Reconciling that deck against a working
+pipeline found that several of its headline figures could not be reproduced —
+`docs/deck-figures.md` records all 14 claims and what the model actually says,
+including the ones that turned out to be wrong. The habit stuck:
+[`ASSUMPTIONS.md`](ASSUMPTIONS.md) now carries 26 numbered findings, most of them
+defects in this project's own work, each with the measurement that exposed it and
+the test that keeps it fixed.
+
+That file is the most useful thing here. The coverage numbers are a snapshot of
+39 station positions, 34 of them unverified; the record of how they were checked,
+what broke, and what is still unknown will outlast them.
