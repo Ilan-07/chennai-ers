@@ -17,6 +17,15 @@ solved to place new stations, with an exact mixed-integer program giving a
 is then re-run under peak-hour congestion and four flood states, because a plan
 that only works on a dry Tuesday is not a plan.
 
+![The coverage console: Greater Chennai at the 5-minute ambulance budget](docs/images/02-coverage.jpg)
+
+*Greater Chennai at the ambulance's 5-minute driving budget. Green is inside the
+standard; red is more than 5 minutes late; grey has no route at all — a
+distinction the map keeps because "not covered" and "unreachable" are different
+problems. White rings are the 39 stations. The panel on the right lists the wards
+holding the most people nobody reaches in time, with the fastest arrival any crew
+can manage.*
+
 > **Results are published under a recorded waiver, not on surveyed positions.**
 > 34 of the 39 station positions are third-party map listings. Any coverage
 > figure taken from this project must be quoted with its interval: **±1.10 points
@@ -53,6 +62,13 @@ agrees: the binding design-basis scenario is `peak`, not inundation.
 | 100-year flood | 52.42% | 36.91% |
 | **peak hour** | **39.57%** | **26.46%** |
 
+![The same city at peak hour: coverage falls to 39.6%](docs/images/04-peak-hour.jpg)
+
+*The same stations, the same standard, at peak hour. Coverage falls from 71.8% to
+39.6% and 4.6 million people move outside the standard — a worse result than any
+flood this project models. The ward table reorders completely: at peak the
+biggest gaps are inner-city wards whose roads are full, not outlying ones.*
+
 **Three well-placed stations buy more than six points.** Solved exactly on the
 land-feasible candidate set, every run proven optimal:
 
@@ -62,6 +78,14 @@ land-feasible candidate set, every run proven optimal:
 | 3 | 78.08% |
 | 5 | 80.98% |
 | 10 | 85.73% |
+
+![Three proposed stations and the cells they add](docs/images/03-siting.jpg)
+
+*Three new stations, solved exactly. Blue is ground the proposal brings inside
+the standard — 4,81,127 more people, +6.3 points. The console states whether the
+result was proven or merely the best found before a time limit; here it reports
+"no other placement of this many stations does better — proven, not estimated",
+and prints the coordinates.*
 
 **Equity costs something, and the amount is measurable.** No siting of fewer than
 **7** stations can give every ward non-zero coverage — that is a proven
@@ -156,6 +180,15 @@ Three profiles, three questions, measured rather than drawn
 | `metro` | urban **centre**, ≥ 1,500/km² | 932 km² | none — see below |
 | `full` | urban cluster at a 500/km² floor | 1,456 km² | none |
 
+![The full settlement profile, 1,456 km2](docs/images/06-full-settlement.jpg)
+
+*The widest profile: 1,456 km² reaching Chengalpattu, Kelambakkam and
+Sriperumbudur. Outside the corporation the reporting unit becomes an H3 cell
+named after its nearest settlement, because no adjoining local body publishes
+ward geometry as GIS — so the table names Old Pallavaram and Thirumazhisai rather
+than ward numbers. The panel marks itself **provisional**: the publish gates are
+wired to the corporation's artefacts and have not been run here.*
+
 A profile is fully described by its file in `config/city/`; `build_profile.sh`
 symlinks `src` and `scripts` from the repo so a profile build always runs current
 code. **The flood layers were produced for the corporation** — their modelling
@@ -209,6 +242,22 @@ cached fixture, so the console cannot disagree with the pipeline.
   proposed station would cover it — what changes.
 - **Export** the current view as CSV, carrying the run id, the publication basis
   and the interval.
+
+![Placing a station by hand and measuring what it reaches](docs/images/05-place-by-hand.jpg)
+
+*Placing a station by hand. The candidate lattice appears as small dots — a
+station may only go where one could be built, so the click snaps to the nearest
+site and reports how far it moved. The purple patch is what this station would
+add. The readout splits that into everyone it reaches (48,441) and everyone it
+reaches who is **not already covered** (26,662); the second number is the one
+that decides a site.*
+
+![The opening card: the question, the finding, and the interval](docs/images/01-brief.jpg)
+
+*The console opens on the question rather than on a control panel, and states the
+interval before any figure is explored. The middle number is deliberate: 36,954
+people sit one second outside the standard, which is a different problem from a
+neighbourhood that is minutes away.*
 
 ## Data
 

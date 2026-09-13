@@ -105,7 +105,8 @@ for f in ui_data.json ui_basemap.json baseline_report.json demand_cells.parquet 
          candidates.parquet wards.parquet stations_resolved.csv \
          optimise_ems.json optimise_fire.json \
          sensitivity_stations_ems.json sensitivity_stations_fire.json \
-         "${PROFILE}_area.parquet" flood_extent.json; do
+         "${PROFILE}_area.parquet" "${PROFILE}_area_report.json" \
+         flood_extent.json; do
   if [ -f "data/interim/$f" ]; then
     cp "data/interim/$f" "$REPO/data/interim/$PROFILE/$f"
   else
@@ -118,6 +119,11 @@ done
 # that still answered that question -- with the pre-F-33 number.
 cp "data/interim/${PROFILE}_area.parquet" \
    "$REPO/data/interim/${PROFILE}_area.parquet"
+# The report that states the extent travels with the boundary it describes. It
+# did not, so the repo kept a report saying 1,581 km2 beside a boundary measuring
+# 1,456 -- and the console header, which reads the report, showed the old number.
+cp "data/interim/${PROFILE}_area_report.json" \
+   "$REPO/data/interim/${PROFILE}_area_report.json"
 echo "==> refreshed $REPO/data/interim/${PROFILE}_area.parquet"
 
 # Register it WHERE IT LANDED. The registry lives in the repo; this tree holds a

@@ -52,6 +52,42 @@ PROFILES = {
 }
 
 
+def measured_area_km2(root: str | Path, profile: str) -> float | None:
+    """A profile's extent as its own build measured it, not as somebody typed it.
+
+    The extent in PROFILES above is a transcription, and a transcription goes
+    stale silently: the full profile's boundary was corrected from 1,581 km2 to
+    1,456 (F-33) and this table went on telling the console 1,581, which is the
+    number a reader sees in the header. The area report is written by the run
+    that produced the boundary, so it cannot disagree with it.
+    """
+    name = PROFILES.get(profile, {}).get("subdir") or profile
+    f = Path(root) / "data/interim" / f"{name}_area_report.json"
+    try:
+        rep = json.loads(f.read_text())
+    except (OSError, json.JSONDecodeError):
+        return None
+    for path in (("study_area", "study_area_km2"), ("study_area_km2",)):
+        cur = rep
+        for key in path:
+            cur = cur.get(key) if isinstance(cur, dict) else None
+        if isinstance(cur, (int, float)):
+            return float(cur)
+    return None
+
+
+def profile_info(root: str | Path, profile: str) -> dict:
+    """PROFILES entry with the extent replaced by the measured one where it exists."""
+    info = dict(PROFILES[profile])
+    measured = measured_area_km2(root, profile)
+    if measured is not None:
+        info["area_km2"] = round(measured)
+        info["area_km2_source"] = "measured by the build"
+    else:
+        info["area_km2_source"] = "declared (no area report on disk)"
+    return info
+
+
 def profile_dir(root: str | Path, profile: str) -> Path:
     if profile not in PROFILES:
         raise KeyError(profile)

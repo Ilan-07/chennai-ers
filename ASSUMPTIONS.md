@@ -1666,6 +1666,33 @@ changes nothing adds nothing.
 
 ---
 
+### F-38 — the console header showed an extent the project had already corrected
+
+Found while taking screenshots for the README, which is a reminder that looking
+at the thing is a test no suite replaces.
+
+The full profile's header read **1581 km²**. F-33 had corrected that boundary to
+1,456 km² hours earlier, the config said 1456, the parquet measured 1455.7 — and
+the console said 1581, because `ers.api.bundle.PROFILES` carries a hand-written
+`area_km2` per profile and nobody edits a constant twice.
+
+Two copies of one fact, and the transcribed one was what a reader saw. The API
+now derives the extent from `{profile}_area_report.json` — written by the run
+that produced the boundary, so it cannot disagree with it — and reports whether
+the number is `measured by the build` or merely `declared`.
+
+A second copy of the same omission turned up in the fix: `build_profile.sh`
+copied the boundary back to the repo but **not the report describing it**, so the
+repo held a report saying 1,581 beside a parquet measuring 1,456. Both now
+travel together, the way the artefact and its registration now do (F-37).
+
+**The corporation keeps its declared 426 km².** That is the authority's own
+figure for its administrative area, not a measurement of a rendered polygon
+(431.9 km²), and the two are allowed to differ — which is why the fix prefers a
+measured value where one exists rather than asserting one everywhere.
+
+---
+
 ## Known omissions, declared
 
 - **Turn restrictions** (`type=restriction` relations) are not modelled. Junction

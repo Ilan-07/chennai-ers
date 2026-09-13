@@ -32,7 +32,8 @@ from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from ers.api.bundle import PROFILES, SERVICES, Bundle, get_bundle
+from ers.api.bundle import (PROFILES, SERVICES, Bundle, get_bundle,
+                            profile_info)
 from ers.model.problem import SitingProblem
 from ers.optimise import exact, greedy
 
@@ -87,9 +88,9 @@ def profiles() -> dict:
     from ers.api.bundle import profile_dir
     from pathlib import Path
     out = []
-    for key, spec in PROFILES.items():
+    for key in PROFILES:
         built = (profile_dir(Path("."), key) / "ui_data.json").exists()
-        out.append({"profile": key, "built": built, **spec})
+        out.append({"profile": key, "built": built, **profile_info(".", key)})
     return {"profiles": out, "default": "gcc"}
 
 
@@ -176,7 +177,7 @@ def meta(b: Dep) -> dict:
     """
     return {
         "profile": b.profile,
-        "profile_info": PROFILES[b.profile],
+        "profile_info": profile_info(b.root, b.profile),
         "city": b.ui["meta"],
         "publication": b.publication(),
         "services": {
