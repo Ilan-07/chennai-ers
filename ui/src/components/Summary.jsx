@@ -1,4 +1,5 @@
 import { fmtInt, fmtMin, fmtPct } from "../api.js";
+import PeopleGrid from "./PeopleGrid.jsx";
 
 /* The tolerance, set as an instrument reading rather than an alarm.
  *
@@ -33,6 +34,35 @@ function Tolerance({ uncertainty }) {
   );
 }
 
+/* How far past the clock an area's quickest arrival lands.
+ *
+ * "0.0% reached" is the same reading for a ward a crew misses by eight seconds
+ * and one it misses by four minutes, and they are not the same problem: the
+ * first is a signals, turnout or one-way problem that no capital programme
+ * should be spent on, the second genuinely wants a station. The table used to
+ * print the raw fastest time and leave the subtraction to the reader, so the
+ * distinction was there and nobody did the arithmetic to find it.
+ */
+function MissesBy({ fastest, budget }) {
+  if (fastest == null) return <td className="miss">no route</td>;
+  const over = fastest - budget;
+  if (over <= 0) return <td className="miss met">inside</td>;
+  // Anything past five minutes late is off the end of the bar. The scale is
+  // there to separate near-misses from the rest, not to rank the hopeless.
+  const frac = Math.min(1, over / 300);
+  const near = over <= 60;
+  return (
+    <td className={`miss${near ? " near" : ""}`}>
+      <span className="miss-bar" aria-hidden="true">
+        <span style={{ width: `${Math.max(6, 100 * frac)}%` }} />
+      </span>
+      <span className="miss-val">
+        {over < 90 ? `${Math.round(over)}s` : `${(over / 60).toFixed(1)}m`}
+      </span>
+    </td>
+  );
+}
+
 export default function Summary({ coverage, result, reach, meta, worstWards, thresholdS }) {
   if (!coverage) {
     return <aside className="readout"><p className="loading">Reading the network…</p></aside>;
@@ -58,6 +88,12 @@ export default function Summary({ coverage, result, reach, meta, worstWards, thr
           {fmtInt(coverage.covered_demand)} of {fmtInt(coverage.total_demand)}{" "}
           {isFire ? "risk-weighted demand" : "residents"}
         </p>
+
+        <PeopleGrid
+          covered={coverage.covered_demand}
+          total={coverage.total_demand}
+          isFire={isFire}
+        />
 
         <p className="left-out">
           <b>{fmtInt(missed)}</b> {isFire ? "of that demand" : "people"} cannot be
@@ -162,19 +198,20 @@ export default function Summary({ coverage, result, reach, meta, worstWards, thr
       <section className="group">
         <h2>Where the most people are left</h2>
         <p className="hint" style={{ margin: "0 0 8px" }}>
-          Fastest is the quickest any crew reaches the nearest part of the area.
-          Some of these miss the clock by seconds.
+          How far past the clock the quickest crew lands. An area shown in amber
+          misses by under a minute — that is a junction or a turnout, not a
+          station.
         </p>
-        <table>
+        <table className="worst">
           <thead>
-            <tr><th>Area</th><th>People</th><th>Fastest</th><th>Reached</th></tr>
+            <tr><th>Area</th><th>People</th><th>Misses by</th><th>Reached</th></tr>
           </thead>
           <tbody>
             {worstWards.map((w) => (
               <tr key={w.id}>
                 <td>{w.no}</td>
                 <td className="people">{fmtInt(w.demand)}</td>
-                <td className="people">{w.fastest == null ? "—" : fmtMin(w.fastest)}</td>
+                <MissesBy fastest={w.fastest} budget={thresholdS} />
                 <td>{fmtPct(w.share)}</td>
               </tr>
             ))}

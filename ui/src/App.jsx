@@ -7,7 +7,8 @@ import MapView, { BANDS, GAINED, REACH } from "./components/MapView.jsx";
 // 3 km accepts every click inside the study area and rejects the ones that are
 // really asking for a station in the sea.
 const SNAP_LIMIT_M = 3000;
-import Controls, { SHORT } from "./components/Controls.jsx";
+import Controls from "./components/Controls.jsx";
+import { SCENARIO_LABEL, SHORT } from "./components/scenarios.js";
 import Summary from "./components/Summary.jsx";
 import Brief from "./components/Brief.jsx";
 import Evidence from "./components/Evidence.jsx";
@@ -39,6 +40,8 @@ export default function App() {
   const [result, setResult] = useState(null);
   const [optimising, setOptimising] = useState(false);
   const [picked, setPicked] = useState(null);
+  const [scenarioShares, setScenarioShares] = useState({});
+  const [scenariosLoading, setScenariosLoading] = useState(false);
   const [layers, setLayers] = useState({
     coverage: true, stations: true, sites: true, wards: false, zones: true,
   });
@@ -109,6 +112,30 @@ export default function App() {
     if (!meta) return;
     api.nearest(service, scenario, profile).then(setNearest).catch(() => setNearest(null));
   }, [meta, service, scenario, profile]);
+
+  // Every road state this service has, measured once so they can be read
+  // against each other. Held at the SERVICE BUDGET rather than the threshold
+  // slider on purpose: it is a comparison between networks, and a comparison
+  // whose axis moves while you drag is not one. It also keeps this off the
+  // slider's hot path — six responses per tick would make the clock stutter.
+  useEffect(() => {
+    if (!meta) return;
+    const list = meta.services[service]?.scenarios ?? [];
+    const budget = meta.services[service].budget_s;
+    let live = true;
+    setScenariosLoading(true);
+    setScenarioShares({});
+    Promise.all(list.map((sc) =>
+      api.coverage(service, sc, budget, profile)
+        .then((c) => [sc, c.covered_share])
+        .catch(() => null)))
+      .then((pairs) => {
+        if (!live) return;
+        setScenarioShares(Object.fromEntries(pairs.filter(Boolean)));
+        setScenariosLoading(false);
+      });
+    return () => { live = false; };
+  }, [meta, service, profile]);
 
   // What the hand-placed stations reach. Asked for explicitly rather than
   // fetched with every click: it is a different question from "how much does the
@@ -279,6 +306,22 @@ export default function App() {
               : "loading"}
           </span>
         </div>
+        {/* What the map is currently answering, spelled out where it cannot be
+            scrolled away from. The service and the road state live in the rail,
+            one of them inside a fold, so a reader who collapsed it was looking
+            at a hundred-year flood with nothing on screen saying so. */}
+        {meta && coverage && (
+          <div className="state-strip" aria-label="Current query">
+            <span className="chip">
+              {service === "ems" ? "Ambulance" : "Fire engine"}
+            </span>
+            <span className={`chip${scenario === "dry" ? "" : " stressed"}`}>
+              {SCENARIO_LABEL[scenario] ?? scenario}
+            </span>
+            <span className="chip mono">{fmtMin(thresholdS)}</span>
+          </div>
+        )}
+
         <div className="topbar-right">
         <button className="about" onClick={() => setBriefOpen(true)}
                 aria-label="About this project">About</button>
@@ -330,6 +373,7 @@ export default function App() {
           placing={placing} setPlacing={setPlacing}
           forced={forced} clearForced={() => setForced([])}
           onShowReach={showReach} reaching={reaching} reach={reach}
+          scenarioShares={scenarioShares} scenariosLoading={scenariosLoading}
           exportHref={api.exportUrl(
             service, scenario, thresholdS,
             result ? (result.exact ?? result.greedy).sites : [], profile)}
@@ -350,6 +394,7 @@ export default function App() {
             coverage={coverage}
             worstWards={worstWards}
             thresholdS={thresholdS}
+            scenarioShares={scenarioShares}
             onClose={() => setBriefOpen(false)}
           />
         )}
@@ -378,13 +423,30 @@ export default function App() {
           </div>
         )}
 
+        {/* The first four bands are one scale — degrees of lateness against the
+            clock — and used to be drawn as four unrelated chips beside two that
+            genuinely are categories. Set as a continuous ramp it reads as an
+            isochrone key, and "no route" and the projections sit apart from it,
+            which is what they are: not a worse time, a different kind of fact. */}
         <div className="legend" aria-label="Map key">
-          {BANDS.map((b) => (
-            <span className="swatch" key={b.key}>
-              <i style={{ background: b.colour }} />
-              {b.label}
+          <span className="ramp">
+            <span className="ramp-bar">
+              {BANDS.slice(0, 4).map((b) => (
+                <i key={b.key} style={{ background: b.colour }} title={b.label} />
+              ))}
             </span>
-          ))}
+            {/* Each label sits under its own step rather than at the ends: the
+                ramp is ordered but not evenly spaced in time, and a bare
+                "in time → later" would invite reading the orange as twice the
+                amber when it is a band two and a half times as wide. */}
+            <span className="ramp-ends">
+              <em>in time</em><em>+2 min</em><em>+5 min</em><em>more</em>
+            </span>
+          </span>
+          <span className="swatch">
+            <i style={{ background: BANDS[4].colour }} />
+            {BANDS[4].label}
+          </span>
           {gained && (
             <span className="swatch">
               <i style={{ background: GAINED.colour }} />

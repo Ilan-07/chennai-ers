@@ -1,22 +1,7 @@
 import { fmtMin } from "../api.js";
-
-// Study areas, shortest name that still distinguishes them. The full label sits
-// underneath; two buttons reading the same thing is how the first version went
-// out, so these are declared once and shared with the top bar.
-export const SHORT = {
-  gcc: "Corporation",
-  metro: "Built-up city",
-  full: "Full settlement",
-};
-
-const SCENARIO_LABEL = {
-  dry: "Dry day",
-  peak: "Peak hour",
-  flood5: "Flood, 5-year",
-  flood25: "Flood, 25-year",
-  flood100: "Flood, 100-year",
-  f2015: "2015 flood",
-};
+import { SCENARIO_LABEL } from "./scenarios.js";
+import TimeBudget from "./TimeBudget.jsx";
+import Resilience from "./Resilience.jsx";
 
 // "47%" when a group agrees, "47-48%" when it does not. Three layers refused for
 // one reason are one fact, and printing it three times reads as three problems.
@@ -112,10 +97,9 @@ export default function Controls({
   meta, profile, service, setService, scenario, setScenario,
   thresholdS, setThresholdS, k, setK, layers, setLayers,
   onOptimise, optimising, placing, setPlacing, forced, clearForced, exportHref,
-  onShowReach, reaching, reach,
+  onShowReach, reaching, reach, scenarioShares, scenariosLoading,
 }) {
   const svc = meta?.services?.[service];
-  const scenarios = svc?.scenarios ?? [];
   const toggle = (key) => setLayers({ ...layers, [key]: !layers[key] });
 
   return (
@@ -128,14 +112,7 @@ export default function Controls({
             </button>
           ))}
         </div>
-        {svc && (
-          <p className="hint">
-            {svc.standard} allows{" "}
-            {fmtMin(svc.budget_s + svc.t_alarm_s + svc.t_turnout_s)} from call to
-            arrival. Answering and turning out takes {svc.t_alarm_s + svc.t_turnout_s}s,
-            leaving {fmtMin(svc.budget_s)} to drive.
-          </p>
-        )}
+        <TimeBudget svc={svc} thresholdS={thresholdS} />
       </Group>
 
       <Group title="Time to arrive">
@@ -154,13 +131,13 @@ export default function Controls({
         </p>
       </Group>
 
-      <Fold title="Road conditions">
-        <select value={scenario} onChange={(e) => setScenario(e.target.value)}
-                aria-label="Network state">
-          {scenarios.map((s) => (
-            <option key={s} value={s}>{SCENARIO_LABEL[s] ?? s}</option>
-          ))}
-        </select>
+      <Fold title="Road conditions" open>
+        <Resilience
+          shares={scenarioShares}
+          scenario={scenario}
+          setScenario={setScenario}
+          loading={scenariosLoading}
+        />
         <FloodNote extent={meta?.flood_extent} />
       </Fold>
 

@@ -1,4 +1,5 @@
 import { fmtInt, fmtMin } from "../api.js";
+import { SCENARIO_LABEL } from "./scenarios.js";
 
 /* The opening card.
  *
@@ -7,8 +8,20 @@ import { fmtInt, fmtMin } from "../api.js";
  * on. Every number here is read from the live API rather than written into the
  * copy, so the brief cannot drift from the model the way the DA-1 deck did.
  */
-export default function Brief({ meta, coverage, worstWards, thresholdS, onClose }) {
+export default function Brief({ meta, coverage, worstWards, thresholdS,
+                                scenarioShares, onClose }) {
   if (!meta || !coverage) return null;
+
+  // The binding road state, read rather than written. The finding this project
+  // is most likely to be remembered for is that congestion beats inundation,
+  // and an opening card that omits it sends a reader to the map looking for the
+  // wrong thing.
+  const ranked = Object.entries(scenarioShares ?? {})
+    .filter(([, v]) => v != null)
+    .sort((a, b) => a[1] - b[1]);
+  const binding = ranked.length > 1 ? ranked[0] : null;
+  const dry = scenarioShares?.dry;
+  const flood = scenarioShares?.flood100;
 
   const tightest = worstWards
     .filter((w) => w.share === 0 && w.fastest != null)
@@ -54,9 +67,22 @@ export default function Brief({ meta, coverage, worstWards, thresholdS, onClose 
       {tightest && (
         <p className="brief-note">
           That last figure is the one worth arguing about: {fmtInt(tightest.demand)}{" "}
-          people sit {Math.round(tightest.fastest - coverage.budget_s)} seconds outside
-          the standard, which is a different problem from a neighbourhood that is
-          minutes away.
+          people sit {Math.round(tightest.fastest - coverage.budget_s)}{" "}
+          {Math.round(tightest.fastest - coverage.budget_s) === 1 ? "second" : "seconds"}{" "}
+          outside the standard, which is a different problem from a neighbourhood
+          that is minutes away.
+        </p>
+      )}
+
+      {binding && dry != null && (
+        <p className="brief-note">
+          The binding case is not the one people expect.{" "}
+          <b>{SCENARIO_LABEL[binding[0]] ?? binding[0]}</b> takes coverage to{" "}
+          <b>{(100 * binding[1]).toFixed(1)}%</b>
+          {binding[0] === "peak" && flood != null && (
+            <> — worse than the hundred-year flood, which holds{" "}
+              {(100 * flood).toFixed(1)}%</>)}
+          . A plan sized for the dry network is not a plan.
         </p>
       )}
 
