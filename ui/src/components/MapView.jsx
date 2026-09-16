@@ -40,7 +40,7 @@ export function bandOf(resp, thresholdS) {
 }
 
 function CoverageLayer({ cells, hex, response, thresholdS, gained, reachCells,
-                        visible, onPick }) {
+                        visible }) {
   const map = useMap();
   const layerRef = useRef(null);
   const polysRef = useRef([]);
@@ -58,9 +58,10 @@ function CoverageLayer({ cells, hex, response, thresholdS, gained, reachCells,
         stroke: false,
         fillOpacity: 0.72,
         fillColor: "#6b6b6b",
-        interactive: true,
+        // Not interactive, and no listener: CellPicker answers the click. See
+        // the note there for why the grid must not be hit-tested by Leaflet.
+        interactive: false,
       });
-      p.on("click", () => onPick && onPick(i));
       polys[i] = p;
       group.addLayer(p);
     }
@@ -71,7 +72,7 @@ function CoverageLayer({ cells, hex, response, thresholdS, gained, reachCells,
       group.remove();
       polysRef.current = [];
     };
-  }, [map, cells, hex, onPick]);
+  }, [map, cells, hex]);
 
   // Restyle in place whenever the scenario, service, threshold or siting moves.
   useEffect(() => {
@@ -97,6 +98,68 @@ function CoverageLayer({ cells, hex, response, thresholdS, gained, reachCells,
     else group.remove();
   }, [visible, map]);
 
+  return null;
+}
+
+// Even-odd ray cast against the hexagon painted at (clat, clon) -- the same test
+// L.Polygon applied to decide whether a click was on it.
+function inHex(hex, clat, clon, lat, lon) {
+  let inside = false;
+  for (let a = 0, b = hex.length - 1; a < hex.length; b = a++) {
+    const x1 = clon + hex[a][0], y1 = clat + hex[a][1];
+    const x2 = clon + hex[b][0], y2 = clat + hex[b][1];
+    if ((y1 > lat) !== (y2 > lat) &&
+        lon < ((x2 - x1) * (lat - y1)) / (y2 - y1) + x1) inside = !inside;
+  }
+  return inside;
+}
+
+// Which hexagon was clicked. This used to be 3,838 interactive polygons with a
+// listener each, which is the expensive way to ask: canvas has no per-shape hit
+// testing, so Leaflet emulates it by walking every interactive layer on the
+// renderer -- on click, and again on every mousemove to decide the cursor. That
+// walk is the whole grid and it does not stop at the first hit, so the cost was
+// paid continuously, by everyone, to serve the occasional click.
+//
+// Asking once, on click, costs a pass over two flat arrays. The pass is not a
+// nearest-centroid guess: a hexagon can only contain the click if its centre
+// lies within the circumradius, so that distance is a COMPLETE filter, and the
+// one or two cells that survive it get the same ray cast the polygons got.
+// Nearest-centroid alone would be within a metre of right, but it disagrees
+// with the old answer on about one click in 160 -- always within ~3 m of a
+// shared edge, because each cell is painted with ONE mean hexagon rather than
+// its own H3 ring, so the painted tiling overlaps slightly at the seams.
+//
+// Distances use the locally-scaled space App uses to snap a placement to the
+// candidate lattice: longitude degrees narrowed by cos(lat), which over the
+// ~0.25 deg the city spans is constant to within a rounding.
+function CellPicker({ cells, hex, visible, onPick }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!cells || !hex || !visible || !onPick) return undefined;
+    const handler = (e) => {
+      const lat = e.latlng.lat, lon = e.latlng.lng;
+      const k = Math.cos((lat * Math.PI) / 180);
+      // Read off the geometry rather than hardcoded, so a change of grid
+      // resolution stays correct here.
+      let limit = 0;
+      for (const [dx, dy] of hex) {
+        const d = dx * k * dx * k + dy * dy;
+        if (d > limit) limit = d;
+      }
+      // Last match wins, as it did when the canvas renderer walked the layers
+      // in draw order. It decides only the seam overlaps described above.
+      let hit = -1;
+      for (let i = 0; i < cells.lat.length; i++) {
+        const dy = cells.lat[i] - lat, dx = (cells.lon[i] - lon) * k;
+        if (dx * dx + dy * dy > limit) continue;
+        if (inHex(hex, cells.lat[i], cells.lon[i], lat, lon)) hit = i;
+      }
+      if (hit >= 0) onPick(hit);
+    };
+    map.on("click", handler);
+    return () => map.off("click", handler);
+  }, [map, cells, hex, visible, onPick]);
   return null;
 }
 
@@ -240,10 +303,26 @@ export default function MapView({
       className="map"
       zoomControl
     >
+      {/* No {s} subdomain: a., b. and c.tile.openstreetmap.org all resolve to the
+        * same Fastly address, so over HTTP/2 Chrome coalesces them onto one
+        * connection anyway -- the prefix bought no parallelism, only extra DNS
+        * lookups, and OSM's tile policy now asks callers to drop it.
+        *
+        * The other two options are about what zooming costs. OSM accepts a
+        * rapid zoom-in and then starves it: replaying a z11 -> z19 sweep (225
+        * tiles, six connections) returned every tile 200, but with stragglers
+        * at 20s, 12s and 9s against a ~60ms median. A stalled tile is not an
+        * idle one -- Leaflet keeps five ancestor levels and two child levels on
+        * screen until it loads, so every level the zoom passed through stacks
+        * up stretched underneath, which is what reads as the map glitching and
+        * sticking. updateWhenZooming stops us adding to the queue mid-animation
+        * and keepBuffer holds one ring of off-screen tiles instead of two. */}
       <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         maxZoom={19}
+        updateWhenZooming={false}
+        keepBuffer={1}
       />
       <FitToCity outline={basemap?.outline} />
       <ScopeMask outline={basemap?.outline} visible={layers.coverage} />
@@ -254,6 +333,11 @@ export default function MapView({
         thresholdS={thresholdS}
         gained={gained}
         reachCells={reachCells}
+        visible={layers.coverage}
+      />
+      <CellPicker
+        cells={cells}
+        hex={hex}
         visible={layers.coverage}
         onPick={onPickCell}
       />
