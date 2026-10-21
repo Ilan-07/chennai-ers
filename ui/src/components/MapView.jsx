@@ -63,7 +63,9 @@ const stationPopup = (s) =>
 // is not exact: hairline slivers open between neighbours and the dark ground
 // showed through them as fine diagonal hatching across the whole city. The
 // fill is pre-blended against the ground and drawn opaque, with a hairline
-// stroke in the same colour that closes the slivers.
+// stroke in the same colour that closes the slivers -- and the see-through is
+// done ONCE, on the whole coverage pane (CoverageVeil), so streets and names
+// show through evenly without any seam being painted twice.
 const GROUND = [27, 29, 32];
 const blendCache = new Map();
 function blend(hex, alpha) {
@@ -87,6 +89,37 @@ export function bandOf(resp, thresholdS) {
   return 3;
 }
 
+const COVERAGE_PANE = "coverage";
+
+// How see-through the coverage is. Zooming in is what someone does when they
+// are looking for a particular street, so the colours step back as the map
+// comes forward; "Streets" drops them further at any zoom. Applied to the pane,
+// not the cells, so every hexagon fades together.
+export function veilFor(zoom, streets) {
+  if (streets) return 0.18;
+  if (zoom <= 11) return 0.72;
+  if (zoom === 12) return 0.62;
+  if (zoom === 13) return 0.52;
+  if (zoom === 14) return 0.44;
+  return 0.38;
+}
+
+function CoverageVeil({ streets }) {
+  const map = useMap();
+  useEffect(() => {
+    const apply = () => {
+      const pane = map.getPane(COVERAGE_PANE);
+      if (pane) pane.style.opacity = String(veilFor(map.getZoom(), streets));
+    };
+    apply();
+    map.on("zoomend", apply);
+    // The pane is created by CoverageLayer once cells arrive; catch that too.
+    map.on("layeradd", apply);
+    return () => { map.off("zoomend", apply); map.off("layeradd", apply); };
+  }, [map, streets]);
+  return null;
+}
+
 function CoverageLayer({ cells, hex, response, thresholdS, gained, reachCells,
                         lost, visible }) {
   const map = useMap();
@@ -108,9 +141,14 @@ function CoverageLayer({ cells, hex, response, thresholdS, gained, reachCells,
       0.42 + 0.5 * Math.sqrt(Math.min(1, p / p95)));
   }, [cells]);
 
-  // Build once: the geometry never changes, only the fill.
+  // Build once: the geometry never changes, only the fill. The cells get a
+  // pane and canvas of their own so the veil can fade them as one layer.
   useEffect(() => {
     if (!cells || !hex) return;
+    if (!map.getPane(COVERAGE_PANE)) {
+      map.createPane(COVERAGE_PANE).style.zIndex = 390;   // under outlines and pins
+    }
+    const renderer = L.canvas({ pane: COVERAGE_PANE, padding: 0.3 });
     const group = L.layerGroup();
     const polys = new Array(cells.lat.length);
     for (let i = 0; i < cells.lat.length; i++) {
@@ -118,6 +156,8 @@ function CoverageLayer({ cells, hex, response, thresholdS, gained, reachCells,
       const lon = cells.lon[i];
       const ring = hex.map(([dx, dy]) => [lat + dy, lon + dx]);
       const p = L.polygon(ring, {
+        renderer,
+        pane: COVERAGE_PANE,
         stroke: true,
         weight: 1,
         opacity: 1,
@@ -446,7 +486,7 @@ function ClickCapture({ enabled, onMapClick }) {
 
 export default function MapView({
   cells, hex, response, thresholdS, gained, reachCells, basemap, stations, sites,
-  candidates, focus, lost,
+  candidates, focus, lost, streets,
   layers, placing, onMapClick, onPickCell,
 }) {
   const wardRings = useMemo(
@@ -487,6 +527,7 @@ export default function MapView({
         lost={lost}
         visible={layers.coverage}
       />
+      <CoverageVeil streets={streets} />
       <CellPicker
         cells={cells}
         hex={hex}

@@ -65,8 +65,33 @@
 /* Night roads from day tiles: inverted, hue turned back so water stays blue-ish,
  * then pulled down and desaturated until it is ground, not picture. */
 .mapwrap .map .leaflet-tile-pane {
-  filter: invert(1) hue-rotate(180deg) brightness(0.62) contrast(1.15) saturate(0.25);
+  filter: invert(1) hue-rotate(180deg) brightness(0.82) contrast(1.12) saturate(0.3);
 }
+/* The coverage pane fades as one layer; the transition makes a zoom or the
+ * Streets toggle read as the map coming forward rather than a flicker. */
+.leaflet-coverage-pane { transition: opacity 220ms ease; }
+
+/* Streets: under the zoom control, styled as part of it. */
+.streets-btn {
+  position: absolute;
+  top: 82px;
+  left: 10px;
+  z-index: 830;
+  appearance: none;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 10px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--line);
+  background: rgba(33, 37, 42, 0.94);
+  color: var(--text-2);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+.streets-btn:hover { color: var(--text); }
+.streets-btn[aria-pressed="true"] { color: var(--siren); border-color: var(--siren); }
+.streets-btn:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 .leaflet-top.leaflet-left { left: 0; }
 .leaflet-container { background: #0e0f11; }
 

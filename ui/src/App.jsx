@@ -56,6 +56,8 @@ export default function App() {
   const [scenarioShares, setScenarioShares] = useState({});
   const [scenariosLoading, setScenariosLoading] = useState(false);
   const [tab, setTab] = useState("overview");
+  // Fade the coverage so streets and place names read through it.
+  const [streets, setStreets] = useState(false);
   // null when no tour is running; otherwise the step on screen.
   const [tourStep, setTourStep] = useState(null);
   const [layers, setLayers] = useState({
@@ -336,6 +338,12 @@ export default function App() {
   // the highlight -- the order they sit on screen.
   useEffect(() => {
     const onKey = (e) => {
+      // S toggles the streets view, unless someone is typing.
+      if ((e.key === "s" || e.key === "S") && !e.metaKey && !e.ctrlKey
+          && !/input|select|textarea/i.test(e.target.tagName)) {
+        setStreets((v) => !v);
+        return;
+      }
       if (e.key !== "Escape") return;
       if (tourStep != null) setTourStep(null);
       else if (briefOpen) setBriefOpen(false);
@@ -490,11 +498,18 @@ export default function App() {
             sites={sites}
             focus={focus}
             lost={lostCells}
+            streets={streets}
             layers={layers}
             placing={placing}
             onMapClick={onMapClick}
             onPickCell={onPickCell}
           />
+
+          <button className="streets-btn" aria-pressed={streets}
+                  title="Fade the coverage to read streets and place names (S)"
+                  onClick={() => setStreets((v) => !v)}>
+            Streets
+          </button>
 
           <div className="instrument">
             <Dial svc={svcMeta} thresholdS={thresholdS} setThresholdS={setThresholdS}
