@@ -267,6 +267,79 @@ function MarkerLayer({ points, visible, radius, colour, edge, popup }) {
   return null;
 }
 
+// Sites as numbered pins. The readout lists them 1..n by coordinate, and a list
+// of coordinates beside a cluster of identical dots leaves the reader to work
+// out which is which; the number on the pin is the same number as the row, so
+// the map and the list can be read against each other. Hand-placed and solved
+// sites are numbered separately, as the readout numbers them, and coloured
+// apart because they answer different questions.
+function SiteLayer({ points, visible }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!points || !visible) return undefined;
+    const group = L.layerGroup();
+    points.forEach((p) => {
+      const placed = p.kind === "placed";
+      const m = L.marker([p.lat, p.lon], {
+        icon: L.divIcon({
+          className: `site-pin${placed ? " placed" : p.kind === "post" ? " post" : ""}`,
+          html: `<span>${p.label}</span>`,
+          iconSize: [22, 22],
+          iconAnchor: [11, 11],
+        }),
+        keyboard: false,
+      });
+      const title = placed ? "Your site" : p.kind === "post" ? "Peak-hour post" : "Proposed site";
+      m.bindPopup(`<b>${title} ${p.label}</b>` +
+                  `<br/>${p.lat.toFixed(5)}, ${p.lon.toFixed(5)}`);
+      group.addLayer(m);
+    });
+    group.addTo(map);
+    return () => group.remove();
+  }, [map, points, visible]);
+  return null;
+}
+
+// Where the reader asked the map to look: an area picked from the readout's
+// table, or a proposed site picked from its list. A table row that names
+// "Ward 188" with no way to find it on a map of 200 wards is half an answer.
+//
+// The bounds come from the area's own demand cells rather than its outline, so
+// this works in every study area -- the wider profiles report H3 units that have
+// no ward geometry at all. The outline is drawn where one exists.
+function FocusLayer({ focus }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!focus) return undefined;
+    if (focus.kind === "site") {
+      map.flyTo([focus.lat, focus.lon], Math.max(map.getZoom(), 14), { duration: 0.6 });
+      const ring = L.circleMarker([focus.lat, focus.lon], {
+        radius: 18, weight: 2, color: "#ffffff", fill: false,
+        dashArray: "4 4", interactive: false,
+      }).addTo(map);
+      return () => ring.remove();
+    }
+    if (!focus.points?.length) return undefined;
+    // The rail and readout float over the map on a wide screen, so the area is
+    // fitted into the gap between them rather than behind them.
+    const wide = map.getContainer().clientWidth > 1080;
+    map.flyToBounds(L.latLngBounds(focus.points), {
+      duration: 0.6, maxZoom: 15,
+      paddingTopLeft: wide ? [330, 60] : [30, 30],
+      paddingBottomRight: wide ? [340, 90] : [30, 30],
+    });
+    const group = L.layerGroup();
+    for (const ring of focus.rings ?? []) {
+      group.addLayer(L.polyline(ring.map(([lon, lat]) => [lat, lon]), {
+        color: "#ffffff", weight: 2.5, opacity: 0.95, interactive: false,
+      }));
+    }
+    group.addTo(map);
+    return () => group.remove();
+  }, [map, focus]);
+  return null;
+}
+
 function ClickCapture({ enabled, onMapClick }) {
   const map = useMap();
   useEffect(() => {
@@ -284,7 +357,7 @@ function ClickCapture({ enabled, onMapClick }) {
 
 export default function MapView({
   cells, hex, response, thresholdS, gained, reachCells, basemap, stations, sites,
-  candidates,
+  candidates, focus,
   layers, placing, onMapClick, onPickCell,
 }) {
   const wardRings = useMemo(
@@ -362,14 +435,8 @@ export default function MapView({
           (s.state ? `<br/>identity: ${s.state}` : "")}
       />
       <LatticeLayer points={candidates} visible={placing} />
-      <MarkerLayer
-        points={sites}
-        visible={layers.sites}
-        radius={8}
-        colour="#f46d43"
-        edge="#000000"
-        popup={(s, i) => `<b>Proposed site ${i + 1}</b><br/>${s.lat.toFixed(5)}, ${s.lon.toFixed(5)}`}
-      />
+      <SiteLayer points={sites} visible={layers.sites} />
+      <FocusLayer focus={focus} />
       <ClickCapture enabled={placing} onMapClick={onMapClick} />
     </MapContainer>
   );

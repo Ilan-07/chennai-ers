@@ -1165,3 +1165,91 @@ td.miss.met  { color: var(--text-3); font-family: inherit; font-size: 11px; }
   .brief { padding: 22px 18px 20px; }
   .brief-figures { grid-template-columns: 1fr; }
 }
+
+/* -------------------------------------------------- focus and navigation */
+
+/* The headline's cost against a dry day. Red is spent because it IS a loss of
+ * coverage, in the same hue the map uses for the people it leaves out. */
+.vs-dry {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--text-3);
+}
+.vs-dry span {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+.vs-dry .down { color: var(--beyond); }
+.vs-dry .up { color: var(--reach); }
+
+/* Rows that move the map. The affordance is quiet — a hover wash and a pointer
+ * — because the table is read far more often than it is clicked. */
+tbody tr.row-link { cursor: pointer; transition: background-color 120ms; }
+tbody tr.row-link:hover td { background: rgba(140, 174, 200, 0.07); }
+tbody tr.row-link:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+tbody tr.row-link.selected td { background: rgba(124, 196, 245, 0.12); }
+tbody tr.row-link.selected td:first-child { box-shadow: inset 2px 0 0 var(--focus); padding-left: 6px; }
+
+.sites .site-row {
+  appearance: none; border: 0; background: transparent;
+  font: inherit; color: inherit; text-align: left;
+  display: flex; gap: 9px; align-items: baseline;
+  width: 100%; padding: 2px 4px; margin: 0 -4px;
+  border-radius: 5px; cursor: pointer;
+}
+.sites .site-row:hover { background: rgba(140, 174, 200, 0.07); color: var(--text); }
+.sites .site-row.selected { background: rgba(124, 196, 245, 0.12); color: var(--text); }
+.sites .site-row:focus-visible { outline: 2px solid var(--focus); }
+
+/* Numbered site pins, matching the readout's list. Orange for the solver's
+ * proposals, the hand-placed purple for the planner's own. */
+.site-pin {
+  display: grid; place-items: center;
+  border-radius: 50%;
+  background: #f46d43;
+  border: 2px solid #0c1319;
+  box-shadow: 0 0 0 1.5px rgba(255,255,255,.9), 0 2px 6px rgba(0,0,0,.45);
+  color: #0c1319;
+  font: 600 11px/1 "IBM Plex Sans", ui-sans-serif, sans-serif;
+}
+.site-pin.placed { background: #b07ae0; }
+
+/* ------------------------------------------------------ peak-hour posts */
+
+.mode-seg { margin-bottom: 10px; }
+.site-pin.post { background: #3a98da; color: #06131f; }
+
+.curve { margin-top: 2px; }
+.curve-legend {
+  display: flex; flex-wrap: wrap; gap: 4px 14px;
+  font-size: 11.5px; color: var(--text-2);
+  margin-bottom: 6px;
+}
+.curve-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.curve-legend i { width: 14px; height: 2px; border-radius: 1px; }
+.curve-legend i.dash { height: 0; border-top: 2px dashed; background: none; }
+.curve-plot { position: relative; }
+.curve svg { display: block; width: 100%; height: auto; overflow: visible; }
+.curve .grid { stroke: var(--line); stroke-width: 1; }
+.curve .tick {
+  fill: var(--text-3); font-size: 9.5px;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+}
+.curve .ceiling { stroke: var(--text-3); stroke-width: 1; stroke-dasharray: 2 3; }
+.curve .current { stroke: var(--line-firm); stroke-width: 1; }
+.curve .cross { stroke: var(--text-3); stroke-width: 1; }
+.curve .dot { stroke: #1a2631; stroke-width: 2; }
+.curve-tip {
+  position: absolute; top: 2px; transform: translateX(-50%);
+  pointer-events: none;
+  display: grid; gap: 2px;
+  padding: 6px 9px;
+  background: var(--ink-2);
+  border: 1px solid var(--line-firm);
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow);
+  font-size: 11px; color: var(--text-2); white-space: nowrap;
+}
+.curve-tip b { color: var(--text); font-weight: 600; }
+.curve-tip span { display: inline-flex; align-items: center; gap: 6px; font-variant-numeric: tabular-nums; }
+.curve-tip i { width: 8px; height: 8px; border-radius: 2px; }

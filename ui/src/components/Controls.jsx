@@ -98,7 +98,9 @@ export default function Controls({
   thresholdS, setThresholdS, k, setK, layers, setLayers,
   onOptimise, optimising, placing, setPlacing, forced, clearForced, exportHref,
   onShowReach, reaching, reach, scenarioShares, scenariosLoading,
+  mode, setMode, staging,
 }) {
+  const posting = mode === "staging";
   const svc = meta?.services?.[service];
   const toggle = (key) => setLayers({ ...layers, [key]: !layers[key] });
 
@@ -141,10 +143,30 @@ export default function Controls({
         <FloodNote extent={meta?.flood_extent} />
       </Fold>
 
-      <Group title="Add stations">
+      <Group title={posting ? "Post ambulances at peak" : "Add stations"}>
+        {/* Offered only where step 15b was built: ambulances, on a build that
+            has a staging result. A fire engine is not staged at a kerb. */}
+        {staging && (
+          <div className="seg mode-seg" role="group" aria-label="What to add">
+            <button aria-pressed={!posting} onClick={() => setMode("station")}>
+              Build stations
+            </button>
+            <button aria-pressed={posting} onClick={() => setMode("staging")}>
+              Peak-hour posts
+            </button>
+          </div>
+        )}
+        {posting && (
+          <p className="hint">
+            An extra ambulance waiting at a roadside post through the{" "}
+            {SCENARIO_LABEL[staging.scenario]?.toLowerCase() ?? staging.scenario}. A
+            post needs a kerb, not a parcel, so any point on the road lattice is
+            allowed. Solved on that network only.
+          </p>
+        )}
         <div className="dial">
-          <span>Build</span>
-          <span className="value">{k} new</span>
+          <span>{posting ? "Post" : "Build"}</span>
+          <span className="value">{k} {posting ? (k === 1 ? "ambulance" : "ambulances") : "new"}</span>
         </div>
         <input
           type="range" min={0} max={12} step={1} value={k}
@@ -152,7 +174,7 @@ export default function Controls({
           onChange={(e) => setK(Number(e.target.value))}
         />
         <button className="btn primary" onClick={onOptimise} disabled={optimising}>
-          {optimising ? "Solving…" : "Find the best sites"}
+          {optimising ? "Solving…" : posting ? "Find the best posts" : "Find the best sites"}
         </button>
         <button className="btn" aria-pressed={placing} onClick={() => setPlacing(!placing)}>
           {placing ? "Stop placing by hand" : "Place one by hand"}

@@ -40,6 +40,13 @@ export default function App() {
   const [result, setResult] = useState(null);
   const [optimising, setOptimising] = useState(false);
   const [picked, setPicked] = useState(null);
+  const [focus, setFocus] = useState(null);
+  // "station" sites buildings on land-feasible parcels; "staging" sites
+  // peak-hour ambulance posts anywhere on the road lattice (step 15b). Two
+  // candidate tables with two index spaces -- every id below is read against
+  // the table of the current mode, never the other one.
+  const [mode, setMode] = useState("station");
+  const [staging, setStaging] = useState(null);
   const [scenarioShares, setScenarioShares] = useState({});
   const [scenariosLoading, setScenariosLoading] = useState(false);
   const [layers, setLayers] = useState({
@@ -60,6 +67,7 @@ export default function App() {
   useEffect(() => {
     setMeta(null); setCells(null); setBasemap(null); setStations(null);
     setCoverage(null); setResult(null); setForced([]); setPicked(null);
+    setFocus(null);
     Promise.all([api.meta(profile), api.cells(profile), api.basemap(profile),
                  api.stations(profile)])
       .then(([m, c, b, s]) => {
@@ -89,6 +97,11 @@ export default function App() {
     setThresholdS(meta.services[service].budget_s);
     setResult(null);
     setForced([]);
+    setMode("station");
+    setStaging(null);
+    // Absent is an answer, not an error: fire engines are not staged, and the
+    // wider study areas have no step 15b build.
+    api.staging(service, profile).then(setStaging).catch(() => setStaging(null));
     api.candidates(service, profile).then((c) => setCandidates(c.candidates)).catch(() => {});
   }, [service, meta, profile]);
 
@@ -98,6 +111,25 @@ export default function App() {
   useEffect(() => {
     setResult(null);
   }, [scenario]);
+
+  // Posts are solved on one network. Leaving it leaves posting mode, rather
+  // than solving posts against a road state they were never measured on.
+  useEffect(() => {
+    if (mode === "staging" && staging && scenario !== staging.scenario) setMode("station");
+  }, [scenario, mode, staging]);
+
+  // Hand-placed ids and a solve belong to one candidate table.
+  useEffect(() => {
+    setForced([]);
+    setResult(null);
+  }, [mode]);
+
+  const chooseMode = useCallback((m) => {
+    if (m === "staging" && staging) setScenario(staging.scenario);
+    setMode(m);
+  }, [staging]);
+
+  const siteTable = mode === "staging" ? staging?.candidate_positions : candidates;
 
   useEffect(() => {
     if (!meta) return;
@@ -145,14 +177,14 @@ export default function App() {
     setReaching(true);
     setError(null);
     try {
-      setReach(await api.reach(service, forced, scenario, profile));
+      setReach(await api.reach(service, forced, scenario, profile, mode));
     } catch (e) {
       setError(String(e));
       setReach(null);
     } finally {
       setReaching(false);
     }
-  }, [forced, service, scenario, profile]);
+  }, [forced, service, scenario, profile, mode]);
 
   // A reach answer belongs to one set of placed sites under one service and one
   // road state. Any of those moving makes it a picture of something else, so it
@@ -164,13 +196,13 @@ export default function App() {
     setError(null);
     try {
       setResult(await api.optimise({ profile, service, scenario, k, forced,
-                                     exact_solve: true }));
+                                     mode, exact_solve: true }));
     } catch (e) {
       setError(String(e));
     } finally {
       setOptimising(false);
     }
-  }, [profile, service, scenario, k, forced]);
+  }, [profile, service, scenario, k, forced, mode]);
 
   // Manual placement: snap the click to the nearest candidate site, because a
   // station can only go where the candidate lattice says a station can go --
@@ -183,12 +215,12 @@ export default function App() {
   // click nowhere near a candidate is REFUSED rather than teleporting the pin
   // across the city to whatever happened to be nearest.
   const onMapClick = useCallback((lat, lon) => {
-    if (!candidates) return;
+    if (!siteTable) return;
     let best = -1;
     let bestD = Infinity;
-    for (let j = 0; j < candidates.length; j++) {
-      const dy = candidates[j].lat - lat;
-      const dx = (candidates[j].lon - lon) * Math.cos((lat * Math.PI) / 180);
+    for (let j = 0; j < siteTable.length; j++) {
+      const dy = siteTable[j].lat - lat;
+      const dx = (siteTable[j].lon - lon) * Math.cos((lat * Math.PI) / 180);
       const d = dy * dy + dx * dx;
       if (d < bestD) { bestD = d; best = j; }
     }
@@ -200,7 +232,7 @@ export default function App() {
     }
     setSnap({ ok: true, metres, name: null });
     setForced((f) => (f.includes(best) ? f.filter((x) => x !== best) : [...f, best]));
-  }, [candidates]);
+  }, [siteTable]);
 
   const onPickCell = useCallback((i) => setPicked(i), []);
 
@@ -234,10 +266,52 @@ export default function App() {
   }, [coverage, meta]);
 
   const sites = useMemo(() => {
-    const forcedPts = candidates ? forced.map((j) => candidates[j]) : [];
-    const solved = result ? result.site_positions : [];
+    const forcedPts = siteTable
+      ? forced.map((j, i) => ({ ...siteTable[j], label: i + 1, kind: "placed" }))
+      : [];
+    const solvedKind = result?.mode === "staging" ? "post" : "solved";
+    const solved = result
+      ? result.site_positions.map((p, i) => ({ ...p, label: i + 1, kind: solvedKind }))
+      : [];
     return [...forcedPts, ...solved];
-  }, [candidates, forced, result]);
+  }, [siteTable, forced, result]);
+
+  // Fly the map to an area named in the readout. Bounds come from the area's
+  // demand cells, which every profile has; the outline only where the basemap
+  // carries one.
+  const focusArea = useCallback((id) => {
+    if (!cells) return;
+    const points = [];
+    for (let i = 0; i < cells.ward.length; i++) {
+      if (cells.ward[i] === id) points.push([cells.lat[i], cells.lon[i]]);
+    }
+    setFocus({ kind: "area", id, points,
+               rings: basemap?.ward_rings?.[String(id)] ?? [] });
+  }, [cells, basemap]);
+
+  const focusSite = useCallback((p) => {
+    setFocus({ kind: "site", lat: p.lat, lon: p.lon });
+  }, []);
+
+  // A focus on a solved site belongs to that solve.
+  useEffect(() => {
+    setFocus((f) => (f?.kind === "site" ? null : f));
+  }, [result]);
+
+  // Esc backs out one layer at a time: an open card, then the inspector, then
+  // the highlight -- the order they sit on screen.
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key !== "Escape") return;
+      if (briefOpen) setBriefOpen(false);
+      else if (evidenceOpen) setEvidenceOpen(false);
+      else if (placing) setPlacing(false);
+      else if (picked != null) setPicked(null);
+      else setFocus(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [briefOpen, evidenceOpen, placing, picked]);
 
   const gained = useMemo(
     () => (result ? new Set(result.newly_covered_cells) : null), [result]);
@@ -351,10 +425,11 @@ export default function App() {
           thresholdS={thresholdS}
           gained={gained}
           reachCells={reachCells}
-          candidates={candidates}
+          candidates={siteTable}
           basemap={basemap}
           stations={stations}
           sites={sites}
+          focus={focus}
           layers={layers}
           placing={placing}
           onMapClick={onMapClick}
@@ -373,10 +448,12 @@ export default function App() {
           placing={placing} setPlacing={setPlacing}
           forced={forced} clearForced={() => setForced([])}
           onShowReach={showReach} reaching={reaching} reach={reach}
+          mode={mode} setMode={chooseMode} staging={staging}
           scenarioShares={scenarioShares} scenariosLoading={scenariosLoading}
           exportHref={api.exportUrl(
             service, scenario, thresholdS,
-            result ? (result.exact ?? result.greedy).sites : [], profile)}
+            result ? (result.exact ?? result.greedy).sites : [], profile,
+            result?.mode ?? "station")}
         />
 
         <Summary
@@ -386,6 +463,14 @@ export default function App() {
           meta={meta}
           worstWards={worstWards}
           thresholdS={thresholdS}
+          scenario={scenario}
+          scenarioShares={scenarioShares}
+          focus={focus}
+          mode={mode}
+          staging={staging}
+          k={k}
+          onFocusArea={focusArea}
+          onFocusSite={focusSite}
         />
 
         {briefOpen && (
@@ -409,16 +494,19 @@ export default function App() {
 
         {placing && (
           <div className="placing-note">
-            Click a marked site. Stations sit on an 800&nbsp;m lattice, so a
-            click snaps to the nearest one.
+            {mode === "staging"
+              ? <>Click a marked point. A post can go anywhere on the road lattice,
+                  so a click snaps to the nearest one.</>
+              : <>Click a marked site. Stations sit on an 800&nbsp;m lattice, so a
+                  click snaps to the nearest one.</>}
           </div>
         )}
 
         {snap && (
           <div className={`snap-note${snap.ok ? "" : " bad"}`} role="status">
             {snap.ok
-              ? `Snapped ${snap.metres < 50 ? "onto" : `${snap.metres.toLocaleString("en-IN")} m to`} the nearest buildable site.`
-              : `No buildable site within ${snap.metres.toLocaleString("en-IN")} m of that point — nothing placed.`}
+              ? `Snapped ${snap.metres < 50 ? "onto" : `${snap.metres.toLocaleString("en-IN")} m to`} the nearest ${mode === "staging" ? "post point" : "buildable site"}.`
+              : `No ${mode === "staging" ? "post point" : "buildable site"} within ${snap.metres.toLocaleString("en-IN")} m of that point — nothing placed.`}
             <button className="linkish" onClick={() => setSnap(null)}>Dismiss</button>
           </div>
         )}

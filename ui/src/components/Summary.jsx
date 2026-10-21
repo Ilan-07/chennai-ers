@@ -1,5 +1,6 @@
 import { fmtInt, fmtMin, fmtPct } from "../api.js";
 import PeopleGrid from "./PeopleGrid.jsx";
+import StagingCurve from "./StagingCurve.jsx";
 
 /* The tolerance, set as an instrument reading rather than an alarm.
  *
@@ -63,7 +64,45 @@ function MissesBy({ fastest, budget }) {
   );
 }
 
-export default function Summary({ coverage, result, reach, meta, worstWards, thresholdS }) {
+/* What the road state costs, against a dry day, beside the figure it moved.
+ *
+ * The rail prints every scenario's share, but the headline used to show the
+ * flooded figure alone, so a reader looking at 39.6% had to find the dry 71.8%
+ * in another panel and subtract. Both shares are at the service budget, so the
+ * line is shown only while the clock is on that budget -- against a moved clock
+ * it would compare two different questions. */
+function VsDry({ scenario, shares, coverage, thresholdS }) {
+  if (scenario === "dry" || shares?.dry == null || shares?.[scenario] == null) return null;
+  if (thresholdS !== coverage.budget_s) return null;
+  const pts = 100 * (shares[scenario] - shares.dry);
+  return (
+    <p className="vs-dry">
+      <span className={pts < 0 ? "down" : "up"}>
+        {pts < 0 ? "−" : "+"}{Math.abs(pts).toFixed(1)} points
+      </span>{" "}
+      against a dry day ({(100 * shares.dry).toFixed(1)}%)
+    </p>
+  );
+}
+
+// A table row that is also a control. Enter and Space work as they would on a
+// button, so the table stays usable from the keyboard.
+function rowProps(onActivate, selected) {
+  return {
+    className: `row-link${selected ? " selected" : ""}`,
+    tabIndex: 0,
+    onClick: onActivate,
+    onKeyDown: (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onActivate(); }
+    },
+  };
+}
+
+export default function Summary({
+  coverage, result, reach, meta, worstWards, thresholdS,
+  scenario, scenarioShares, focus, onFocusArea, onFocusSite,
+  mode, staging, k,
+}) {
   if (!coverage) {
     return <aside className="readout"><p className="loading">Reading the network…</p></aside>;
   }
@@ -74,6 +113,12 @@ export default function Summary({ coverage, result, reach, meta, worstWards, thr
   const isFire = coverage.service === "fire";
   const caveat = meta?.profile_info?.note;
   const pub = coverage.publication ?? meta?.publication;
+  const isPosts = result?.mode === "staging";
+  // The dry-day station plan of the same size, scored on the peak network: the
+  // comparison that says whether a separate peak plan is worth having.
+  const dryPlan = isPosts
+    ? staging?.dry_plan_at_peak?.find((r) => r.k === result.k)
+    : null;
 
   return (
     <aside className="readout" aria-label="Results">
@@ -88,6 +133,8 @@ export default function Summary({ coverage, result, reach, meta, worstWards, thr
           {fmtInt(coverage.covered_demand)} of {fmtInt(coverage.total_demand)}{" "}
           {isFire ? "risk-weighted demand" : "residents"}
         </p>
+        <VsDry scenario={scenario} shares={scenarioShares}
+               coverage={coverage} thresholdS={thresholdS} />
 
         <PeopleGrid
           covered={coverage.covered_demand}
@@ -113,10 +160,19 @@ export default function Summary({ coverage, result, reach, meta, worstWards, thr
         )}
       </section>
 
+      {mode === "staging" && staging && (
+        <section className="group">
+          <h2>What posts buy at peak</h2>
+          <StagingCurve staging={staging} k={k} />
+        </section>
+      )}
+
       {result && (
         <section className="group result">
           <h2>
-            With {result.k} more station{result.k === 1 ? "" : "s"}
+            {isPosts
+              ? `With ${result.k} peak-hour post${result.k === 1 ? "" : "s"}`
+              : `With ${result.k} more station${result.k === 1 ? "" : "s"}`}
             {result.forced.length ? ` beside your ${result.forced.length} placed` : ""}
           </h2>
           <p className="figure" style={{ fontSize: 34 }}>
@@ -132,15 +188,32 @@ export default function Summary({ coverage, result, reach, meta, worstWards, thr
           <p className="proof">
             {result.exact
               ? result.exact.proven_optimal
-                ? "No other placement of this many stations does better — proven, not estimated."
+                ? `No other placement of this many ${isPosts ? "posts" : "stations"} does better — proven, not estimated.`
                 : `Not proven optimal: ${result.exact.optimality}`
               : "Greedy solution only."}
           </p>
+          {dryPlan && (
+            <p className="proof">
+              The dry-day plan's {result.k} station{result.k === 1 ? "" : "s"} would
+              add only {dryPlan.gain_points_at_peak.toFixed(1)} points at this hour
+              {dryPlan.sites_shared_with_posts === 0
+                ? ", and share no site with these posts"
+                : `, sharing ${dryPlan.sites_shared_with_posts} site${
+                    dryPlan.sites_shared_with_posts === 1 ? "" : "s"}`}.
+            </p>
+          )}
           <ol className="sites">
             {result.site_positions.map((s, i) => (
               <li key={i}>
-                <span className="pin">{i + 1}</span>
-                {s.lat.toFixed(5)}, {s.lon.toFixed(5)}
+                <button
+                  className={`site-row${focus?.kind === "site" && focus.lat === s.lat
+                    && focus.lon === s.lon ? " selected" : ""}`}
+                  onClick={() => onFocusSite(s)}
+                  title="Show on the map"
+                >
+                  <span className="pin">{i + 1}</span>
+                  {s.lat.toFixed(5)}, {s.lon.toFixed(5)}
+                </button>
               </li>
             ))}
           </ol>
@@ -200,7 +273,7 @@ export default function Summary({ coverage, result, reach, meta, worstWards, thr
         <p className="hint" style={{ margin: "0 0 8px" }}>
           How far past the clock the quickest crew lands. An area shown in amber
           misses by under a minute — that is a junction or a turnout, not a
-          station.
+          station. Pick a row to find it on the map.
         </p>
         <table className="worst">
           <thead>
@@ -208,7 +281,9 @@ export default function Summary({ coverage, result, reach, meta, worstWards, thr
           </thead>
           <tbody>
             {worstWards.map((w) => (
-              <tr key={w.id}>
+              <tr key={w.id}
+                  {...rowProps(() => onFocusArea(w.id),
+                               focus?.kind === "area" && focus.id === w.id)}>
                 <td>{w.no}</td>
                 <td className="people">{fmtInt(w.demand)}</td>
                 <MissesBy fastest={w.fastest} budget={thresholdS} />

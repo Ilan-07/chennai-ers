@@ -39,15 +39,18 @@ export const api = {
         `&threshold_s=${Math.round(thresholdS)}`),
   // What hand-placed stations reach, per station. At the SERVICE budget, not
   // the threshold slider -- the response says so and the readout repeats it.
-  reach: (svc, sites, scenario, p) =>
+  reach: (svc, sites, scenario, p, mode = "station") =>
     get(`/api/reach/${svc}?profile=${p}&scenario=${scenario}` +
-        `&sites=${sites.join(",")}`),
+        `&sites=${sites.join(",")}&mode=${mode}`),
+  // Peak-hour ambulance posts (step 15b). 404 where the build has none, which
+  // the console reads as "this study area does not offer posts".
+  staging: (svc, p) => get(`/api/staging/${svc}?profile=${p}`),
   nearest: (svc, scenario, p) =>
     get(`/api/nearest/${svc}?profile=${p}&scenario=${scenario}`),
   optimise: (body) => post("/api/optimise", body),
-  exportUrl: (svc, scenario, thresholdS, sites, p) =>
+  exportUrl: (svc, scenario, thresholdS, sites, p, mode = "station") =>
     `/api/export.csv?profile=${p}&svc=${svc}&scenario=${scenario}` +
-    `&threshold_s=${Math.round(thresholdS)}&sites=${sites.join(",")}`,
+    `&threshold_s=${Math.round(thresholdS)}&sites=${sites.join(",")}&mode=${mode}`,
 };
 
 export const fmtPct = (x) => `${(100 * x).toFixed(1)}%`;
