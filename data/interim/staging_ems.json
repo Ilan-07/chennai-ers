@@ -1,0 +1,5311 @@
+{
+  "PROVISIONAL": false,
+  "all_runs_proven_optimal": true,
+  "baseline_share": 0.3957,
+  "bases": {
+    "bases": 39,
+    "by_service": {
+      "fire": 39
+    },
+    "note": "No EMS base inventory exists. Coverage is modelled from the 39 authoritative fire stations, using EMS turnout offsets, speed multipliers and response standard. The 108 ambulance standby points are not published and are absent from OSM.",
+    "proxy": "fire_stations",
+    "resolves_when": "EMRI supplies the 108 standby-point list",
+    "source": "none"
+  },
+  "basis_note": "Published under a recorded waiver, NOT on surveyed positions. See config/publish_waiver.yml.",
+  "candidate_positions": [
+    {
+      "land_feasible": true,
+      "lat": 13.08072,
+      "lon": 80.26518
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.07894,
+      "lon": 80.25469
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.07718,
+      "lon": 80.24062
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.07411,
+      "lon": 80.22907
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.0771,
+      "lon": 80.21181
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.07636,
+      "lon": 80.20155
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.07418,
+      "lon": 80.19111
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.06448,
+      "lon": 80.17168
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.06175,
+      "lon": 80.15816
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.08231,
+      "lon": 80.2817
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.01092,
+      "lon": 80.21706
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.0155,
+      "lon": 80.22537
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.02802,
+      "lon": 80.23539
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.03402,
+      "lon": 80.24449
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.0488,
+      "lon": 80.24973
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.05575,
+      "lon": 80.25554
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.06813,
+      "lon": 80.27127
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.84635,
+      "lon": 80.06187
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.91373,
+      "lon": 80.10177
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.92091,
+      "lon": 80.11214
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.93002,
+      "lon": 80.12119
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.94292,
+      "lon": 80.13362
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.99612,
+      "lon": 80.18948
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.00176,
+      "lon": 80.19941
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.11991,
+      "lon": 80.19929
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.0499,
+      "lon": 80.21188
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.03477,
+      "lon": 80.21257
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.02224,
+      "lon": 80.20633
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.04767,
+      "lon": 80.12011
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.03621,
+      "lon": 80.14649
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.03443,
+      "lon": 80.15717
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.0148,
+      "lon": 80.19294
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.03806,
+      "lon": 80.25672
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.02888,
+      "lon": 80.24983
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.04484,
+      "lon": 80.25984
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.01865,
+      "lon": 80.2599
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.04395,
+      "lon": 80.27191
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.89769,
+      "lon": 80.24745
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.91,
+      "lon": 80.25003
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.91978,
+      "lon": 80.25112
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.96165,
+      "lon": 80.25625
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.84847,
+      "lon": 80.24093
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.86877,
+      "lon": 80.24349
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.83334,
+      "lon": 80.24048
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.08777,
+      "lon": 80.28987
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.03346,
+      "lon": 80.27738
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.02587,
+      "lon": 80.27515
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.06919,
+      "lon": 80.20579
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.00727,
+      "lon": 80.23804
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.00677,
+      "lon": 80.24762
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.98786,
+      "lon": 80.25147
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.06477,
+      "lon": 80.24353
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.05756,
+      "lon": 80.24147
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.06727,
+      "lon": 80.25194
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.00663,
+      "lon": 80.25582
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.03762,
+      "lon": 80.2642
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.02488,
+      "lon": 80.26495
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.05084,
+      "lon": 80.26413
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.06105,
+      "lon": 80.2652
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.05869,
+      "lon": 80.27571
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.05138,
+      "lon": 80.27508
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.02581,
+      "lon": 80.25743
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.98547,
+      "lon": 80.22334
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.97604,
+      "lon": 80.22137
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.04267,
+      "lon": 80.23233
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.06673,
+      "lon": 80.23148
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.01804,
+      "lon": 80.24113
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.9807,
+      "lon": 80.25933
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.97253,
+      "lon": 80.25804
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.98133,
+      "lon": 80.24321
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.03506,
+      "lon": 80.23029
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.05537,
+      "lon": 80.11948
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.04949,
+      "lon": 80.08797
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.03759,
+      "lon": 80.04972
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.09748,
+      "lon": 80.29326
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.10612,
+      "lon": 80.29317
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.08924,
+      "lon": 80.27888
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.09563,
+      "lon": 80.27523
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.10741,
+      "lon": 80.27232
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.11924,
+      "lon": 80.27649
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.1286,
+      "lon": 80.27852
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.12759,
+      "lon": 80.2888
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.07367,
+      "lon": 80.27651
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.10562,
+      "lon": 80.28
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.04395,
+      "lon": 80.24098
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.05091,
+      "lon": 80.23388
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.05338,
+      "lon": 80.2241
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.02263,
+      "lon": 80.14612
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.01264,
+      "lon": 80.13286
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.00974,
+      "lon": 80.12117
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.00742,
+      "lon": 80.11298
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.0035,
+      "lon": 80.09955
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.04778,
+      "lon": 80.20357
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.04735,
+      "lon": 80.19497
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.04548,
+      "lon": 80.18681
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.04207,
+      "lon": 80.17706
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.03935,
+      "lon": 80.16979
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.06432,
+      "lon": 80.28067
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.02372,
+      "lon": 80.22766
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.01292,
+      "lon": 80.20772
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.00365,
+      "lon": 80.21201
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.99723,
+      "lon": 80.21651
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.07369,
+      "lon": 80.28534
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.04578,
+      "lon": 80.11288
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.04925,
+      "lon": 80.10559
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.05065,
+      "lon": 80.09732
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.07207,
+      "lon": 80.26412
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.08581,
+      "lon": 80.25122
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.08771,
+      "lon": 80.26078
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.96353,
+      "lon": 80.21588
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.94952,
+      "lon": 80.13856
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.93696,
+      "lon": 80.1391
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.01396,
+      "lon": 80.24896
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.03118,
+      "lon": 80.22398
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.98211,
+      "lon": 80.23218
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.94844,
+      "lon": 80.20976
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.96596,
+      "lon": 80.18859
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.96473,
+      "lon": 80.19613
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.97453,
+      "lon": 80.19215
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.98111,
+      "lon": 80.19544
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.9872,
+      "lon": 80.17593
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.98795,
+      "lon": 80.18534
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.97997,
+      "lon": 80.16291
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.95095,
+      "lon": 80.14586
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.92272,
+      "lon": 80.13257
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.94138,
+      "lon": 80.14569
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.09228,
+      "lon": 80.21826
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.09254,
+      "lon": 80.21046
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.09305,
+      "lon": 80.19851
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.08572,
+      "lon": 80.22367
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.08327,
+      "lon": 80.23262
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.10179,
+      "lon": 80.28686
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.11277,
+      "lon": 80.28175
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.11423,
+      "lon": 80.29247
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.11352,
+      "lon": 80.26365
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.09497,
+      "lon": 80.25893
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.10217,
+      "lon": 80.2604
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.09471,
+      "lon": 80.26722
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.09972,
+      "lon": 80.25329
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.08702,
+      "lon": 80.27002
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.05477,
+      "lon": 80.16125
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.02061,
+      "lon": 80.13609
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.02102,
+      "lon": 80.12671
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.98309,
+      "lon": 80.12872
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.98646,
+      "lon": 80.11929
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.99358,
+      "lon": 80.11317
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.02146,
+      "lon": 80.2195
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.02873,
+      "lon": 80.21675
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.00776,
+      "lon": 80.1952
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.95993,
+      "lon": 80.14709
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.94322,
+      "lon": 80.11559
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.96,
+      "lon": 80.11666
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.96721,
+      "lon": 80.11815
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.97048,
+      "lon": 80.14696
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.97487,
+      "lon": 80.13295
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.97338,
+      "lon": 80.12517
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.93459,
+      "lon": 80.11259
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.93929,
+      "lon": 80.0874
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.9303,
+      "lon": 80.09244
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.93547,
+      "lon": 80.10311
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.04286,
+      "lon": 80.14957
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.0377,
+      "lon": 80.19291
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.03598,
+      "lon": 80.20428
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.99625,
+      "lon": 80.25206
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.0081,
+      "lon": 80.26416
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.00165,
+      "lon": 80.26769
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.99633,
+      "lon": 80.26192
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.93477,
+      "lon": 80.20393
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.92848,
+      "lon": 80.20004
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.91696,
+      "lon": 80.19421
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.91843,
+      "lon": 80.17659
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.92276,
+      "lon": 80.15195
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.94856,
+      "lon": 80.19988
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.08359,
+      "lon": 80.24417
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.09689,
+      "lon": 80.24453
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.09946,
+      "lon": 80.23078
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.09291,
+      "lon": 80.23632
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.09948,
+      "lon": 80.21741
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.10324,
+      "lon": 80.20752
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.10643,
+      "lon": 80.22529
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.83896,
+      "lon": 80.0639
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.89129,
+      "lon": 80.06974
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.89276,
+      "lon": 80.08601
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.91698,
+      "lon": 80.06193
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.91499,
+      "lon": 80.07205
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.91943,
+      "lon": 80.08468
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.92539,
+      "lon": 80.101
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.90556,
+      "lon": 80.06624
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.09974,
+      "lon": 80.18665
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.11282,
+      "lon": 80.15018
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.12022,
+      "lon": 80.14954
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.12685,
+      "lon": 80.14069
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.13073,
+      "lon": 80.13147
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.11941,
+      "lon": 80.09494
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.11907,
+      "lon": 80.08117
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.08549,
+      "lon": 80.21296
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.03223,
+      "lon": 80.26995
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.01785,
+      "lon": 80.27018
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.92899,
+      "lon": 80.2314
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.91469,
+      "lon": 80.22933
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.90098,
+      "lon": 80.22783
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.83178,
+      "lon": 80.22919
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.81893,
+      "lon": 80.2305
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.80524,
+      "lon": 80.22403
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.89989,
+      "lon": 80.23542
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.19213,
+      "lon": 80.26971
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.20368,
+      "lon": 80.26993
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.2205,
+      "lon": 80.27304
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.22896,
+      "lon": 80.27392
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.23638,
+      "lon": 80.27404
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.25655,
+      "lon": 80.27489
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.27284,
+      "lon": 80.26154
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.25373,
+      "lon": 80.15517
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.19534,
+      "lon": 80.18516
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.18743,
+      "lon": 80.19216
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.18015,
+      "lon": 80.1941
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.15843,
+      "lon": 80.20376
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.12541,
+      "lon": 80.2464
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.12002,
+      "lon": 80.25503
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.14315,
+      "lon": 80.20501
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.13258,
+      "lon": 80.21208
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.12207,
+      "lon": 80.2237
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.11608,
+      "lon": 80.23169
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.10972,
+      "lon": 80.24181
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.10856,
+      "lon": 80.23337
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.14388,
+      "lon": 80.29663
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.15253,
+      "lon": 80.30017
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.16326,
+      "lon": 80.30352
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.18505,
+      "lon": 80.30903
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.17532,
+      "lon": 80.28674
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.2133,
+      "lon": 80.3192
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.22736,
+      "lon": 80.32639
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.2051,
+      "lon": 80.32118
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.19976,
+      "lon": 80.31595
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.18724,
+      "lon": 80.31632
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.11346,
+      "lon": 80.22059
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.11307,
+      "lon": 80.21317
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.12038,
+      "lon": 80.21228
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.1092,
+      "lon": 80.19934
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.08782,
+      "lon": 80.18966
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.08811,
+      "lon": 80.18222
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.08878,
+      "lon": 80.16957
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.10145,
+      "lon": 80.16207
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.09976,
+      "lon": 80.17018
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.10785,
+      "lon": 80.1866
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.10944,
+      "lon": 80.1691
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.10447,
+      "lon": 80.15355
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.06699,
+      "lon": 80.18573
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.07897,
+      "lon": 80.18482
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.08196,
+      "lon": 80.17614
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.09438,
+      "lon": 80.17653
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.0805,
+      "lon": 80.16113
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.09761,
+      "lon": 80.14679
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.09949,
+      "lon": 80.13295
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.10675,
+      "lon": 80.128
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.11617,
+      "lon": 80.10312
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.10526,
+      "lon": 80.10842
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.09112,
+      "lon": 80.10849
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.083,
+      "lon": 80.10878
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.06425,
+      "lon": 80.13832
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.06765,
+      "lon": 80.12961
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.07378,
+      "lon": 80.11203
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.08219,
+      "lon": 80.15225
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.08413,
+      "lon": 80.14469
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.08661,
+      "lon": 80.13211
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.08845,
+      "lon": 80.12284
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.07237,
+      "lon": 80.15313
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.07262,
+      "lon": 80.17511
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.08925,
+      "lon": 80.16089
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.09523,
+      "lon": 80.15519
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.11431,
+      "lon": 80.11088
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.11858,
+      "lon": 80.15741
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.11786,
+      "lon": 80.16934
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.10865,
+      "lon": 80.17768
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.12036,
+      "lon": 80.13645
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.12605,
+      "lon": 80.15905
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.13221,
+      "lon": 80.17289
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.14026,
+      "lon": 80.18002
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.14355,
+      "lon": 80.18769
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.20477,
+      "lon": 80.12195
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.2072,
+      "lon": 80.11211
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.21117,
+      "lon": 80.0958
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.21275,
+      "lon": 80.08568
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.20869,
+      "lon": 80.07792
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.25219,
+      "lon": 80.2902
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.07453,
+      "lon": 80.12492
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.1032,
+      "lon": 80.09272
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.13369,
+      "lon": 80.10348
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.12818,
+      "lon": 80.11298
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.14208,
+      "lon": 80.1046
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.15008,
+      "lon": 80.10365
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.15953,
+      "lon": 80.09958
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.17056,
+      "lon": 80.09513
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.17377,
+      "lon": 80.08823
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.18085,
+      "lon": 80.08574
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.19208,
+      "lon": 80.08491
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.20452,
+      "lon": 80.09015
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.23565,
+      "lon": 80.04914
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.23805,
+      "lon": 80.16134
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.23749,
+      "lon": 80.18216
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.24614,
+      "lon": 80.1879
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.19168,
+      "lon": 80.2576
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.19049,
+      "lon": 80.24595
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.19128,
+      "lon": 80.23843
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.03118,
+      "lon": 80.11125
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.01793,
+      "lon": 80.10261
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.98737,
+      "lon": 80.09331
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.99492,
+      "lon": 80.09585
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.98702,
+      "lon": 80.0642
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.04717,
+      "lon": 80.08016
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.04121,
+      "lon": 80.08897
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.04407,
+      "lon": 80.14044
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.03688,
+      "lon": 80.13838
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.02284,
+      "lon": 80.11891
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.02148,
+      "lon": 80.15574
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.02085,
+      "lon": 80.16621
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.0172,
+      "lon": 80.17537
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.01539,
+      "lon": 80.18517
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.02452,
+      "lon": 80.18305
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.03178,
+      "lon": 80.18378
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.03339,
+      "lon": 80.174
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.0421,
+      "lon": 80.16225
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.04904,
+      "lon": 80.16598
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.04424,
+      "lon": 80.22228
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.04194,
+      "lon": 80.215
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.06228,
+      "lon": 80.22398
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.06878,
+      "lon": 80.2144
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.05856,
+      "lon": 80.2152
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.03045,
+      "lon": 80.19334
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.00532,
+      "lon": 80.13589
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.01286,
+      "lon": 80.16832
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.01133,
+      "lon": 80.15466
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.01071,
+      "lon": 80.14642
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.05683,
+      "lon": 80.19705
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.05028,
+      "lon": 80.17758
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.05437,
+      "lon": 80.18863
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.06425,
+      "lon": 80.19775
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.05701,
+      "lon": 80.18075
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.04943,
+      "lon": 80.15452
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.05584,
+      "lon": 80.14913
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.05723,
+      "lon": 80.17066
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.04187,
+      "lon": 80.12588
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.08559,
+      "lon": 80.06765
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.07963,
+      "lon": 80.07247
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.07314,
+      "lon": 80.07702
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.06741,
+      "lon": 80.08986
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.06524,
+      "lon": 80.09843
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.0541,
+      "lon": 80.06257
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.18118,
+      "lon": 80.0495
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.19214,
+      "lon": 80.07019
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.19922,
+      "lon": 80.08123
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.19882,
+      "lon": 80.1149
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.19814,
+      "lon": 80.10691
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.18657,
+      "lon": 80.10698
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.10549,
+      "lon": 80.10033
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.1043,
+      "lon": 80.05958
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.10106,
+      "lon": 80.07113
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.09395,
+      "lon": 80.07748
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.08879,
+      "lon": 80.09208
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.0921,
+      "lon": 80.09882
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.11382,
+      "lon": 80.06284
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.11919,
+      "lon": 80.07341
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.12488,
+      "lon": 80.06635
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.1273,
+      "lon": 80.05902
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.13645,
+      "lon": 80.05648
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.14446,
+      "lon": 80.06003
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.14659,
+      "lon": 80.07007
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.14899,
+      "lon": 80.08788
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.15062,
+      "lon": 80.07936
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.13862,
+      "lon": 80.09641
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.13446,
+      "lon": 80.06786
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.1967,
+      "lon": 80.16077
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.1394,
+      "lon": 80.13391
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.14346,
+      "lon": 80.14006
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.14923,
+      "lon": 80.13148
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.15597,
+      "lon": 80.13418
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.16236,
+      "lon": 80.1296
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.18294,
+      "lon": 80.14271
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.19418,
+      "lon": 80.15053
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.22427,
+      "lon": 80.17236
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.22437,
+      "lon": 80.18671
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.22609,
+      "lon": 80.19436
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.23814,
+      "lon": 80.19845
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.22822,
+      "lon": 80.21795
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.23582,
+      "lon": 80.22931
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.24124,
+      "lon": 80.23571
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.25931,
+      "lon": 80.23073
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.24841,
+      "lon": 80.23073
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.27086,
+      "lon": 80.22722
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.27525,
+      "lon": 80.21463
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.26217,
+      "lon": 80.21577
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.26819,
+      "lon": 80.19599
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.27602,
+      "lon": 80.20155
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.2681,
+      "lon": 80.18576
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.25718,
+      "lon": 80.17304
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.24575,
+      "lon": 80.17145
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.24686,
+      "lon": 80.15766
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.2385,
+      "lon": 80.13581
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.22993,
+      "lon": 80.12849
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.24968,
+      "lon": 80.14627
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.25109,
+      "lon": 80.1819
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.18574,
+      "lon": 80.2029
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.17524,
+      "lon": 80.21554
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.14875,
+      "lon": 80.23058
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.14219,
+      "lon": 80.23685
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.13161,
+      "lon": 80.25257
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.13606,
+      "lon": 80.25866
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.1355,
+      "lon": 80.19077
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.9878,
+      "lon": 80.20548
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.96525,
+      "lon": 80.2071
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.92041,
+      "lon": 80.184
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.93418,
+      "lon": 80.18214
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.94273,
+      "lon": 80.18303
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.9556,
+      "lon": 80.18687
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.99222,
+      "lon": 80.19888
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.99509,
+      "lon": 80.20667
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.97934,
+      "lon": 80.18061
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.97126,
+      "lon": 80.18284
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.9596,
+      "lon": 80.17563
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.95996,
+      "lon": 80.16809
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.96186,
+      "lon": 80.15939
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.14461,
+      "lon": 80.2196
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.02603,
+      "lon": 80.19986
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.90611,
+      "lon": 80.0962
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.99725,
+      "lon": 80.10655
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.03143,
+      "lon": 80.08606
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.03755,
+      "lon": 80.0765
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.01244,
+      "lon": 80.08709
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.95017,
+      "lon": 80.15389
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.94253,
+      "lon": 80.16412
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.97284,
+      "lon": 80.15426
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.97372,
+      "lon": 80.16729
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.96978,
+      "lon": 80.17489
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.28011,
+      "lon": 80.26316
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.28697,
+      "lon": 80.20598
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.2745,
+      "lon": 80.17901
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.26646,
+      "lon": 80.16054
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.2812,
+      "lon": 80.28288
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.28302,
+      "lon": 80.27326
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.27872,
+      "lon": 80.29509
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.2608,
+      "lon": 80.26872
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.80611,
+      "lon": 80.18932
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.8339,
+      "lon": 80.15806
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.84615,
+      "lon": 80.14811
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.85112,
+      "lon": 80.1403
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.82311,
+      "lon": 80.17009
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.86273,
+      "lon": 80.12695
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.86978,
+      "lon": 80.10922
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.87915,
+      "lon": 80.08032
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.02787,
+      "lon": 80.16837
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.9803,
+      "lon": 80.14504
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.9905,
+      "lon": 80.14978
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.98137,
+      "lon": 80.13739
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.9883,
+      "lon": 80.1421
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.96777,
+      "lon": 80.10263
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.96739,
+      "lon": 80.08552
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.9618,
+      "lon": 80.07954
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.94307,
+      "lon": 80.07643
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.95383,
+      "lon": 80.0823
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.94398,
+      "lon": 80.0688
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.94978,
+      "lon": 80.06391
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.97699,
+      "lon": 80.10305
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.80142,
+      "lon": 80.08664
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.81032,
+      "lon": 80.07678
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.82158,
+      "lon": 80.07757
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.80314,
+      "lon": 80.07589
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.11933,
+      "lon": 80.28552
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.12178,
+      "lon": 80.29387
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.13643,
+      "lon": 80.29047
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.13179,
+      "lon": 80.29647
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.12654,
+      "lon": 80.26583
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.11538,
+      "lon": 80.2492
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.13742,
+      "lon": 80.24791
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.13194,
+      "lon": 80.24281
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.14526,
+      "lon": 80.25014
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.11884,
+      "lon": 80.24258
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.10908,
+      "lon": 80.25517
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.11336,
+      "lon": 80.20567
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.93916,
+      "lon": 80.15366
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.90949,
+      "lon": 80.15721
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.07436,
+      "lon": 80.22103
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.12942,
+      "lon": 80.22469
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.15062,
+      "lon": 80.20434
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.0786,
+      "lon": 80.0585
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.08855,
+      "lon": 80.05734
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.08024,
+      "lon": 80.05053
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.10814,
+      "lon": 80.05003
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.9218,
+      "lon": 80.09343
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.90153,
+      "lon": 80.10226
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.88018,
+      "lon": 80.10883
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.8924,
+      "lon": 80.10884
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.15246,
+      "lon": 80.24284
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.16167,
+      "lon": 80.24391
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.16503,
+      "lon": 80.25391
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.16255,
+      "lon": 80.2619
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.16023,
+      "lon": 80.23246
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.17465,
+      "lon": 80.24711
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.15681,
+      "lon": 80.25739
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.16383,
+      "lon": 80.22453
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.1686,
+      "lon": 80.23078
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.16809,
+      "lon": 80.2387
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.19334,
+      "lon": 80.22061
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.20079,
+      "lon": 80.21997
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.21524,
+      "lon": 80.21922
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.24504,
+      "lon": 80.21574
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.08523,
+      "lon": 80.20297
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.9656,
+      "lon": 80.12696
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.96337,
+      "lon": 80.13639
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.89925,
+      "lon": 80.18293
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.89045,
+      "lon": 80.17464
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.88267,
+      "lon": 80.17069
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.86807,
+      "lon": 80.17597
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.84942,
+      "lon": 80.17067
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.83521,
+      "lon": 80.16769
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.81809,
+      "lon": 80.16041
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.80891,
+      "lon": 80.1504
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.7989,
+      "lon": 80.14563
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.98926,
+      "lon": 80.21466
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.97153,
+      "lon": 80.21223
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.98044,
+      "lon": 80.20444
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.89093,
+      "lon": 80.14088
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.91236,
+      "lon": 80.14322
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.92249,
+      "lon": 80.14294
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.9021,
+      "lon": 80.15829
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.97309,
+      "lon": 80.23121
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.96739,
+      "lon": 80.23593
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.96735,
+      "lon": 80.24585
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.94616,
+      "lon": 80.24739
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.94433,
+      "lon": 80.23814
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.95399,
+      "lon": 80.24238
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.99566,
+      "lon": 80.24235
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.9501,
+      "lon": 80.25496
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.93526,
+      "lon": 80.16407
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.97473,
+      "lon": 80.24643
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.83195,
+      "lon": 80.09834
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.84587,
+      "lon": 80.22648
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.84698,
+      "lon": 80.20007
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.84846,
+      "lon": 80.19086
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.84112,
+      "lon": 80.18871
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.84257,
+      "lon": 80.15944
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.82846,
+      "lon": 80.1292
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.82959,
+      "lon": 80.12177
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.82885,
+      "lon": 80.11395
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.83517,
+      "lon": 80.08663
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.84564,
+      "lon": 80.08694
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.8368,
+      "lon": 80.20132
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.8544,
+      "lon": 80.19942
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.86735,
+      "lon": 80.19107
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.885,
+      "lon": 80.18994
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.92162,
+      "lon": 80.20324
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.90766,
+      "lon": 80.19987
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.88953,
+      "lon": 80.19778
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.88015,
+      "lon": 80.20317
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.86031,
+      "lon": 80.2146
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.85515,
+      "lon": 80.22152
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.86313,
+      "lon": 80.20717
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.85169,
+      "lon": 80.20699
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.87407,
+      "lon": 80.2083
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.87158,
+      "lon": 80.15037
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.86498,
+      "lon": 80.15651
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.85892,
+      "lon": 80.16867
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.85479,
+      "lon": 80.17793
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.85862,
+      "lon": 80.19035
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.82279,
+      "lon": 80.21944
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.82167,
+      "lon": 80.21138
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.82134,
+      "lon": 80.20377
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.81397,
+      "lon": 80.2048
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.79968,
+      "lon": 80.19786
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.94214,
+      "lon": 80.19158
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.942,
+      "lon": 80.20434
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.89037,
+      "lon": 80.18453
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.89805,
+      "lon": 80.16444
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.89938,
+      "lon": 80.17472
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.88494,
+      "lon": 80.15629
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.89611,
+      "lon": 80.12087
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.10151,
+      "lon": 80.19413
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.0256,
+      "lon": 80.17553
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.93667,
+      "lon": 80.17372
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.92908,
+      "lon": 80.13789
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.93329,
+      "lon": 80.1299
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.9252,
+      "lon": 80.16253
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.92977,
+      "lon": 80.14829
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.04333,
+      "lon": 80.2797
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.2717,
+      "lon": 80.10575
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.27446,
+      "lon": 80.09491
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.29191,
+      "lon": 80.05539
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.1724,
+      "lon": 80.30543
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.18395,
+      "lon": 80.30155
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.17689,
+      "lon": 80.31336
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.22313,
+      "lon": 80.32001
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.9575,
+      "lon": 80.12365
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.97379,
+      "lon": 80.09054
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.04254,
+      "lon": 80.06177
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.03748,
+      "lon": 80.09567
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.0567,
+      "lon": 80.10973
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.85972,
+      "lon": 80.10784
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.86227,
+      "lon": 80.09974
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.87383,
+      "lon": 80.13466
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.8457,
+      "lon": 80.12334
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.84211,
+      "lon": 80.13706
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.81061,
+      "lon": 80.12431
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.80383,
+      "lon": 80.12157
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.80911,
+      "lon": 80.1424
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.02851,
+      "lon": 80.15285
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.1825,
+      "lon": 80.28987
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.18458,
+      "lon": 80.27003
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.18325,
+      "lon": 80.28251
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.17607,
+      "lon": 80.29436
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.17971,
+      "lon": 80.25532
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.16434,
+      "lon": 80.26986
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.13919,
+      "lon": 80.28182
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.97854,
+      "lon": 80.0656
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.20166,
+      "lon": 80.19497
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.21371,
+      "lon": 80.19612
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.26801,
+      "lon": 80.24184
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.26142,
+      "lon": 80.25073
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.25739,
+      "lon": 80.25894
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.24778,
+      "lon": 80.24956
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.24597,
+      "lon": 80.26028
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.24282,
+      "lon": 80.26708
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.22904,
+      "lon": 80.26439
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.23289,
+      "lon": 80.23745
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.22817,
+      "lon": 80.24419
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.21836,
+      "lon": 80.24839
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.20624,
+      "lon": 80.25013
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.20001,
+      "lon": 80.25507
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.19775,
+      "lon": 80.22876
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.19717,
+      "lon": 80.20602
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.20176,
+      "lon": 80.21223
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.20953,
+      "lon": 80.20731
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.19248,
+      "lon": 80.19937
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.19415,
+      "lon": 80.17458
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.95506,
+      "lon": 80.13304
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.00013,
+      "lon": 80.12221
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.99789,
+      "lon": 80.13116
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.993,
+      "lon": 80.12557
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.97927,
+      "lon": 80.1203
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.12618,
+      "lon": 80.12028
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.11728,
+      "lon": 80.12636
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.13587,
+      "lon": 80.14194
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.09519,
+      "lon": 80.13909
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.82164,
+      "lon": 80.08555
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.79966,
+      "lon": 80.09742
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.8868,
+      "lon": 80.14879
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.86021,
+      "lon": 80.14495
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.83456,
+      "lon": 80.22222
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.1773,
+      "lon": 80.07727
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.18058,
+      "lon": 80.07006
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.18638,
+      "lon": 80.05901
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.17882,
+      "lon": 80.06133
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.18633,
+      "lon": 80.07532
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.19941,
+      "lon": 80.07301
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.2188,
+      "lon": 80.09132
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.2255,
+      "lon": 80.09465
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.2158,
+      "lon": 80.06545
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.23566,
+      "lon": 80.08816
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.24543,
+      "lon": 80.09208
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.23014,
+      "lon": 80.06946
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.20702,
+      "lon": 80.06391
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.24104,
+      "lon": 80.12019
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.86735,
+      "lon": 80.06988
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.8663,
+      "lon": 80.07733
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.93776,
+      "lon": 80.09462
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.89102,
+      "lon": 80.25228
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.88759,
+      "lon": 80.24558
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.87754,
+      "lon": 80.24376
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.85922,
+      "lon": 80.24192
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.94223,
+      "lon": 80.25983
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.93865,
+      "lon": 80.25274
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.93057,
+      "lon": 80.25172
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.16728,
+      "lon": 80.29658
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.85482,
+      "lon": 80.06838
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.93533,
+      "lon": 80.23688
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.07981,
+      "lon": 80.10075
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.08187,
+      "lon": 80.12621
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.94267,
+      "lon": 80.04979
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.86493,
+      "lon": 80.22657
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.12479,
+      "lon": 80.20545
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.13073,
+      "lon": 80.20076
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.13279,
+      "lon": 80.18131
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.13256,
+      "lon": 80.15398
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.1392,
+      "lon": 80.15737
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.17868,
+      "lon": 80.1539
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.16813,
+      "lon": 80.15482
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.16031,
+      "lon": 80.15523
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.16172,
+      "lon": 80.12155
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.16354,
+      "lon": 80.11392
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.15869,
+      "lon": 80.10702
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.16922,
+      "lon": 80.10898
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.17561,
+      "lon": 80.10297
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.19238,
+      "lon": 80.10142
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.14847,
+      "lon": 80.05351
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.16467,
+      "lon": 80.05103
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.12453,
+      "lon": 80.0505
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.81788,
+      "lon": 80.05071
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.26955,
+      "lon": 80.28783
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.16778,
+      "lon": 80.20082
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.16436,
+      "lon": 80.20873
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.95171,
+      "lon": 80.11656
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.09316,
+      "lon": 80.22658
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.11935,
+      "lon": 80.18931
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.84072,
+      "lon": 80.05627
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.90168,
+      "lon": 80.2183
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.95127,
+      "lon": 80.17439
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.90982,
+      "lon": 80.19155
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.18334,
+      "lon": 80.23139
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.18602,
+      "lon": 80.22184
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.13893,
+      "lon": 80.22788
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.95652,
+      "lon": 80.21308
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.15017,
+      "lon": 80.21246
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.80661,
+      "lon": 80.20074
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.8593,
+      "lon": 80.07425
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.80769,
+      "lon": 80.23285
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.85854,
+      "lon": 80.08219
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.83538,
+      "lon": 80.18163
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.90546,
+      "lon": 80.20796
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.92589,
+      "lon": 80.23815
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.0736,
+      "lon": 80.1674
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.28771,
+      "lon": 80.33075
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.17041,
+      "lon": 80.22129
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.05061,
+      "lon": 80.13676
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.06466,
+      "lon": 80.12278
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.06334,
+      "lon": 80.11473
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.05806,
+      "lon": 80.12653
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.96363,
+      "lon": 80.06604
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.95823,
+      "lon": 80.07309
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.9639,
+      "lon": 80.05108
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.15292,
+      "lon": 80.25096
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.26935,
+      "lon": 80.31257
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.87037,
+      "lon": 80.05629
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.88916,
+      "lon": 80.22872
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.90351,
+      "lon": 80.08665
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.92302,
+      "lon": 80.07715
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.92524,
+      "lon": 80.06978
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.24218,
+      "lon": 80.29018
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.23167,
+      "lon": 80.29054
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.28065,
+      "lon": 80.23116
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.10658,
+      "lon": 80.0814
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.11204,
+      "lon": 80.09566
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.12833,
+      "lon": 80.07924
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.2347,
+      "lon": 80.06146
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.25653,
+      "lon": 80.09126
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.25201,
+      "lon": 80.07748
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.25364,
+      "lon": 80.06838
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.2545,
+      "lon": 80.05892
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.25702,
+      "lon": 80.04948
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.26588,
+      "lon": 80.0503
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.27083,
+      "lon": 80.05757
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.28768,
+      "lon": 80.08826
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.28044,
+      "lon": 80.07826
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.28539,
+      "lon": 80.06989
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.29994,
+      "lon": 80.10736
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.26688,
+      "lon": 80.1144
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.30389,
+      "lon": 80.09911
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.29878,
+      "lon": 80.1162
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.95001,
+      "lon": 80.23317
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.22052,
+      "lon": 80.10126
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.22686,
+      "lon": 80.16511
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.111,
+      "lon": 80.12108
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.02845,
+      "lon": 80.133
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.92829,
+      "lon": 80.18707
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.96108,
+      "lon": 80.24074
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.88075,
+      "lon": 80.22681
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.90776,
+      "lon": 80.23309
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.91516,
+      "lon": 80.16998
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.92315,
+      "lon": 80.12442
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.9374,
+      "lon": 80.24436
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.91696,
+      "lon": 80.05419
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.86115,
+      "lon": 80.05938
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.87827,
+      "lon": 80.06486
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.8807,
+      "lon": 80.07237
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.84964,
+      "lon": 80.05402
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.85686,
+      "lon": 80.05241
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.82396,
+      "lon": 80.05528
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.83177,
+      "lon": 80.05449
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.91096,
+      "lon": 80.08911
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.89538,
+      "lon": 80.0621
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.91317,
+      "lon": 80.12625
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.90259,
+      "lon": 80.14226
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.81719,
+      "lon": 80.24073
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.13208,
+      "lon": 80.16545
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.20238,
+      "lon": 80.13928
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.20274,
+      "lon": 80.13108
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.21441,
+      "lon": 80.17023
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.2325,
+      "lon": 80.30245
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.24749,
+      "lon": 80.27432
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.05873,
+      "lon": 80.05205
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.86262,
+      "lon": 80.19965
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.28725,
+      "lon": 80.2618
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.14333,
+      "lon": 80.25772
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.88207,
+      "lon": 80.05085
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.88971,
+      "lon": 80.0538
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.10285,
+      "lon": 80.23913
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.96708,
+      "lon": 80.09381
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.30456,
+      "lon": 80.14676
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.13431,
+      "lon": 80.23405
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.20443,
+      "lon": 80.17483
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.99514,
+      "lon": 80.08183
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.00122,
+      "lon": 80.0892
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.89482,
+      "lon": 80.04829
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.82517,
+      "lon": 80.14059
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.95246,
+      "lon": 80.05007
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.84833,
+      "lon": 80.21392
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.97914,
+      "lon": 80.05415
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.83892,
+      "lon": 80.21342
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.80946,
+      "lon": 80.24351
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.02295,
+      "lon": 80.08425
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.88401,
+      "lon": 80.13564
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.87154,
+      "lon": 80.1013
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.82456,
+      "lon": 80.19476
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.03551,
+      "lon": 80.05703
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.87788,
+      "lon": 80.19283
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.85789,
+      "lon": 80.13379
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.86558,
+      "lon": 80.13373
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.06234,
+      "lon": 80.06237
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.83799,
+      "lon": 80.12316
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.04403,
+      "lon": 80.06927
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.82847,
+      "lon": 80.08276
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.8324,
+      "lon": 80.07045
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.23686,
+      "lon": 80.21733
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.81077,
+      "lon": 80.15971
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.23301,
+      "lon": 80.20804
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.81416,
+      "lon": 80.1371
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.8599,
+      "lon": 80.08989
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.86845,
+      "lon": 80.08911
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.17938,
+      "lon": 80.13246
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.18172,
+      "lon": 80.11931
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.18909,
+      "lon": 80.09452
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.1751,
+      "lon": 80.20164
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.20348,
+      "lon": 80.18239
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.16984,
+      "lon": 80.06895
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.19002,
+      "lon": 80.20941
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.1802,
+      "lon": 80.20947
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.15348,
+      "lon": 80.06174
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.16901,
+      "lon": 80.13501
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.12622,
+      "lon": 80.19466
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.90647,
+      "lon": 80.16727
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.21727,
+      "lon": 80.17979
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.21874,
+      "lon": 80.22651
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.21541,
+      "lon": 80.24064
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.20693,
+      "lon": 80.27677
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.15501,
+      "lon": 80.19634
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.14206,
+      "lon": 80.19509
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.19564,
+      "lon": 80.27978
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.15511,
+      "lon": 80.22438
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.17221,
+      "lon": 80.25683
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.22715,
+      "lon": 80.25667
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.21986,
+      "lon": 80.26452
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.21922,
+      "lon": 80.2564
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.88075,
+      "lon": 80.23442
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.19227,
+      "lon": 80.31093
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.06387,
+      "lon": 80.10569
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.84102,
+      "lon": 80.17314
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.8472,
+      "lon": 80.18352
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.96872,
+      "lon": 80.22116
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.24218,
+      "lon": 80.1455
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.22664,
+      "lon": 80.10631
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.29221,
+      "lon": 80.21889
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.28822,
+      "lon": 80.22606
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.28459,
+      "lon": 80.24049
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.09629,
+      "lon": 80.05775
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.15483,
+      "lon": 80.04991
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.07149,
+      "lon": 80.06111
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.23776,
+      "lon": 80.17333
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.24433,
+      "lon": 80.1789
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.20921,
+      "lon": 80.10379
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.21249,
+      "lon": 80.11819
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.95304,
+      "lon": 80.16527
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.29858,
+      "lon": 80.1614
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.28837,
+      "lon": 80.16279
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.29049,
+      "lon": 80.15455
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.29628,
+      "lon": 80.18278
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.28319,
+      "lon": 80.13104
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.26688,
+      "lon": 80.13516
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.29628,
+      "lon": 80.12343
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.27522,
+      "lon": 80.16391
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.3004,
+      "lon": 80.26149
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.30027,
+      "lon": 80.27038
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.09204,
+      "lon": 80.08512
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.99493,
+      "lon": 80.07027
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.29677,
+      "lon": 80.14758
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.27346,
+      "lon": 80.15175
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.03013,
+      "lon": 80.07689
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.25147,
+      "lon": 80.30644
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.93701,
+      "lon": 80.07123
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.89003,
+      "lon": 80.1168
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.25474,
+      "lon": 80.28291
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.89212,
+      "lon": 80.12787
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.94944,
+      "lon": 80.22257
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.8734,
+      "lon": 80.22684
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.89905,
+      "lon": 80.19849
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.15351,
+      "lon": 80.28692
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.87782,
+      "lon": 80.21945
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.89231,
+      "lon": 80.23637
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.82113,
+      "lon": 80.12795
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.82603,
+      "lon": 80.2403
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.8408,
+      "lon": 80.2406
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.24776,
+      "lon": 80.31805
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.93018,
+      "lon": 80.07975
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.8283,
+      "lon": 80.17556
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.20776,
+      "lon": 80.04699
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.21457,
+      "lon": 80.05096
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.09045,
+      "lon": 80.04975
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.95795,
+      "lon": 80.0906
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.94712,
+      "lon": 80.10693
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.82666,
+      "lon": 80.10569
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.82936,
+      "lon": 80.20105
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.83639,
+      "lon": 80.13217
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.06439,
+      "lon": 80.07493
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.30336,
+      "lon": 80.33003
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.2233,
+      "lon": 80.28073
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.26106,
+      "lon": 80.28718
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.26527,
+      "lon": 80.25738
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.25755,
+      "lon": 80.24417
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.25229,
+      "lon": 80.23733
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.26396,
+      "lon": 80.33319
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.28003,
+      "lon": 80.34287
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.21243,
+      "lon": 80.27175
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.26235,
+      "lon": 80.30941
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.25895,
+      "lon": 80.32383
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.88403,
+      "lon": 80.21084
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.87229,
+      "lon": 80.20098
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.28386,
+      "lon": 80.1979
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.26042,
+      "lon": 80.30068
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.27718,
+      "lon": 80.30429
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.01515,
+      "lon": 80.09463
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.02546,
+      "lon": 80.09212
+    },
+    {
+      "land_feasible": false,
+      "lat": 12.88686,
+      "lon": 80.0771
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.24269,
+      "lon": 80.22355
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.20797,
+      "lon": 80.16466
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.18644,
+      "lon": 80.14947
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.17886,
+      "lon": 80.09623
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.16178,
+      "lon": 80.06422
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.11725,
+      "lon": 80.04997
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.05425,
+      "lon": 80.08189
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.25145,
+      "lon": 80.29759
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.1502,
+      "lon": 80.1907
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.29865,
+      "lon": 80.21369
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.30008,
+      "lon": 80.22359
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.26253,
+      "lon": 80.15291
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.2634,
+      "lon": 80.14343
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.26221,
+      "lon": 80.12391
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.0038,
+      "lon": 80.2201
+    },
+    {
+      "land_feasible": true,
+      "lat": 12.89505,
+      "lon": 80.15554
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.28317,
+      "lon": 80.25138
+    },
+    {
+      "land_feasible": true,
+      "lat": 13.2891,
+      "lon": 80.06234
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.25376,
+      "lon": 80.21511
+    },
+    {
+      "land_feasible": false,
+      "lat": 13.21675,
+      "lon": 80.12726
+    }
+  ],
+  "candidates": 948,
+  "candidates_land_feasible": 352,
+  "code_commit": "7c82ee61fb4713a0070c658ba176c42b6b153b2f-dirty",
+  "config_hash": "d856dcff2f3d684bb3970b49b24b234ad690d08cad0b2ee202bc7068f237cc28",
+  "dry_plan_at_peak": [
+    {
+      "gain_points_at_peak": 0.34,
+      "k": 1,
+      "proven_optimal_on_dry": true,
+      "share_at_peak": 0.3991,
+      "sites": [
+        421
+      ],
+      "sites_shared_with_posts": 0
+    },
+    {
+      "gain_points_at_peak": 1.37,
+      "k": 2,
+      "proven_optimal_on_dry": true,
+      "share_at_peak": 0.4094,
+      "sites": [
+        118,
+        421
+      ],
+      "sites_shared_with_posts": 0
+    },
+    {
+      "gain_points_at_peak": 2.71,
+      "k": 3,
+      "proven_optimal_on_dry": true,
+      "share_at_peak": 0.4229,
+      "sites": [
+        118,
+        421,
+        792
+      ],
+      "sites_shared_with_posts": 0
+    },
+    {
+      "gain_points_at_peak": 4.79,
+      "k": 4,
+      "proven_optimal_on_dry": true,
+      "share_at_peak": 0.4436,
+      "sites": [
+        118,
+        421,
+        480,
+        792
+      ],
+      "sites_shared_with_posts": 0
+    },
+    {
+      "gain_points_at_peak": 5.67,
+      "k": 5,
+      "proven_optimal_on_dry": true,
+      "share_at_peak": 0.4524,
+      "sites": [
+        54,
+        118,
+        421,
+        480,
+        792
+      ],
+      "sites_shared_with_posts": 1
+    },
+    {
+      "gain_points_at_peak": 6.43,
+      "k": 6,
+      "proven_optimal_on_dry": true,
+      "share_at_peak": 0.46,
+      "sites": [
+        54,
+        118,
+        275,
+        421,
+        480,
+        792
+      ],
+      "sites_shared_with_posts": 1
+    },
+    {
+      "gain_points_at_peak": 8.61,
+      "k": 7,
+      "proven_optimal_on_dry": true,
+      "share_at_peak": 0.4819,
+      "sites": [
+        54,
+        94,
+        118,
+        275,
+        421,
+        480,
+        792
+      ],
+      "sites_shared_with_posts": 1
+    },
+    {
+      "gain_points_at_peak": 9.41,
+      "k": 8,
+      "proven_optimal_on_dry": true,
+      "share_at_peak": 0.4898,
+      "sites": [
+        54,
+        94,
+        116,
+        275,
+        421,
+        480,
+        519,
+        792
+      ],
+      "sites_shared_with_posts": 1
+    },
+    {
+      "gain_points_at_peak": 9.77,
+      "k": 9,
+      "proven_optimal_on_dry": true,
+      "share_at_peak": 0.4935,
+      "sites": [
+        54,
+        94,
+        116,
+        275,
+        421,
+        449,
+        480,
+        519,
+        792
+      ],
+      "sites_shared_with_posts": 1
+    },
+    {
+      "gain_points_at_peak": 10.02,
+      "k": 10,
+      "proven_optimal_on_dry": true,
+      "share_at_peak": 0.4959,
+      "sites": [
+        54,
+        94,
+        116,
+        200,
+        275,
+        421,
+        449,
+        480,
+        519,
+        792
+      ],
+      "sites_shared_with_posts": 0
+    }
+  ],
+  "dry_share": 0.7177,
+  "input_digests": [],
+  "matrix_nnz": 10959,
+  "peak_loss_points": 32.2,
+  "post_meaning": "additional ambulance posted for the peak window (upper bound on repositioning the existing fleet; A-15)",
+  "posts": [
+    {
+      "gain_points": 2.89,
+      "greedy_share": 0.4246,
+      "k": 1,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "recovers_share_of_peak_loss": 0.0898,
+      "seconds": 0.96,
+      "share": 0.4246,
+      "sites": [
+        138
+      ]
+    },
+    {
+      "gain_points": 5.58,
+      "greedy_share": 0.4515,
+      "k": 2,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "recovers_share_of_peak_loss": 0.1733,
+      "seconds": 0.129,
+      "share": 0.4515,
+      "sites": [
+        25,
+        138
+      ]
+    },
+    {
+      "gain_points": 7.9,
+      "greedy_share": 0.4723,
+      "k": 3,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "recovers_share_of_peak_loss": 0.2455,
+      "seconds": 0.126,
+      "share": 0.4748,
+      "sites": [
+        93,
+        138,
+        325
+      ]
+    },
+    {
+      "gain_points": 9.6,
+      "greedy_share": 0.4888,
+      "k": 4,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "recovers_share_of_peak_loss": 0.2981,
+      "seconds": 0.123,
+      "share": 0.4917,
+      "sites": [
+        93,
+        126,
+        138,
+        325
+      ]
+    },
+    {
+      "gain_points": 10.98,
+      "greedy_share": 0.5036,
+      "k": 5,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "recovers_share_of_peak_loss": 0.3411,
+      "seconds": 0.133,
+      "share": 0.5055,
+      "sites": [
+        93,
+        138,
+        327,
+        480,
+        699
+      ]
+    },
+    {
+      "gain_points": 12.26,
+      "greedy_share": 0.5164,
+      "k": 6,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "recovers_share_of_peak_loss": 0.3806,
+      "seconds": 0.124,
+      "share": 0.5183,
+      "sites": [
+        93,
+        138,
+        327,
+        472,
+        480,
+        699
+      ]
+    },
+    {
+      "gain_points": 13.5,
+      "greedy_share": 0.5288,
+      "k": 7,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "recovers_share_of_peak_loss": 0.4192,
+      "seconds": 0.127,
+      "share": 0.5307,
+      "sites": [
+        93,
+        138,
+        327,
+        408,
+        472,
+        480,
+        699
+      ]
+    },
+    {
+      "gain_points": 14.73,
+      "greedy_share": 0.5411,
+      "k": 8,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "recovers_share_of_peak_loss": 0.4574,
+      "seconds": 0.137,
+      "share": 0.543,
+      "sites": [
+        56,
+        93,
+        138,
+        327,
+        408,
+        472,
+        480,
+        699
+      ]
+    },
+    {
+      "gain_points": 15.8,
+      "greedy_share": 0.5529,
+      "k": 9,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "recovers_share_of_peak_loss": 0.4907,
+      "seconds": 0.237,
+      "share": 0.5537,
+      "sites": [
+        56,
+        93,
+        138,
+        327,
+        408,
+        472,
+        480,
+        677,
+        699
+      ]
+    },
+    {
+      "gain_points": 16.87,
+      "greedy_share": 0.5637,
+      "k": 10,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "recovers_share_of_peak_loss": 0.5238,
+      "seconds": 0.279,
+      "share": 0.5644,
+      "sites": [
+        4,
+        56,
+        92,
+        138,
+        161,
+        325,
+        408,
+        472,
+        677,
+        699
+      ]
+    }
+  ],
+  "publication_basis": "waived",
+  "run_id": "542a06794acecb85",
+  "scenario": "peak",
+  "seconds": 11.0,
+  "seed": null,
+  "service": "ems",
+  "stations": [
+    {
+      "gain_points": 2.89,
+      "greedy_share": 0.4246,
+      "k": 1,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "recovers_share_of_peak_loss": 0.0898,
+      "seconds": 0.71,
+      "share": 0.4246,
+      "sites": [
+        138
+      ]
+    },
+    {
+      "gain_points": 5.58,
+      "greedy_share": 0.4515,
+      "k": 2,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "recovers_share_of_peak_loss": 0.1733,
+      "seconds": 0.086,
+      "share": 0.4515,
+      "sites": [
+        25,
+        138
+      ]
+    },
+    {
+      "gain_points": 7.9,
+      "greedy_share": 0.4723,
+      "k": 3,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "recovers_share_of_peak_loss": 0.2455,
+      "seconds": 0.075,
+      "share": 0.4748,
+      "sites": [
+        93,
+        138,
+        325
+      ]
+    },
+    {
+      "gain_points": 9.6,
+      "greedy_share": 0.4888,
+      "k": 4,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "recovers_share_of_peak_loss": 0.2981,
+      "seconds": 0.079,
+      "share": 0.4917,
+      "sites": [
+        93,
+        126,
+        138,
+        325
+      ]
+    },
+    {
+      "gain_points": 10.98,
+      "greedy_share": 0.5036,
+      "k": 5,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "recovers_share_of_peak_loss": 0.3411,
+      "seconds": 0.078,
+      "share": 0.5055,
+      "sites": [
+        93,
+        138,
+        327,
+        480,
+        699
+      ]
+    },
+    {
+      "gain_points": 12.22,
+      "greedy_share": 0.5161,
+      "k": 6,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "recovers_share_of_peak_loss": 0.3796,
+      "seconds": 0.076,
+      "share": 0.518,
+      "sites": [
+        93,
+        138,
+        327,
+        408,
+        480,
+        699
+      ]
+    },
+    {
+      "gain_points": 13.45,
+      "greedy_share": 0.5284,
+      "k": 7,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "recovers_share_of_peak_loss": 0.4178,
+      "seconds": 0.079,
+      "share": 0.5303,
+      "sites": [
+        56,
+        93,
+        138,
+        327,
+        408,
+        480,
+        699
+      ]
+    },
+    {
+      "gain_points": 14.67,
+      "greedy_share": 0.5406,
+      "k": 8,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "recovers_share_of_peak_loss": 0.4557,
+      "seconds": 0.108,
+      "share": 0.5425,
+      "sites": [
+        56,
+        93,
+        138,
+        327,
+        404,
+        408,
+        480,
+        699
+      ]
+    },
+    {
+      "gain_points": 15.74,
+      "greedy_share": 0.5524,
+      "k": 9,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "recovers_share_of_peak_loss": 0.4888,
+      "seconds": 0.181,
+      "share": 0.5531,
+      "sites": [
+        4,
+        56,
+        92,
+        138,
+        161,
+        325,
+        404,
+        408,
+        699
+      ]
+    },
+    {
+      "gain_points": 16.78,
+      "greedy_share": 0.5624,
+      "k": 10,
+      "optimality": "proven optimal",
+      "proven_gap": 0.0,
+      "proven_optimal": true,
+      "recovers_share_of_peak_loss": 0.5213,
+      "seconds": 0.107,
+      "share": 0.5636,
+      "sites": [
+        25,
+        56,
+        86,
+        138,
+        161,
+        335,
+        404,
+        408,
+        480,
+        699
+      ]
+    }
+  ],
+  "stations_signature": "f98b313a5600a358",
+  "travel_budget_s": 300,
+  "waiver": {
+    "accepted_by": "Ilangkumaran Yogamani / Kalyan Ram",
+    "closes_when": "The 15 identity-confirmation emails are answered, or the stations are visited. Addresses are in data/interim/station_survey_worklist.csv; the procedure is in docs/station-survey.md. Either route replaces this waiver with evidence.",
+    "date": "2026-09-10",
+    "reason": "Coursework submission timeline. The station survey is outstanding and is not expected to complete before the report is due, so results are published on the positions currently held rather than withheld entirely.",
+    "rests_on": "34 of 39 station positions are Google Maps business listings adopted in E-11c, not surveyed coordinates -- 29 from the GCC list plus the 5 map-listed stations of the 6 the TNFRS directory adds (ADR-001a). 14 of those 34 have a confirmed identity (an official TNFRS landline or CUG mobile matching the listing, or an OSM fire feature within 150 m). The remaining 20 are named and categorised as fire stations but are corroborated by nothing independent; 15 of them carry the identity question the uncertainty draw is built on. 3 are ambiguous between two candidate listings and 1 (Athipattu) is contested.",
+    "review_by": "2026-12-01",
+    "stations_total": 39,
+    "stations_unsurveyed": 34,
+    "uncertainty": {
+      "if_unconfirmed_listings_correct_points": 1.1,
+      "if_unconfirmed_listings_wrong_points": 8.55,
+      "note": "Re-measured 2026-09-13 against the 39-station inventory (ADR-001a), which widened both ends: 0.87 -> 1.10 and 8.05 -> 8.55. Six stations TNFRS operates inside the corporation were added, five of them on map listings rather than surveys, so there is more position uncertainty in the draw and not less. The optimistic end also stopped charging those six a flat 60 m -- they are map listings, and are now drawn at the 50 m their own evidence supports (F-32), which is why it reads 1.10 and not 1.11. At the wider figure almost every effect this project has measured sits inside the noise -- the emergency multiplier at 7.8 points, the junction term at 6.2, the equity cost at k=10 at 6.3, the wading factor at 5.6, maximin siting at 3.4, A-07's risk multipliers at 2.4, the flood closure depth at 1.3, the candidate lattice at 0.8. Exactly one clears it: the +/-20% class-speed band at 21.3 points. A coverage figure published under this waiver may not be quoted at the narrow interval alone.\n"
+    }
+  }
+}

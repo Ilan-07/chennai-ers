@@ -87,6 +87,26 @@ result was proven or merely the best found before a time limit; here it reports
 "no other placement of this many stations does better — proven, not estimated",
 and prints the coordinates.*
 
+**Peak hour wants its own plan, not more buildings.** Solved exactly on the peak
+network, extra ambulances posted at the roadside for the peak window buy far more
+than the dry-day station plan does at the same hour — and the two share almost no
+sites:
+
+| ambulances | peak posts | dry-day plan, scored at peak |
+|---|---|---|
+| 0 (today) | 39.57% | 39.57% |
+| 3 | 47.48% | 42.29% |
+| 10 | 56.44% | 49.59% |
+
+Every run proven optimal. The station-position interval (±1.10, or ±8.55 if the
+unconfirmed listings are wrong) applies to each figure as it does everywhere else.
+
+Ten posts recover 52% of what peak hour takes. Letting a post stand anywhere on
+the road lattice, rather than only on a buildable parcel, is worth at most 0.1
+points: the gain comes from **when** the ambulance is positioned, not from where
+it is allowed to be. Each post is an *extra* ambulance (A-15), so this is an upper
+bound on repositioning the existing fleet. [ADR-012](docs/adr/012-peak-hour-staging.md).
+
 **Equity costs something, and the amount is measurable.** No siting of fewer than
 **7** stations can give every ward non-zero coverage — that is a proven
 structural bound, not an estimate. At k=10, maximising the worst ward instead of
@@ -162,6 +182,7 @@ is a reading aid.
 | 12b | `flood_extent_report.py` | which flood scenarios each study area may honestly be asked | 10 s |
 | 14 | `equity_curve.py`, `frontier.py` | ward-equity cost of siting | 4 min |
 | 15 | `optimise_robust.py` | siting against a scenario distribution | 2 min |
+| 15b | `stage.py` | peak-hour ambulance posts vs the dry-day plan, k = 1–10 | 15 s |
 | E-11 | `sensitivity_stations.py`, `prioritise_survey.py` | positional noise floor, survey order | 25 min |
 | 17–18 | `export_*.py`, `ui/build_console.sh` | the offline single-file console | 1 min |
 | 19 | `ers.api`, `ui/` | FastAPI service + React/Leaflet console (`make ui && make api`) | 10 s |
@@ -238,6 +259,11 @@ cached fixture, so the console cannot disagree with the pipeline.
   drawn while placing, so you aim at a site rather than a street — and the snap
   distance is reported. *Show what they reach* gives each placed station everyone
   it reaches and, separately, everyone it reaches **who is not already covered**.
+- **Post ambulances for peak hour.** Ambulance only: switch *Add stations* to
+  *Peak-hour posts* to site extra crews on the peak network, with the curve of
+  what each number of posts buys against the dry-day plan.
+- **Pick a row to find it.** The worst-areas table and the proposed-site list
+  fly the map to what they name.
 - **Click any cell** for its time today, who reaches it first, and — if a
   proposed station would cover it — what changes.
 - **Export** the current view as CSV, carrying the run id, the publication basis

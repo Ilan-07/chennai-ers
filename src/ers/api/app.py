@@ -223,6 +223,29 @@ def candidates(svc: Service, b: Dep) -> dict:
     return {"service": svc, "candidates": _service(b, svc)["candidates"]}
 
 
+Mode: TypeAlias = Literal["station", "staging"]
+
+
+def _siting_space(b: Bundle, svc: str, scen: str, mode: str):
+    """The coverage matrix and candidate list a siting question is asked over.
+
+    Stations and posts are DIFFERENT candidate sets with different index spaces:
+    a station needs a land-feasible parcel, a peak-hour post needs a kerb. Every
+    route that takes candidate ids goes through here, so an id can never be read
+    against the other mode's table.
+    """
+    if mode == "station":
+        return b.coverage_matrix(svc, scen), _service(b, svc)["candidates"]
+    st = b.staging(svc)
+    if st is None:
+        raise HTTPException(404, f"no staging result for {svc} in this build; "
+                                 f"run: make data/interim/staging_{svc}.json")
+    if scen != st["scenario"]:
+        raise HTTPException(422, f"posts are solved on the {st['scenario']!r} network "
+                                 f"only, not {scen!r}")
+    return st["matrix"], st["candidate_positions"]
+
+
 # ----------------------------------------------------------------- coverage
 
 @app.get("/api/coverage/{svc}", tags=["coverage"])
@@ -300,7 +323,8 @@ def nearest(svc: Service, b: Dep, scenario: str = "dry") -> dict:
 
 
 @app.get("/api/reach/{svc}", tags=["coverage"])
-def reach(svc: Service, b: Dep, sites: str, scenario: str = "dry") -> dict:
+def reach(svc: Service, b: Dep, sites: str, scenario: str = "dry",
+          mode: Mode = "station") -> dict:
     """What a hand-placed station would actually reach, per station.
 
     Placing a site by hand and pressing solve answers "how much does the whole
@@ -323,7 +347,7 @@ def reach(svc: Service, b: Dep, sites: str, scenario: str = "dry") -> dict:
         want = [int(x) for x in sites.split(",") if x.strip()]
     except ValueError:
         raise HTTPException(422, f"sites must be comma-separated integers: {sites!r}")
-    M = b.coverage_matrix(svc, scenario)
+    M, cand = _siting_space(b, svc, scenario, mode)
     n_cand = M.shape[1]
     bad = [j for j in want if not 0 <= j < n_cand]
     if bad:
@@ -331,7 +355,6 @@ def reach(svc: Service, b: Dep, sites: str, scenario: str = "dry") -> dict:
 
     pre = b.precovered(svc, scenario)
     demand = np.asarray(b.ui["cells"]["pop"], dtype="float64")
-    cand = b.service(svc)["candidates"]
     budget = float(b.service(svc)["budget_s"])
 
     col = M.tocsc()
@@ -355,7 +378,7 @@ def reach(svc: Service, b: Dep, sites: str, scenario: str = "dry") -> dict:
     combined_new = union & ~pre
     overlap = sum(r["demand"] for r in out) - float(demand[union].sum())
     return {
-        "service": svc, "scenario": scenario,
+        "service": svc, "scenario": scenario, "mode": mode,
         "budget_s": budget,
         "at_service_budget": True,
         "note": (f"Reach is measured at the {svc.upper()} service budget of "
@@ -387,6 +410,9 @@ class OptimiseRequest(BaseModel):
     forbidden: list[int] = Field(default_factory=list,
                                  description="candidate ids the optimiser may not use")
     exact_solve: bool = Field(True, description="also run the exact MIP for a proven bound")
+    mode: Mode = Field("station", description="'station' sites buildings on land-feasible "
+                                              "parcels; 'staging' sites peak-hour ambulance "
+                                              "posts anywhere on the road lattice")
 
 
 @app.post("/api/optimise", tags=["siting"])
@@ -404,7 +430,7 @@ def optimise(req: OptimiseRequest, b: Dep) -> dict:
     if req.profile != b.profile:
         b = bundle(req.profile)
     _scenario(b, svc, scen)
-    M = b.coverage_matrix(svc, scen)
+    M, cand = _siting_space(b, svc, scen, req.mode)
     demand = b.demand[svc]
     total = float(demand.sum())
     n_cand = M.shape[1]
@@ -436,7 +462,7 @@ def optimise(req: OptimiseRequest, b: Dep) -> dict:
     t0 = time.time()
     gs = greedy.solve(prob)
     out: dict = {
-        "service": svc, "scenario": scen, "k": req.k,
+        "service": svc, "scenario": scen, "k": req.k, "mode": req.mode,
         "baseline_share": round(base_share, 4),
         "with_manual_share": round(manual_share, 4),
         "forced": req.forced,
@@ -463,8 +489,7 @@ def optimise(req: OptimiseRequest, b: Dep) -> dict:
             (ex.objective - gs.objective) / max(ex.objective, 1e-9), 5)
 
     sites = out.get("exact", out["greedy"])["sites"]
-    cand = _service(b, svc)["candidates"]
-    out["site_positions"] = [cand[j] for j in sites]
+    out["site_positions"] = [{"lat": cand[j]["lat"], "lon": cand[j]["lon"]} for j in sites]
 
     # Which cells the chosen sites actually add. Without this the console can
     # report a share that went up and show a map that did not move, which is the
@@ -489,6 +514,29 @@ def shipped_siting(svc: Service, b: Dep) -> dict:
     return {"service": svc, "exact_by_k": _service(b, svc)["exact"]}
 
 
+@app.get("/api/staging/{svc}", tags=["siting"])
+def staging(svc: Service, b: Dep) -> dict:
+    """Step 15b: peak-hour ambulance posts, k = 1..10, against what step 11 buys.
+
+    Three curves on the same network. `posts` may use any road-lattice site;
+    `stations` only land-feasible ones; `dry_plan_at_peak` is the dry-day station
+    plan scored at peak. The gap between the first and the third is what a
+    time-of-day plan is worth; the gap between the first two is what dropping the
+    parcel requirement is worth -- and the build shows it is nearly nothing.
+    """
+    st = b.staging(svc)
+    if st is None:
+        raise HTTPException(404, f"no staging result for {svc}; "
+                                 f"run: make data/interim/staging_{svc}.json")
+    keep = ("service", "scenario", "travel_budget_s", "post_meaning", "baseline_share",
+            "dry_share", "peak_loss_points", "candidates", "candidates_land_feasible",
+            "all_runs_proven_optimal", "posts", "stations", "dry_plan_at_peak",
+            "run_id", "publication_basis")
+    return {**{k: st[k] for k in keep if k in st},
+            "candidate_positions": [{"lat": p["lat"], "lon": p["lon"]}
+                                    for p in st["candidate_positions"]]}
+
+
 @app.get("/api/robust/{svc}", tags=["siting"])
 def robust(svc: Service, b: Dep) -> dict:
     """Step 15: siting against the scenario distribution rather than one network."""
@@ -507,10 +555,13 @@ def export_csv(
     scenario: str = "dry",
     threshold_s: Annotated[int | None, Query(ge=60, le=1800)] = None,
     sites: Annotated[str, Query(description="comma-separated candidate ids")] = "",
+    mode: Mode = "station",
 ) -> StreamingResponse:
     """The export brief: what was asked, what it rests on, and what it claims."""
     cov = coverage(svc, b, scenario=scenario, threshold_s=threshold_s)
-    cand = _service(b, svc)["candidates"]
+    chosen_any = any(s.strip() for s in sites.split(","))
+    cand = (_siting_space(b, svc, scenario, mode)[1] if chosen_any
+            else _service(b, svc)["candidates"])
     chosen = [int(s) for s in sites.split(",") if s.strip().isdigit()]
 
     buf = io.StringIO()
@@ -531,6 +582,8 @@ def export_csv(
     w.writerow(["uncertainty_points_if_listings_wrong",
                 unc["if_unconfirmed_wrong"]["spread_points"]])
     w.writerow([])
+    w.writerow(["proposed_site_kind", "peak-hour ambulance post" if mode == "staging"
+                else "station"])
     w.writerow(["proposed_site_id", "lat", "lon"])
     for j in chosen:
         if 0 <= j < len(cand):

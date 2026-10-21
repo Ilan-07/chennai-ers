@@ -171,6 +171,16 @@ class Bundle:
         budget = float(self.service(svc)["budget_s"])
         return (resp >= 0) & (resp <= budget)
 
+    def staging(self, svc: str) -> dict | None:
+        """Step 15b's peak-hour posts, or None where the build has none.
+
+        Posts live in their OWN candidate index space -- every point on the road
+        lattice, not only the land-feasible sites the console's station matrix
+        is sliced to -- so their matrix is loaded from the staging artefact and
+        never mixed with `coverage_matrix`.
+        """
+        return _load_staging(str(profile_dir(self.root, self.profile)), svc)
+
     def report(self, name: str) -> dict:
         p = profile_dir(self.root, self.profile) / f"{name}.json"
         if not p.exists():
@@ -253,6 +263,21 @@ class Bundle:
     @property
     def total_demand(self) -> dict[str, float]:
         return {s: float(self.demand[s].sum()) for s in SERVICES}
+
+
+def _load_staging(interim: str, svc: str) -> dict | None:
+    f = Path(interim) / f"staging_{svc}.json"
+    if not f.exists():
+        return None
+    return _load_staging_at(str(f), f.stat().st_mtime)
+
+
+@lru_cache(maxsize=4)
+def _load_staging_at(path: str, stamp: float) -> dict:
+    rep = json.loads(Path(path).read_text())
+    m = Path(path).with_name(f"staging_{rep['service']}_{rep['scenario']}.npz")
+    rep["matrix"] = sparse.load_npz(m).tocsr()
+    return rep
 
 
 @lru_cache(maxsize=8)

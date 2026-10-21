@@ -171,6 +171,11 @@ $(I)/equity_curve_%.json: scripts/equity_curve.py $(I)/optimise_%.json
 $(I)/robust_%_k10.json: scripts/optimise_robust.py $(I)/candidates.parquet $(I)/degradation_report.json
 	$(PY) scripts/optimise_robust.py $* 10
 
+# Step 15b, ~15 s. Ambulances only: a fire engine is not staged at a kerb.
+$(I)/staging_ems.json: scripts/stage.py $(I)/candidates.parquet $(I)/demand_cells.parquet \
+                       $(I)/stations_resolved.csv $(wildcard config/scenarios/*.yml)
+	$(PY) scripts/stage.py ems
+
 # 9.1 h before the incremental-min rewrite; ~20 min after.
 $(I)/survey_priority.json: scripts/prioritise_survey.py $(I)/stations_resolved.csv $(I)/coverage_ems.npz
 	$(PY) scripts/prioritise_survey.py
@@ -221,6 +226,7 @@ all: coverage $(I)/degradation_report.json $(I)/routing_validation.json \
      $(foreach s,$(SERVICES),$(I)/frontier_$(s).json) \
      $(foreach s,$(SERVICES),$(I)/equity_curve_$(s).json) \
      $(foreach s,$(SERVICES),$(I)/robust_$(s)_k10.json) \
+     $(I)/staging_ems.json \
      $(foreach s,$(SERVICES),$(I)/sensitivity_mixed_$(s).json) \
      $(I)/survey_priority.json $(I)/console.html
 	$(MAKE) gate
