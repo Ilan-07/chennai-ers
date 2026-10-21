@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { api, fmtMin } from "./api.js";
-import MapView, { BANDS, GAINED, REACH } from "./components/MapView.jsx";
+import MapView, { BANDS, GAINED, LOST, REACH, STATION_SOURCES, stationSource }
+  from "./components/MapView.jsx";
 
 // How far a click may be from a buildable site before it is refused. Candidates
 // sit on an 800 m lattice (A-12) and the worst in-city gap to one is ~2.2 km, so
@@ -46,6 +47,9 @@ export default function App() {
   // candidate tables with two index spaces -- every id below is read against
   // the table of the current mode, never the other one.
   const [mode, setMode] = useState("station");
+  // Paint only what the current road condition takes from a dry day.
+  const [comparing, setComparing] = useState(false);
+  const [comparison, setComparison] = useState(null);
   const [staging, setStaging] = useState(null);
   const [scenarioShares, setScenarioShares] = useState({});
   const [scenariosLoading, setScenariosLoading] = useState(false);
@@ -111,6 +115,29 @@ export default function App() {
   useEffect(() => {
     setResult(null);
   }, [scenario]);
+
+  // The compare view has nothing to compare on a dry day, and it answers one
+  // question at one clock: it is refetched whenever either moves.
+  useEffect(() => {
+    if (scenario === "dry") { setComparing(false); setComparison(null); return; }
+    if (!comparing || !meta) { setComparison(null); return; }
+    let live = true;
+    api.compare(service, scenario, thresholdS, profile)
+      .then((c) => live && setComparison(c))
+      .catch((e) => live && setError(String(e)));
+    return () => { live = false; };
+  }, [comparing, scenario, service, thresholdS, profile, meta]);
+
+  const lostCells = useMemo(
+    () => (comparing && comparison ? new Set(comparison.lost_cells) : null),
+    [comparing, comparison]);
+
+  // Which station sources this inventory actually has, for the key.
+  const stationKinds = useMemo(() => {
+    if (!stations) return [];
+    const seen = new Set(stations.map((s) => stationSource(s).key));
+    return STATION_SOURCES.filter((k) => seen.has(k.key));
+  }, [stations]);
 
   // Posts are solved on one network. Leaving it leaves posting mode, rather
   // than solving posts against a road state they were never measured on.
@@ -430,6 +457,7 @@ export default function App() {
           stations={stations}
           sites={sites}
           focus={focus}
+          lost={lostCells}
           layers={layers}
           placing={placing}
           onMapClick={onMapClick}
@@ -449,6 +477,7 @@ export default function App() {
           forced={forced} clearForced={() => setForced([])}
           onShowReach={showReach} reaching={reaching} reach={reach}
           mode={mode} setMode={chooseMode} staging={staging}
+          comparing={comparing} setComparing={setComparing}
           scenarioShares={scenarioShares} scenariosLoading={scenariosLoading}
           exportHref={api.exportUrl(
             service, scenario, thresholdS,
@@ -517,6 +546,26 @@ export default function App() {
             isochrone key, and "no route" and the projections sit apart from it,
             which is what they are: not a worse time, a different kind of fact. */}
         <div className="legend" aria-label="Map key">
+          {lostCells ? (
+            <>
+              <span className="swatch">
+                <i style={{ background: LOST.colour }} />
+                Taken by {(SCENARIO_LABEL[scenario] ?? scenario).toLowerCase()}
+                {comparison && (
+                  <b className="legend-n">{Math.round(comparison.lost_demand).toLocaleString("en-IN")}</b>
+                )}
+              </span>
+              <span className="swatch">
+                <i style={{ background: BANDS[0].colour, opacity: 0.55 }} />
+                Still in time
+              </span>
+              <span className="swatch">
+                <i style={{ background: "#5d6b76", opacity: 0.6 }} />
+                Late either way
+              </span>
+            </>
+          ) : (
+          <>
           <span className="ramp">
             <span className="ramp-bar">
               {BANDS.slice(0, 4).map((b) => (
@@ -535,13 +584,26 @@ export default function App() {
             <i style={{ background: BANDS[4].colour }} />
             {BANDS[4].label}
           </span>
-          {gained && (
+          </>
+          )}
+          {stationKinds.length > 0 && layers.stations && (
+            <span className="swatch stations-key" title="How each station's position was established">
+              {stationKinds.map((k) => (
+                <span key={k.key} className="st-kind">
+                  <i className="st-dot" style={{ background: k.fill }} />
+                  {k.key === "listing" ? "Listed" : k.key === "mapped" ? "Mapped" : "Surveyed"}
+                </span>
+              ))}
+              <span className="st-label">stations</span>
+            </span>
+          )}
+          {gained && !lostCells && (
             <span className="swatch">
               <i style={{ background: GAINED.colour }} />
               {GAINED.label}
             </span>
           )}
-          {reachCells && (
+          {reachCells && !lostCells && (
             <span className="swatch">
               <i style={{ background: REACH.colour }} />
               {REACH.label}

@@ -309,6 +309,49 @@ def coverage(
     }
 
 
+@app.get("/api/compare/{svc}", tags=["coverage"])
+def compare(
+    svc: Service,
+    b: Dep,
+    scenario: str,
+    base: str = "dry",
+    threshold_s: Annotated[int | None, Query(ge=60, le=1800)] = None,
+) -> dict:
+    """Which cells a road condition takes out of the standard, against a base.
+
+    The rail ranks every road state by one number, and the map paints one state
+    at a time, so the question a planner asks next -- WHERE does peak hour cost
+    us -- could only be answered by flicking between two maps and remembering
+    the first. This answers it directly: the cells inside the clock on the base
+    network and outside it on this one, and how many people live in them.
+
+    Same routed times as /api/coverage, cut at the same threshold; nothing is
+    re-routed. A condition can only remove or slow links, so `gained` is
+    expected empty, and is reported rather than assumed.
+    """
+    _scenario(b, svc, scenario)
+    _scenario(b, svc, base)
+    budget = float(_service(b, svc)["budget_s"])
+    thr = float(threshold_s if threshold_s is not None else budget)
+    demand = b.demand[svc]
+
+    def inside(scen: str) -> np.ndarray:
+        r = b.response_s(svc, scen)
+        return (r >= 0) & (r <= thr)
+
+    now, then = inside(scenario), inside(base)
+    lost, gained = then & ~now, now & ~then
+    return {
+        "service": svc, "scenario": scenario, "base": base, "threshold_s": thr,
+        "lost_cells": [int(i) for i in np.flatnonzero(lost)],
+        "gained_cells": [int(i) for i in np.flatnonzero(gained)],
+        "lost_demand": round(float(demand[lost].sum()), 1),
+        "gained_demand": round(float(demand[gained].sum()), 1),
+        "kept_demand": round(float(demand[now & then].sum()), 1),
+        "total_demand": round(float(demand.sum()), 1),
+    }
+
+
 @app.get("/api/nearest/{svc}", tags=["coverage"])
 def nearest(svc: Service, b: Dep, scenario: str = "dry") -> dict:
     """Which existing stations reach each cell first, and in how long.

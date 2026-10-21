@@ -1253,3 +1253,88 @@ tbody tr.row-link.selected td:first-child { box-shadow: inset 2px 0 0 var(--focu
 .curve-tip b { color: var(--text); font-weight: 600; }
 .curve-tip span { display: inline-flex; align-items: center; gap: 6px; font-variant-numeric: tabular-nums; }
 .curve-tip i { width: 8px; height: 8px; border-radius: 2px; }
+
+/* -------------------------------------------------------- compare view */
+
+.compare-btn { margin-top: 10px; }
+.compare-btn[aria-pressed="true"] {
+  border-color: rgba(224, 86, 107, 0.55);
+  background: rgba(224, 86, 107, 0.12);
+}
+
+.legend-n {
+  margin-left: 6px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+/* A reference note folded inside a fold: quieter than a section heading. */
+.subfold { margin-top: 10px; }
+.subfold > summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 11.5px;
+  color: var(--text-3);
+}
+.subfold > summary::-webkit-details-marker { display: none; }
+.subfold > summary::before { content: "+ "; color: var(--text-3); }
+.subfold[open] > summary::before { content: "− "; }
+.subfold > summary:hover { color: var(--text-2); }
+.subfold > summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* Station key: certainty as fill, the same encoding the markers use. */
+.legend .stations-key { gap: 10px; }
+.legend .st-kind { display: inline-flex; align-items: center; gap: 5px; }
+.legend .st-dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  box-shadow: 0 0 0 1.5px #ffffff;
+}
+.legend .st-label { color: var(--text-3); }
+
+/* ---------------------------------------------------- phone and tablet */
+
+/* Below the breakpoint the page is ONE scroll. The rail and readout used to be
+ * capped at 42vh with their own scrollbars inside a page that also scrolled,
+ * so a thumb on a panel moved the panel and a thumb beside it moved the page.
+ * Now the order is the reading order: the map, its key, what it says, then
+ * the controls that change it. */
+@media (max-width: 1080px) {
+  .stage { overscroll-behavior: contain; }
+  .map { order: 1; height: 56vh; min-height: 320px; }
+  .legend { order: 2; }
+  .picked { order: 3; width: auto; }
+  .readout { order: 4; }
+  .rail { order: 5; }
+  .rail, .readout {
+    max-height: none;
+    overflow: visible;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--ink-2);
+  }
+
+  /* Overlays cover the screen, not the top of a scrolled column. */
+  .brief-scrim { position: fixed; z-index: 1200; padding: 14px; }
+  .brief { max-height: calc(100dvh - 28px); }
+}
+
+@media (max-width: 560px) {
+  .topbar { padding: 8px 12px; row-gap: 6px; }
+  .wordmark { flex-direction: row; align-items: baseline; gap: 8px; }
+  .wordmark .where { display: none; }
+  /* One row that scrolls sideways rather than three stacked rows of chrome
+     taking a quarter of the screen before the map begins. */
+  .topbar-right {
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    gap: 6px;
+  }
+  .topbar-right::-webkit-scrollbar { display: none; }
+  .topbar-right .about { flex: none; padding: 5px 9px; }
+  .seg.topseg { flex: none; }
+  .map { height: 50vh; }
+  .legend .stations-key { flex-wrap: wrap; justify-content: center; }
+}

@@ -31,6 +31,34 @@ export const GAINED = { label: "Gained", colour: "#4aa8e8" };
 // apart at a glance.
 export const REACH = { label: "Your station reaches", colour: "#b07ae0" };
 
+// Cells a road condition takes out of the standard, in the compare view. The
+// band red, because it is the same fact the red already means -- people left
+// outside the clock -- narrowed to the ones this condition put there.
+export const LOST = { colour: "#e0566b" };
+
+// How each station's position was established. Solid is a mapped feature,
+// hollow is a business listing that may name the wrong station (E-11g): the
+// certainty is drawn as fill rather than hue so it never competes with the
+// coverage ramp underneath.
+export const STATION_SOURCES = [
+  { key: "surveyed", label: "Surveyed", fill: "#ffffff" },
+  { key: "mapped", label: "Mapped in OpenStreetMap", fill: "#c9d6e0" },
+  { key: "listing", label: "Google Maps listing", fill: "#0c1319" },
+];
+
+export function stationSource(s) {
+  if (s.conf === "surveyed") return STATION_SOURCES[0];
+  if (String(s.conf).startsWith("osm")) return STATION_SOURCES[1];
+  return STATION_SOURCES[2];
+}
+
+// Module-level on purpose: MarkerLayer rebuilds its markers whenever these
+// change identity, and as inline arrows they changed on every render -- every
+// tick of the threshold slider tore down and re-created all 39 stations.
+const stationFill = (s) => stationSource(s).fill;
+const stationPopup = (s) =>
+  `<b>${s.name}</b><br/>Position: ${stationSource(s).label}`;
+
 export function bandOf(resp, thresholdS) {
   if (resp < 0) return 4;
   if (resp <= thresholdS) return 0;
@@ -40,7 +68,7 @@ export function bandOf(resp, thresholdS) {
 }
 
 function CoverageLayer({ cells, hex, response, thresholdS, gained, reachCells,
-                        visible }) {
+                        lost, visible }) {
   const map = useMap();
   const layerRef = useRef(null);
   const polysRef = useRef([]);
@@ -78,8 +106,24 @@ function CoverageLayer({ cells, hex, response, thresholdS, gained, reachCells,
   useEffect(() => {
     const polys = polysRef.current;
     if (!polys.length || !response) return;
+    // Compare view: only what the condition took is drawn at strength. What it
+    // left inside the clock is a faint green, and ground outside the clock
+    // either way is nearly withdrawn -- it is not this condition's doing.
+    if (lost) {
+      for (let i = 0; i < polys.length; i++) {
+        const r = response[i];
+        const now = r >= 0 && r <= thresholdS;
+        polys[i].setStyle(lost.has(i)
+          ? { fillColor: LOST.colour, fillOpacity: 0.88 }
+          : now
+            ? { fillColor: BANDS[0].colour, fillOpacity: 0.3 }
+            : { fillColor: "#5d6b76", fillOpacity: 0.16 });
+      }
+      return;
+    }
     for (let i = 0; i < polys.length; i++) {
       polys[i].setStyle({
+        fillOpacity: 0.72,
         // Hand-placed reach outranks the solver's gain: when both apply, the
         // planner is looking at their own station and wants to see its work.
         fillColor: reachCells && reachCells.has(i)
@@ -89,7 +133,7 @@ function CoverageLayer({ cells, hex, response, thresholdS, gained, reachCells,
             : BANDS[bandOf(response[i], thresholdS)].colour,
       });
     }
-  }, [response, thresholdS, gained, reachCells]);
+  }, [response, thresholdS, gained, reachCells, lost]);
 
   useEffect(() => {
     const group = layerRef.current;
@@ -357,16 +401,13 @@ function ClickCapture({ enabled, onMapClick }) {
 
 export default function MapView({
   cells, hex, response, thresholdS, gained, reachCells, basemap, stations, sites,
-  candidates, focus,
+  candidates, focus, lost,
   layers, placing, onMapClick, onPickCell,
 }) {
   const wardRings = useMemo(
     () => (basemap ? Object.values(basemap.ward_rings) : null), [basemap]);
   const zoneRings = useMemo(
     () => (basemap ? Object.values(basemap.zone_rings) : null), [basemap]);
-
-  const stationColour = (s) =>
-    s.conf === "surveyed" ? "#1a9850" : s.conf === "gmaps" ? "#2c7fb8" : "#8856a7";
 
   return (
     <MapContainer
@@ -406,6 +447,7 @@ export default function MapView({
         thresholdS={thresholdS}
         gained={gained}
         reachCells={reachCells}
+        lost={lost}
         visible={layers.coverage}
       />
       <CellPicker
@@ -428,11 +470,9 @@ export default function MapView({
         points={stations}
         visible={layers.stations}
         radius={5}
-        colour={stationColour}
+        colour={stationFill}
         edge="#ffffff"
-        popup={(s) =>
-          `<b>${s.name}</b><br/>position: ${s.conf}` +
-          (s.state ? `<br/>identity: ${s.state}` : "")}
+        popup={stationPopup}
       />
       <LatticeLayer points={candidates} visible={placing} />
       <SiteLayer points={sites} visible={layers.sites} />

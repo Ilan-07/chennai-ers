@@ -98,7 +98,7 @@ export default function Controls({
   thresholdS, setThresholdS, k, setK, layers, setLayers,
   onOptimise, optimising, placing, setPlacing, forced, clearForced, exportHref,
   onShowReach, reaching, reach, scenarioShares, scenariosLoading,
-  mode, setMode, staging,
+  mode, setMode, staging, comparing, setComparing,
 }) {
   const posting = mode === "staging";
   const svc = meta?.services?.[service];
@@ -140,7 +140,20 @@ export default function Controls({
           setScenario={setScenario}
           loading={scenariosLoading}
         />
-        <FloodNote extent={meta?.flood_extent} />
+        {scenario !== "dry" && (
+          <button className="btn compare-btn" aria-pressed={comparing}
+                  onClick={() => setComparing(!comparing)}>
+            {comparing
+              ? "Back to response times"
+              : `Show what ${(SCENARIO_LABEL[scenario] ?? scenario).toLowerCase()} takes`}
+          </button>
+        )}
+        {/* The modelling note is a reference, not a step: folded so the
+            controls below it are not pushed off the first screen. */}
+        <details className="subfold">
+          <summary>How road conditions are modelled</summary>
+          <FloodNote extent={meta?.flood_extent} />
+        </details>
       </Fold>
 
       <Group title={posting ? "Post ambulances at peak" : "Add stations"}>

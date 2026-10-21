@@ -45,6 +45,10 @@ export const api = {
   // Peak-hour ambulance posts (step 15b). 404 where the build has none, which
   // the console reads as "this study area does not offer posts".
   staging: (svc, p) => get(`/api/staging/${svc}?profile=${p}`),
+  // Which cells a road condition takes out of the standard, against a base.
+  compare: (svc, scenario, thresholdS, p, base = "dry") =>
+    get(`/api/compare/${svc}?profile=${p}&scenario=${scenario}&base=${base}` +
+        `&threshold_s=${Math.round(thresholdS)}`),
   nearest: (svc, scenario, p) =>
     get(`/api/nearest/${svc}?profile=${p}&scenario=${scenario}`),
   optimise: (body) => post("/api/optimise", body),

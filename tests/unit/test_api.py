@@ -344,3 +344,18 @@ def test_every_profile_can_report_what_a_placed_site_reaches(client, profile):
     r = client.get(f"/api/reach/ems?profile={profile}&sites=0")
     assert r.status_code == 200, r.text
     assert r.json()["sites"][0]["cells"] >= 0
+
+
+def test_compare_is_the_difference_of_two_coverages(client):
+    """What a condition takes is exactly the gap between the two shares."""
+    body = client.get("/api/compare/ems?scenario=peak&base=dry").json()
+    dry = client.get("/api/coverage/ems?scenario=dry").json()
+    peak = client.get("/api/coverage/ems?scenario=peak").json()
+    net = body["gained_demand"] - body["lost_demand"]
+    assert net == pytest.approx(peak["covered_demand"] - dry["covered_demand"], abs=1.0)
+    assert body["lost_demand"] > 0
+
+
+def test_compare_against_itself_takes_nothing(client):
+    body = client.get("/api/compare/ems?scenario=dry&base=dry").json()
+    assert body["lost_cells"] == [] and body["gained_cells"] == []
