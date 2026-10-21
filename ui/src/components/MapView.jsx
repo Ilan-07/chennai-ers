@@ -34,7 +34,7 @@ export const REACH = { label: "Your station reaches", colour: "#b07ae0" };
 // Cells a road condition takes out of the standard, in the compare view. The
 // band red, because it is the same fact the red already means -- people left
 // outside the clock -- narrowed to the ones this condition put there.
-export const LOST = { colour: "#e0566b" };
+export const LOST = { colour: "#ff5a76" };
 
 // How each station's position was established. Solid is a mapped feature,
 // hollow is a business listing that may name the wrong station (E-11g): the
@@ -43,7 +43,7 @@ export const LOST = { colour: "#e0566b" };
 export const STATION_SOURCES = [
   { key: "surveyed", label: "Surveyed", fill: "#ffffff" },
   { key: "mapped", label: "Mapped in OpenStreetMap", fill: "#c9d6e0" },
-  { key: "listing", label: "Google Maps listing", fill: "#0c1319" },
+  { key: "listing", label: "Google Maps listing", fill: "#15171a" },
 ];
 
 export function stationSource(s) {
@@ -59,6 +59,26 @@ const stationFill = (s) => stationSource(s).fill;
 const stationPopup = (s) =>
   `<b>${s.name}</b><br/>Position: ${stationSource(s).label}`;
 
+// Each cell is drawn with one mean hexagon, not its own H3 ring, so the tiling
+// is not exact: hairline slivers open between neighbours and the dark ground
+// showed through them as fine diagonal hatching across the whole city. The
+// fill is pre-blended against the ground and drawn opaque, with a hairline
+// stroke in the same colour that closes the slivers.
+const GROUND = [27, 29, 32];
+const blendCache = new Map();
+function blend(hex, alpha) {
+  const q = Math.round(alpha * 40) / 40;
+  const key = hex + q;
+  let out = blendCache.get(key);
+  if (!out) {
+    const c = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+    const m = c.map((v, i) => Math.round(GROUND[i] + q * (v - GROUND[i])));
+    out = `rgb(${m[0]},${m[1]},${m[2]})`;
+    blendCache.set(key, out);
+  }
+  return out;
+}
+
 export function bandOf(resp, thresholdS) {
   if (resp < 0) return 4;
   if (resp <= thresholdS) return 0;
@@ -73,6 +93,21 @@ function CoverageLayer({ cells, hex, response, thresholdS, gained, reachCells,
   const layerRef = useRef(null);
   const polysRef = useRef([]);
 
+  // Brightness is people. A hexagon of paddy and a hexagon of Washermanpet are
+  // the same size on the map and not the same problem, so each cell's opacity
+  // rises with the square root of its population (capped at the 95th
+  // percentile, so a handful of dense cells cannot wash out the rest). Colour
+  // still says how late; brightness now says how many.
+  const alphaRef = useRef(null);
+  useEffect(() => {
+    if (!cells) return;
+    const pop = cells.pop;
+    const sorted = [...pop].sort((a, b) => a - b);
+    const p95 = Math.max(1, sorted[Math.floor(0.95 * (sorted.length - 1))]);
+    alphaRef.current = Float32Array.from(pop, (p) =>
+      0.42 + 0.5 * Math.sqrt(Math.min(1, p / p95)));
+  }, [cells]);
+
   // Build once: the geometry never changes, only the fill.
   useEffect(() => {
     if (!cells || !hex) return;
@@ -83,7 +118,9 @@ function CoverageLayer({ cells, hex, response, thresholdS, gained, reachCells,
       const lon = cells.lon[i];
       const ring = hex.map(([dx, dy]) => [lat + dy, lon + dx]);
       const p = L.polygon(ring, {
-        stroke: false,
+        stroke: true,
+        weight: 1,
+        opacity: 1,
         fillOpacity: 0.72,
         fillColor: "#6b6b6b",
         // Not interactive, and no listener: CellPicker answers the click. See
@@ -109,29 +146,31 @@ function CoverageLayer({ cells, hex, response, thresholdS, gained, reachCells,
     // Compare view: only what the condition took is drawn at strength. What it
     // left inside the clock is a faint green, and ground outside the clock
     // either way is nearly withdrawn -- it is not this condition's doing.
+    const alpha = alphaRef.current;
+    const a = (i) => (alpha ? alpha[i] : 0.72);
     if (lost) {
       for (let i = 0; i < polys.length; i++) {
         const r = response[i];
         const now = r >= 0 && r <= thresholdS;
-        polys[i].setStyle(lost.has(i)
-          ? { fillColor: LOST.colour, fillOpacity: 0.88 }
+        const c = lost.has(i)
+          ? blend(LOST.colour, Math.max(0.6, a(i)))
           : now
-            ? { fillColor: BANDS[0].colour, fillOpacity: 0.3 }
-            : { fillColor: "#5d6b76", fillOpacity: 0.16 });
+            ? blend(BANDS[0].colour, 0.32 * a(i))
+            : blend("#5c636b", 0.22);
+        polys[i].setStyle({ fillOpacity: 1, fillColor: c, color: c });
       }
       return;
     }
     for (let i = 0; i < polys.length; i++) {
-      polys[i].setStyle({
-        fillOpacity: 0.72,
-        // Hand-placed reach outranks the solver's gain: when both apply, the
-        // planner is looking at their own station and wants to see its work.
-        fillColor: reachCells && reachCells.has(i)
-          ? REACH.colour
-          : gained && gained.has(i)
-            ? GAINED.colour
-            : BANDS[bandOf(response[i], thresholdS)].colour,
-      });
+      // Hand-placed reach outranks the solver's gain: when both apply, the
+      // planner is looking at their own station and wants to see its work.
+      const base = reachCells && reachCells.has(i)
+        ? REACH.colour
+        : gained && gained.has(i)
+          ? GAINED.colour
+          : BANDS[bandOf(response[i], thresholdS)].colour;
+      const c = blend(base, a(i));
+      polys[i].setStyle({ fillOpacity: 1, fillColor: c, color: c });
     }
   }, [response, thresholdS, gained, reachCells, lost]);
 
@@ -226,7 +265,7 @@ function ScopeMask({ outline, visible }) {
       holes.push(ring.map(([lon, lat]) => [lat, lon]));
     }
     const mask = L.polygon([world, ...holes], {
-      stroke: false, fillColor: "#070d12", fillOpacity: 0.58, interactive: false,
+      stroke: false, fillColor: "#0e0f11", fillOpacity: 0.62, interactive: false,
     }).addTo(map);
     const edge = L.polygon(holes, {
       fill: false, color: "#8fb6d0", weight: 1.25, opacity: 0.5, interactive: false,
@@ -259,7 +298,13 @@ function FitToCity({ outline }) {
   useEffect(() => {
     if (!outline || !outline.length) return;
     const pts = outline.flat().map(([lon, lat]) => [lat, lon]);
-    if (pts.length) map.fitBounds(L.latLngBounds(pts), { padding: [12, 12] });
+    // Fitted into the gap the panels leave: the card owns the right edge and
+    // the clock the bottom-left, so centring on the window put the city under
+    // the card.
+    const wide = map.getContainer().clientWidth > 900;
+    if (pts.length) map.fitBounds(L.latLngBounds(pts), wide
+      ? { paddingTopLeft: [40, 24], paddingBottomRight: [380, 110] }
+      : { padding: [12, 12] });
   }, [map, outline]);
   return null;
 }
@@ -417,20 +462,12 @@ export default function MapView({
       className="map"
       zoomControl
     >
-      {/* No {s} subdomain: a., b. and c.tile.openstreetmap.org all resolve to the
-        * same Fastly address, so over HTTP/2 Chrome coalesces them onto one
-        * connection anyway -- the prefix bought no parallelism, only extra DNS
-        * lookups, and OSM's tile policy now asks callers to drop it.
-        *
-        * The other two options are about what zooming costs. OSM accepts a
-        * rapid zoom-in and then starves it: replaying a z11 -> z19 sweep (225
-        * tiles, six connections) returned every tile 200, but with stragglers
-        * at 20s, 12s and 9s against a ~60ms median. A stalled tile is not an
-        * idle one -- Leaflet keeps five ancestor levels and two child levels on
-        * screen until it loads, so every level the zoom passed through stacks
-        * up stretched underneath, which is what reads as the map glitching and
-        * sticking. updateWhenZooming stops us adding to the queue mid-animation
-        * and keepBuffer holds one ring of off-screen tiles instead of two. */}
+      {/* OpenStreetMap's standard tiles, darkened in CSS (.map .leaflet-tile-pane)
+        * rather than swapped for a hosted dark style: the hosted ones now want
+        * an API key, and a basemap that can stop rendering on someone else's
+        * billing decision is not one to build a demo on. updateWhenZooming /
+        * keepBuffer: see 7c82ee6 -- a stalled tile stacks every level a zoom
+        * passed through. */}
       <TileLayer
         url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -459,12 +496,12 @@ export default function MapView({
       <VectorLayer
         rings={wardRings}
         visible={layers.wards}
-        style={{ color: "#ffffff", weight: 1, opacity: 0.55 }}
+        style={{ color: "#eeeae2", weight: 0.8, opacity: 0.3 }}
       />
       <VectorLayer
         rings={zoneRings}
         visible={layers.zones}
-        style={{ color: "#111111", weight: 2, opacity: 0.7 }}
+        style={{ color: "#eeeae2", weight: 1.4, opacity: 0.38 }}
       />
       <MarkerLayer
         points={stations}

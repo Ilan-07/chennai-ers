@@ -9,7 +9,7 @@ import { SCENARIO_LABEL } from "./scenarios.js";
  * copy, so the brief cannot drift from the model the way the DA-1 deck did.
  */
 export default function Brief({ meta, coverage, worstWards, thresholdS,
-                                scenarioShares, onClose }) {
+                                scenarioShares, onClose, onTour }) {
   if (!meta || !coverage) return null;
 
   // The binding road state, read rather than written. The finding this project
@@ -37,7 +37,7 @@ export default function Brief({ meta, coverage, worstWards, thresholdS,
          onClick={(e) => e.stopPropagation()}>
       <button className="brief-close" onClick={onClose} aria-label="Close">×</button>
 
-      <p className="brief-kicker">Design of Smart Cities · Chennai</p>
+      <p className="brief-kicker">Design of Smart Cities, Chennai</p>
       <h2>Who can an ambulance or fire engine actually reach in time?</h2>
 
       <p className="brief-lead">
@@ -100,9 +100,16 @@ export default function Brief({ meta, coverage, worstWards, thresholdS,
         )}
       </p>
 
-      <button className="btn primary brief-go" onClick={onClose}>
-        Explore the map
-      </button>
+      <div className="brief-actions">
+        {onTour && (
+          <button className="btn primary brief-go" onClick={onTour}>
+            Take the five-step tour
+          </button>
+        )}
+        <button className="btn ghost brief-go" onClick={onClose}>
+          Explore on my own
+        </button>
+      </div>
     </div>
     </div>
   );

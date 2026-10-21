@@ -12,36 +12,48 @@
  */
 
 :root {
-  /* Ground: a true blue-slate, not a tinted black. The map's night ground. */
-  --ink:        #0c1319;
-  --ink-2:      #101a22;
-  --surface:    rgba(19, 29, 38, 0.82);
-  --surface-2:  rgba(26, 38, 49, 0.92);
-  --line:       rgba(140, 174, 200, 0.16);
-  --line-firm:  rgba(140, 174, 200, 0.30);
+  /* Ground: asphalt at night, a warm neutral rather than a tinted blue-black.
+   * The map is the brightest thing on screen; chrome is the road it sits on. */
+  --ink:        #15171a;
+  --ink-2:      #1b1e22;
+  --surface:    rgba(24, 27, 31, 0.84);
+  --surface-2:  rgba(33, 37, 42, 0.94);
+  --line:       rgba(238, 234, 226, 0.09);
+  --line-firm:  rgba(238, 234, 226, 0.18);
 
-  --text:       #e8eff5;
-  --text-2:     #a6bccd;
-  --text-3:     #6f8798;
+  /* Chalk: road-marking white and its weathered greys. */
+  --text:       #eeeae2;
+  --text-2:     #aba79e;
+  --text-3:     #75726b;
 
-  /* The isochrone ramp. These three are also the map's fill colours. */
+  /* The isochrone ramp. These are also the map's fill colours. */
   --reach:      #34a36b;
   --reach-dim:  #1d6b46;
   --edge:       #e0b13c;
   --beyond:     #d0495c;
   --gained:     #4aa8e8;
 
-  --focus:      #7cc4f5;
+  /* Siren blue: the one interactive accent -- actions, focus, posts. */
+  --siren:      #4c9aff;
+  --focus:      #4c9aff;
+  --lost:       #ff5a76;
 
-  --r-sm: 7px;
-  --r-md: 11px;
-  --r-lg: 16px;
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 18px;
 
-  --shadow: 0 1px 2px rgba(0,0,0,.36), 0 8px 28px rgba(0,0,0,.30);
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.38);
+
+  /* Archivo for the interface; its tabular figures replace a monospace for
+   * readings. Big Shoulders -- drawn from Chicago's civic signage -- only for
+   * the instrument: the clock and the figures it produces. */
+  --font-ui:  "Archivo", ui-sans-serif, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-num: "Archivo", ui-sans-serif, -apple-system, sans-serif;
+  --font-sign: "Big Shoulders Display", "Archivo", sans-serif;
 
   color-scheme: dark;
-  font-family: "IBM Plex Sans", ui-sans-serif, -apple-system, "Segoe UI", Roboto, sans-serif;
-  font-feature-settings: "tnum" 1, "cv05" 1;
+  font-family: var(--font-ui);
+  font-feature-settings: "tnum" 1;
 }
 
 * { box-sizing: border-box; }
@@ -204,7 +216,7 @@ select:hover { border-color: var(--line-firm); }
 /* A slider reads as a dial: the value sits beside its label, in mono. */
 .dial { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
 .dial .value {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-num);
   font-size: 14px;
   font-variant-numeric: tabular-nums;
   color: var(--text);
@@ -311,7 +323,7 @@ input[type="range"]::-moz-range-thumb {
   margin-bottom: 6px;
 }
 .clock .t {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-num);
   font-size: 12.5px;
   color: var(--text-2);
   font-variant-numeric: tabular-nums;
@@ -350,7 +362,7 @@ input[type="range"]::-moz-range-thumb {
   color: var(--text-3);
 }
 .tolerance .pm {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-num);
   color: var(--text-2);
   font-variant-numeric: tabular-nums;
 }
@@ -364,7 +376,7 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .result .delta {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-num);
   font-variant-numeric: tabular-nums;
   color: var(--reach);
 }
@@ -373,7 +385,7 @@ input[type="range"]::-moz-range-thumb {
 .sites { list-style: none; margin: 10px 0 0; padding: 0; }
 .sites li {
   display: flex; gap: 9px; align-items: baseline;
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-num);
   font-size: 11.5px;
   color: var(--text-2);
   padding: 3px 0;
@@ -400,7 +412,7 @@ tbody td {
   color: var(--text-2);
 }
 tbody td:first-child { color: var(--text); }
-tbody tr td.people { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 11.5px; }
+tbody tr td.people { font-family: var(--font-num); font-size: 11.5px; }
 
 /* ---------------------------------------------------------------- legend */
 
@@ -455,7 +467,7 @@ tbody tr td.people { font-family: "IBM Plex Mono", ui-monospace, monospace; font
   font-size: 11.5px; color: var(--text-2); padding: 2px 0;
 }
 .picked li .ago {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-num);
   font-variant-numeric: tabular-nums;
   color: var(--text-3);
 }
@@ -475,7 +487,6 @@ tbody tr td.people { font-family: "IBM Plex Mono", ui-monospace, monospace; font
 .leaflet-container.placing { cursor: crosshair; }
 /* The rail floats over the map, so Leaflet's own controls have to clear it. */
 .leaflet-top.leaflet-left { left: 296px; }
-@media (max-width: 1080px) { .leaflet-top.leaflet-left { left: 0; } }
 .leaflet-control-zoom { border: 0 !important; box-shadow: var(--shadow) !important; }
 .leaflet-control-zoom { border-radius: var(--r-sm) !important; overflow: hidden; }
 .leaflet-control-zoom a {
@@ -523,27 +534,13 @@ tbody tr td.people { font-family: "IBM Plex Mono", ui-monospace, monospace; font
   overflow-x: auto; font-size: 12px; color: #f0a0aa;
 }
 code {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-num);
   background: var(--ink-2); padding: 1px 5px; border-radius: 4px; font-size: .92em;
 }
 
 /* ----------------------------------------------------------- narrow view */
 
-@media (max-width: 1080px) {
-  .rail, .readout {
-    position: static;
-    width: auto;
-    margin: 0;
-    border-radius: 0;
-    border: 0;
-    border-top: 1px solid var(--line);
-    max-height: 42vh;
-  }
-  .stage { display: flex; flex-direction: column; overflow-y: auto; }
-  .map { position: relative; flex: none; height: 54vh; }
-  .legend, .picked { position: static; transform: none; margin: 10px; }
-  .legend { flex-wrap: wrap; border-radius: var(--r-md); }
-}
+
 
 /* ------------------------------------------------------------- the brief */
 
@@ -735,7 +732,7 @@ code {
 .ev-table td:first-child { color: var(--text); }
 .ev-table .num, .ev-table th:not(:first-child) { text-align: right; }
 .ev-table .num {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-num);
   font-variant-numeric: tabular-nums;
 }
 .ev-table .verdict { text-align: right; color: var(--text-3); font-size: 11.5px; }
@@ -748,7 +745,7 @@ code {
 }
 .ev-gates .gate-mark {
   width: 34px; flex: none;
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-num);
   font-size: 11px;
   color: var(--reach);
 }
@@ -902,7 +899,7 @@ code {
 .budget-key li { display: flex; align-items: center; gap: 4px; white-space: nowrap; }
 .budget-key i { width: 7px; height: 7px; border-radius: 2px; flex: none; }
 .budget-key b {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-num);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
   color: var(--text-2);
@@ -918,7 +915,7 @@ code {
   color: var(--text-3);
 }
 .budget-total b {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-num);
   font-variant-numeric: tabular-nums;
   font-weight: 500;
   color: var(--text-2);
@@ -974,7 +971,7 @@ code {
 .resil-rows .on .resil-fill { box-shadow: 0 0 9px rgba(140, 174, 200, .30); }
 
 .resil-val {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-num);
   font-size: 11px;
   font-variant-numeric: tabular-nums;
   text-align: right;
@@ -1020,7 +1017,7 @@ td.miss {
   position: relative;
   text-align: right;
   white-space: nowrap;
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-num);
   font-size: 11px;
   color: var(--beyond);
 }
@@ -1067,7 +1064,7 @@ td.miss.met  { color: var(--text-3); font-family: inherit; font-size: 11px; }
   white-space: nowrap;
 }
 .state-strip .chip.mono {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-num);
   font-variant-numeric: tabular-nums;
 }
 /* Any road state other than a dry day is a stressed network, and the map looks
@@ -1135,36 +1132,9 @@ td.miss.met  { color: var(--text-3); font-family: inherit; font-size: 11px; }
 /* Below the breakpoint the rail stops floating and sits in the scroll, so the
    service and the road state are on the page already — the strip would only be
    repeating them, and the top bar has no width to spare for it. */
-@media (max-width: 1080px) {
-  .state-strip { display: none; }
 
-  /* The bar holds a wordmark, two buttons and three study areas. At 52px fixed
-     it simply ran off the right edge; it is allowed to take the second line it
-     needs instead. */
-  .topbar {
-    height: auto;
-    min-height: 52px;
-    flex-wrap: wrap;
-    row-gap: 8px;
-    padding: 9px 14px;
-  }
-  .topbar-right { flex-wrap: wrap; gap: 8px; }
 
-  /* Counted out at full width the grid becomes a banner. It is a figure beside
-     a figure, not a hero. */
-  .pgrid { max-width: 260px; }
-}
 
-@media (max-width: 560px) {
-  .wordmark { flex-direction: column; gap: 0; }
-  .wordmark h1 { font-size: 14px; }
-  .seg.topseg button { padding: 5px 8px; font-size: 11.5px; }
-  .legend { justify-content: center; row-gap: 6px; }
-  /* The ramp keeps its own left border when it wraps onto a line of its own. */
-  .legend .swatch + .swatch { border-left: 0; }
-  .brief { padding: 22px 18px 20px; }
-  .brief-figures { grid-template-columns: 1fr; }
-}
 
 /* -------------------------------------------------- focus and navigation */
 
@@ -1176,7 +1146,7 @@ td.miss.met  { color: var(--text-3); font-family: inherit; font-size: 11px; }
   color: var(--text-3);
 }
 .vs-dry span {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-num);
   font-variant-numeric: tabular-nums;
 }
 .vs-dry .down { color: var(--beyond); }
@@ -1207,10 +1177,10 @@ tbody tr.row-link.selected td:first-child { box-shadow: inset 2px 0 0 var(--focu
   display: grid; place-items: center;
   border-radius: 50%;
   background: #f46d43;
-  border: 2px solid #0c1319;
+  border: 2px solid #15171a;
   box-shadow: 0 0 0 1.5px rgba(255,255,255,.9), 0 2px 6px rgba(0,0,0,.45);
-  color: #0c1319;
-  font: 600 11px/1 "IBM Plex Sans", ui-sans-serif, sans-serif;
+  color: #15171a;
+  font: 600 11px/1 var(--font-ui);
 }
 .site-pin.placed { background: #b07ae0; }
 
@@ -1233,7 +1203,7 @@ tbody tr.row-link.selected td:first-child { box-shadow: inset 2px 0 0 var(--focu
 .curve .grid { stroke: var(--line); stroke-width: 1; }
 .curve .tick {
   fill: var(--text-3); font-size: 9.5px;
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: var(--font-num);
 }
 .curve .ceiling { stroke: var(--text-3); stroke-width: 1; stroke-dasharray: 2 3; }
 .curve .current { stroke: var(--line-firm); stroke-width: 1; }
@@ -1299,42 +1269,6 @@ tbody tr.row-link.selected td:first-child { box-shadow: inset 2px 0 0 var(--focu
  * so a thumb on a panel moved the panel and a thumb beside it moved the page.
  * Now the order is the reading order: the map, its key, what it says, then
  * the controls that change it. */
-@media (max-width: 1080px) {
-  .stage { overscroll-behavior: contain; }
-  .map { order: 1; height: 56vh; min-height: 320px; }
-  .legend { order: 2; }
-  .picked { order: 3; width: auto; }
-  .readout { order: 4; }
-  .rail { order: 5; }
-  .rail, .readout {
-    max-height: none;
-    overflow: visible;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    background: var(--ink-2);
-  }
 
-  /* Overlays cover the screen, not the top of a scrolled column. */
-  .brief-scrim { position: fixed; z-index: 1200; padding: 14px; }
-  .brief { max-height: calc(100dvh - 28px); }
-}
 
-@media (max-width: 560px) {
-  .topbar { padding: 8px 12px; row-gap: 6px; }
-  .wordmark { flex-direction: row; align-items: baseline; gap: 8px; }
-  .wordmark .where { display: none; }
-  /* One row that scrolls sideways rather than three stacked rows of chrome
-     taking a quarter of the screen before the map begins. */
-  .topbar-right {
-    width: 100%;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scrollbar-width: none;
-    gap: 6px;
-  }
-  .topbar-right::-webkit-scrollbar { display: none; }
-  .topbar-right .about { flex: none; padding: 5px 9px; }
-  .seg.topseg { flex: none; }
-  .map { height: 50vh; }
-  .legend .stations-key { flex-wrap: wrap; justify-content: center; }
-}
+

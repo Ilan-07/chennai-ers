@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { api, fmtMin } from "./api.js";
+import { api } from "./api.js";
 import MapView, { BANDS, GAINED, LOST, REACH, STATION_SOURCES, stationSource }
   from "./components/MapView.jsx";
 
@@ -8,10 +8,12 @@ import MapView, { BANDS, GAINED, LOST, REACH, STATION_SOURCES, stationSource }
 // 3 km accepts every click inside the study area and rejects the ones that are
 // really asking for a station in the sea.
 const SNAP_LIMIT_M = 3000;
-import Controls from "./components/Controls.jsx";
 import { SCENARIO_LABEL, SHORT } from "./components/scenarios.js";
-import Summary from "./components/Summary.jsx";
 import Brief from "./components/Brief.jsx";
+import Card from "./components/Card.jsx";
+import Dial, { clock } from "./components/Dial.jsx";
+import Ribbon from "./components/Ribbon.jsx";
+import Tour, { STEPS } from "./components/Tour.jsx";
 import Evidence from "./components/Evidence.jsx";
 
 export default function App() {
@@ -53,6 +55,9 @@ export default function App() {
   const [staging, setStaging] = useState(null);
   const [scenarioShares, setScenarioShares] = useState({});
   const [scenariosLoading, setScenariosLoading] = useState(false);
+  const [tab, setTab] = useState("overview");
+  // null when no tour is running; otherwise the step on screen.
+  const [tourStep, setTourStep] = useState(null);
   const [layers, setLayers] = useState({
     coverage: true, stations: true, sites: true, wards: false, zones: true,
   });
@@ -218,12 +223,14 @@ export default function App() {
   // is dropped rather than left on screen looking current.
   useEffect(() => { setReach(null); }, [forced, service, scenario, profile]);
 
-  const optimise = useCallback(async () => {
+  // Overrides let the tour solve in the same tick it changes the question;
+  // read from state alone, it would solve the question it is leaving.
+  const optimise = useCallback(async (over = {}) => {
     setOptimising(true);
     setError(null);
     try {
       setResult(await api.optimise({ profile, service, scenario, k, forced,
-                                     mode, exact_solve: true }));
+                                     mode, exact_solve: true, ...over }));
     } catch (e) {
       setError(String(e));
     } finally {
@@ -330,7 +337,8 @@ export default function App() {
   useEffect(() => {
     const onKey = (e) => {
       if (e.key !== "Escape") return;
-      if (briefOpen) setBriefOpen(false);
+      if (tourStep != null) setTourStep(null);
+      else if (briefOpen) setBriefOpen(false);
       else if (evidenceOpen) setEvidenceOpen(false);
       else if (placing) setPlacing(false);
       else if (picked != null) setPicked(null);
@@ -338,7 +346,36 @@ export default function App() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [briefOpen, evidenceOpen, placing, picked]);
+  }, [briefOpen, evidenceOpen, placing, picked, tourStep]);
+
+  // The tour drives the console. Each step is applied once, when it is
+  // reached; its caption then reads whatever the console now shows.
+  const budget = meta?.services?.[service]?.budget_s ?? 300;
+  useEffect(() => {
+    if (tourStep == null || !meta) return;
+    const actions = {
+      budget: meta.services.ems.budget_s,
+      setThresholdS,
+      setScenario,
+      setComparing,
+      reset: () => {
+        setService("ems"); setScenario("dry"); setComparing(false);
+        setThresholdS(meta.services.ems.budget_s); setMode("station");
+        setResult(null); setTab("overview"); setFocus(null); setPicked(null);
+      },
+      solvePosts: (n) => {
+        setComparing(false); setScenario("peak"); setMode("staging");
+        setK(n); setTab("plan");
+        optimise({ service: "ems", scenario: "peak", k: n, forced: [], mode: "staging" });
+      },
+    };
+    STEPS[tourStep].apply(actions);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tourStep]);
+
+  const startTour = useCallback(() => { setBriefOpen(false); setTourStep(0); }, []);
+  // Placing ends, and its toast goes, when placing stops.
+  useEffect(() => { if (!placing) setSnap(null); }, [placing]);
 
   const gained = useMemo(
     () => (result ? new Set(result.newly_covered_cells) : null), [result]);
@@ -396,110 +433,183 @@ export default function App() {
     );
   }
 
+  const svcMeta = meta?.services?.[service];
+  const overhead = svcMeta ? svcMeta.t_alarm_s + svcMeta.t_turnout_s : 120;
+  const total = overhead + thresholdS;
+  const condLabel = (SCENARIO_LABEL[scenario] ?? scenario).toLowerCase();
+
   return (
     <div className="app">
       <header className="topbar">
         <div className="wordmark">
           <h1>Chennai emergency response</h1>
           <span className="where">
-            {meta
-              ? `${meta.profile_info.area_km2} km² · ${meta.profile_info.units}`
-              : "loading"}
+            {meta ? `${meta.profile_info.area_km2} km², ${meta.profile_info.units}` : "loading"}
           </span>
         </div>
-        {/* What the map is currently answering, spelled out where it cannot be
-            scrolled away from. The service and the road state live in the rail,
-            one of them inside a fold, so a reader who collapsed it was looking
-            at a hundred-year flood with nothing on screen saying so. */}
-        {meta && coverage && (
-          <div className="state-strip" aria-label="Current query">
-            <span className="chip">
-              {service === "ems" ? "Ambulance" : "Fire engine"}
-            </span>
-            <span className={`chip${scenario === "dry" ? "" : " stressed"}`}>
-              {SCENARIO_LABEL[scenario] ?? scenario}
-            </span>
-            <span className="chip mono">{fmtMin(thresholdS)}</span>
-          </div>
-        )}
 
-        <div className="topbar-right">
-        <button className="about" onClick={() => setBriefOpen(true)}
-                aria-label="About this project">About</button>
-        <button className="about" onClick={() => setEvidenceOpen(true)}
-                aria-label="Method and evidence">Evidence</button>
-        <div className="seg topseg" role="group" aria-label="Study area">
-          {(profiles.length ? profiles : [{ profile: "gcc", built: true }]).map((p) => (
-            <button
-              key={p.profile}
-              aria-pressed={profile === p.profile}
-              disabled={!p.built}
-              title={p.built ? p.label : "not built"}
-              onClick={() => setProfile(p.profile)}
-            >
-              {SHORT[p.profile] ?? p.profile}
+        <div className="seg service-seg" role="group" aria-label="Service">
+          {[["ems", "Ambulance"], ["fire", "Fire engine"]].map(([id, label]) => (
+            <button key={id} aria-pressed={service === id} onClick={() => setService(id)}>
+              {label}
             </button>
           ))}
         </div>
+
+        <label className="area-select">
+          <span className="sr-only">Study area</span>
+          <select value={profile} onChange={(e) => setProfile(e.target.value)}>
+            {(profiles.length ? profiles : [{ profile: "gcc", built: true }]).map((p) => (
+              <option key={p.profile} value={p.profile} disabled={!p.built}>
+                {SHORT[p.profile] ?? p.profile}{p.built ? "" : " (not built)"}
+              </option>
+            ))}
+          </select>
+        </label>
+        <div className="topbar-right">
+          <button className="about" onClick={() => setBriefOpen(true)}>About</button>
+          <button className="btn primary small tour-btn" onClick={startTour}
+                  disabled={!meta}>
+            Tour
+          </button>
         </div>
       </header>
 
       <div className="stage">
-        <MapView
-          cells={cells}
-          hex={meta?.hex}
-          response={coverage?.response_s}
-          thresholdS={thresholdS}
-          gained={gained}
-          reachCells={reachCells}
-          candidates={siteTable}
-          basemap={basemap}
-          stations={stations}
-          sites={sites}
-          focus={focus}
-          lost={lostCells}
-          layers={layers}
-          placing={placing}
-          onMapClick={onMapClick}
-          onPickCell={onPickCell}
-        />
+        <div className="mapwrap">
+          <MapView
+            cells={cells}
+            hex={meta?.hex}
+            response={coverage?.response_s}
+            thresholdS={thresholdS}
+            gained={gained}
+            reachCells={reachCells}
+            candidates={siteTable}
+            basemap={basemap}
+            stations={stations}
+            sites={sites}
+            focus={focus}
+            lost={lostCells}
+            layers={layers}
+            placing={placing}
+            onMapClick={onMapClick}
+            onPickCell={onPickCell}
+          />
 
-        <Controls
-          meta={meta}
-          profile={profile}
-          service={service} setService={setService}
-          scenario={scenario} setScenario={setScenario}
-          thresholdS={thresholdS} setThresholdS={setThresholdS}
-          k={k} setK={setK}
+          <div className="instrument">
+            <Dial svc={svcMeta} thresholdS={thresholdS} setThresholdS={setThresholdS}
+                  share={coverage?.covered_share} busy={!coverage} />
+          </div>
+
+          <div className="bottom-strip">
+            <Ribbon shares={scenarioShares} scenario={scenario} setScenario={setScenario}
+                    comparing={comparing} setComparing={setComparing} />
+
+            {/* The key changes with the question. Brightness is explained once,
+                because it is the one encoding a reader would not guess. */}
+            <div className="legend" aria-label="Map key">
+              {lostCells ? (
+                <>
+                  <span className="swatch"><i style={{ background: LOST.colour }} />
+                    Taken by {condLabel}</span>
+                  <span className="swatch"><i style={{ background: BANDS[0].colour, opacity: 0.5 }} />
+                    Still in time</span>
+                  <span className="swatch"><i style={{ background: "#5c636b", opacity: 0.6 }} />
+                    Late either way</span>
+                </>
+              ) : (
+                <>
+                  <span className="ramp-bar" aria-hidden="true">
+                    {BANDS.slice(0, 4).map((b) => <i key={b.key} style={{ background: b.colour }} />)}
+                  </span>
+                  <span className="ramp-words">
+                    in time <em>→</em> 2 <em>→</em> 5 min late <em>→</em> more
+                  </span>
+                  <span className="swatch"><i style={{ background: BANDS[4].colour }} />no route</span>
+                </>
+              )}
+              <span className="swatch dim">brighter = more people</span>
+              {gained && !lostCells && (
+                <span className="swatch"><i style={{ background: GAINED.colour }} />{GAINED.label}</span>
+              )}
+              {reachCells && !lostCells && (
+                <span className="swatch"><i style={{ background: REACH.colour }} />{REACH.label}</span>
+              )}
+              {stationKinds.length > 0 && layers.stations && stationKinds.map((k) => (
+                <span key={k.key} className="swatch">
+                  <i className="st-dot" style={{ background: k.fill }} />
+                  {k.key === "listing" ? "listed station" : k.key === "mapped" ? "mapped station" : "surveyed"}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {placing && (
+            <div className={`toast${snap && !snap.ok ? " bad" : ""}`} role="status">
+              {snap
+                ? snap.ok
+                  ? `Placed, ${snap.metres < 50 ? "on" : `${snap.metres.toLocaleString("en-IN")} m from`} where you clicked. Click it again to remove it.`
+                  : `Nothing within ${snap.metres.toLocaleString("en-IN")} m of that point. Nothing placed.`
+                : mode === "staging"
+                  ? "Click the map to post an ambulance. It snaps to the nearest road point."
+                  : "Click a marked site. Stations sit on an 800 m lattice, so a click snaps to the nearest."}
+            </div>
+          )}
+
+          {pickedInfo && (
+            <div className="picked">
+              <button className="linkish close" onClick={() => setPicked(null)}
+                      aria-label="Close">×</button>
+              <h3>{meta?.wards?.[pickedInfo.ward]?.name
+                   ?? `Ward ${meta?.wards?.[pickedInfo.ward]?.no ?? pickedInfo.ward}`}</h3>
+              <p className="picked-time">
+                {pickedInfo.resp < 0 ? "No route" : clock(pickedInfo.resp + overhead)}
+                <span> call to arrival, {Math.round(pickedInfo.pop).toLocaleString("en-IN")} people</span>
+              </p>
+              {(pickedInfo.byPlaced.length > 0 || pickedInfo.byProposed) && (
+                <p className="picked-future">
+                  Inside the standard once{" "}
+                  {pickedInfo.byPlaced.length > 0
+                    ? `your site ${pickedInfo.byPlaced.join(" and ")} ${pickedInfo.byPlaced.length > 1 ? "are" : "is"} built`
+                    : "the proposals are built"}.
+                </p>
+              )}
+              {pickedInfo.who.length > 0 && (
+                <ol>
+                  {pickedInfo.who.map((w, i) => (
+                    <li key={i}><span>{w.name}</span><span className="ago">{clock(w.sec + overhead)}</span></li>
+                  ))}
+                </ol>
+              )}
+            </div>
+          )}
+
+          {tourStep != null && (
+            <Tour step={tourStep} setStep={setTourStep} onClose={() => setTourStep(null)}
+                  live={{ coverage, scenarioShares, comparison, result, staging,
+                          budgetTotal: overhead + budget }} />
+          )}
+        </div>
+
+        <Card
+          tab={tab} setTab={setTab}
+          coverage={coverage} scenario={scenario} scenarioShares={scenarioShares}
+          comparison={comparison} comparing={comparing}
+          worstWards={worstWards} thresholdS={thresholdS} total={total}
+          focus={focus} onFocusArea={focusArea} onFocusSite={focusSite}
           layers={layers} setLayers={setLayers}
-          onOptimise={optimise} optimising={optimising}
-          placing={placing} setPlacing={setPlacing}
-          forced={forced} clearForced={() => setForced([])}
-          onShowReach={showReach} reaching={reaching} reach={reach}
-          mode={mode} setMode={chooseMode} staging={staging}
-          comparing={comparing} setComparing={setComparing}
-          scenarioShares={scenarioShares} scenariosLoading={scenariosLoading}
           exportHref={api.exportUrl(
             service, scenario, thresholdS,
             result ? (result.exact ?? result.greedy).sites : [], profile,
             result?.mode ?? "station")}
-        />
-
-        <Summary
-          coverage={coverage}
+          onEvidence={() => setEvidenceOpen(true)}
+          publication={coverage?.publication ?? meta?.publication}
+          mode={mode} setMode={chooseMode} staging={staging}
+          k={k} setK={setK} onSolve={optimise} optimising={optimising}
+          placing={placing} setPlacing={setPlacing}
+          forced={forced} clearForced={() => setForced([])}
+          onShowReach={showReach} reaching={reaching} reach={reach}
           result={result}
-          reach={reach}
-          meta={meta}
-          worstWards={worstWards}
-          thresholdS={thresholdS}
-          scenario={scenario}
-          scenarioShares={scenarioShares}
-          focus={focus}
-          mode={mode}
-          staging={staging}
-          k={k}
-          onFocusArea={focusArea}
-          onFocusSite={focusSite}
         />
 
         {briefOpen && (
@@ -510,6 +620,7 @@ export default function App() {
             thresholdS={thresholdS}
             scenarioShares={scenarioShares}
             onClose={() => setBriefOpen(false)}
+            onTour={startTour}
           />
         )}
 
@@ -519,137 +630,6 @@ export default function App() {
             profile={profile}
             onClose={() => setEvidenceOpen(false)}
           />
-        )}
-
-        {placing && (
-          <div className="placing-note">
-            {mode === "staging"
-              ? <>Click a marked point. A post can go anywhere on the road lattice,
-                  so a click snaps to the nearest one.</>
-              : <>Click a marked site. Stations sit on an 800&nbsp;m lattice, so a
-                  click snaps to the nearest one.</>}
-          </div>
-        )}
-
-        {snap && (
-          <div className={`snap-note${snap.ok ? "" : " bad"}`} role="status">
-            {snap.ok
-              ? `Snapped ${snap.metres < 50 ? "onto" : `${snap.metres.toLocaleString("en-IN")} m to`} the nearest ${mode === "staging" ? "post point" : "buildable site"}.`
-              : `No ${mode === "staging" ? "post point" : "buildable site"} within ${snap.metres.toLocaleString("en-IN")} m of that point — nothing placed.`}
-            <button className="linkish" onClick={() => setSnap(null)}>Dismiss</button>
-          </div>
-        )}
-
-        {/* The first four bands are one scale — degrees of lateness against the
-            clock — and used to be drawn as four unrelated chips beside two that
-            genuinely are categories. Set as a continuous ramp it reads as an
-            isochrone key, and "no route" and the projections sit apart from it,
-            which is what they are: not a worse time, a different kind of fact. */}
-        <div className="legend" aria-label="Map key">
-          {lostCells ? (
-            <>
-              <span className="swatch">
-                <i style={{ background: LOST.colour }} />
-                Taken by {(SCENARIO_LABEL[scenario] ?? scenario).toLowerCase()}
-                {comparison && (
-                  <b className="legend-n">{Math.round(comparison.lost_demand).toLocaleString("en-IN")}</b>
-                )}
-              </span>
-              <span className="swatch">
-                <i style={{ background: BANDS[0].colour, opacity: 0.55 }} />
-                Still in time
-              </span>
-              <span className="swatch">
-                <i style={{ background: "#5d6b76", opacity: 0.6 }} />
-                Late either way
-              </span>
-            </>
-          ) : (
-          <>
-          <span className="ramp">
-            <span className="ramp-bar">
-              {BANDS.slice(0, 4).map((b) => (
-                <i key={b.key} style={{ background: b.colour }} title={b.label} />
-              ))}
-            </span>
-            {/* Each label sits under its own step rather than at the ends: the
-                ramp is ordered but not evenly spaced in time, and a bare
-                "in time → later" would invite reading the orange as twice the
-                amber when it is a band two and a half times as wide. */}
-            <span className="ramp-ends">
-              <em>in time</em><em>+2 min</em><em>+5 min</em><em>more</em>
-            </span>
-          </span>
-          <span className="swatch">
-            <i style={{ background: BANDS[4].colour }} />
-            {BANDS[4].label}
-          </span>
-          </>
-          )}
-          {stationKinds.length > 0 && layers.stations && (
-            <span className="swatch stations-key" title="How each station's position was established">
-              {stationKinds.map((k) => (
-                <span key={k.key} className="st-kind">
-                  <i className="st-dot" style={{ background: k.fill }} />
-                  {k.key === "listing" ? "Listed" : k.key === "mapped" ? "Mapped" : "Surveyed"}
-                </span>
-              ))}
-              <span className="st-label">stations</span>
-            </span>
-          )}
-          {gained && !lostCells && (
-            <span className="swatch">
-              <i style={{ background: GAINED.colour }} />
-              {GAINED.label}
-            </span>
-          )}
-          {reachCells && !lostCells && (
-            <span className="swatch">
-              <i style={{ background: REACH.colour }} />
-              {REACH.label}
-            </span>
-          )}
-        </div>
-
-        {pickedInfo && (
-          <div className="picked">
-            <button className="linkish close" onClick={() => setPicked(null)}
-                    aria-label="Close">×</button>
-            <h3>{meta?.wards?.[pickedInfo.ward]?.name
-                 ?? `Ward ${meta?.wards?.[pickedInfo.ward]?.no ?? pickedInfo.ward}`}</h3>
-            <p className="sub">
-              {Math.round(pickedInfo.pop).toLocaleString("en-IN")} residents ·{" "}
-              {pickedInfo.resp < 0
-                ? "no route today"
-                : `${(pickedInfo.resp / 60).toFixed(1)} min away today`}
-            </p>
-            {(pickedInfo.byPlaced.length > 0 || pickedInfo.byProposed) && (
-              <p className="picked-future">
-                Within {(pickedInfo.budgetS / 60).toFixed(0)} min once{" "}
-                {pickedInfo.byPlaced.length > 0
-                  ? `your site ${pickedInfo.byPlaced.join(" and ")} ${
-                      pickedInfo.byPlaced.length > 1 ? "are" : "is"} built`
-                  : "the proposed stations are built"}.
-                <span className="picked-caveat">
-                  Reachability is modelled at the budget, so the new time is
-                  known to be inside it, not to the second.
-                </span>
-              </p>
-            )}
-            {pickedInfo.who.length > 0 && (
-              <>
-                <p className="picked-label">Nearest stations today</p>
-                <ol>
-                  {pickedInfo.who.map((w, i) => (
-                    <li key={i}>
-                      <span>{w.name}</span>
-                      <span className="ago">{(w.sec / 60).toFixed(1)} min</span>
-                    </li>
-                  ))}
-                </ol>
-              </>
-            )}
-          </div>
         )}
       </div>
     </div>
